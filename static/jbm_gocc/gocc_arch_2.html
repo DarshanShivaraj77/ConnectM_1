@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>JBM GOCC – Product Architecture</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Workspaces-first fleet + lifecycle + warranty platform" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --accent: #15803d;
+      --accent-2: #2563eb;
+      --accent-3: #ea580c;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --border-subtle: #cbd5f5;
+      --shadow-soft: 0 16px 40px rgba(15,23,42,0.08);
+    }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(37,99,235,0.06) 0, transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(16,185,129,0.06) 0, transparent 55%),
+        #f5f5f7;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .aurora{
+      position:fixed;
+      inset:-50%;
+      filter:blur(120px);
+      z-index:-1;
+      background:
+        radial-gradient(circle at 20% 30%, #22d3ee 0%, transparent 40%),
+        radial-gradient(circle at 70% 40%, #3b82f6 0%, transparent 45%),
+        radial-gradient(circle at 50% 70%, #facc15 0%, transparent 45%);
+      animation:auroraMove 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes auroraMove{
+      0%{ transform:translate(0,0); }
+      100%{ transform:translate(200px,-150px); }
+    }
+
+    a { color: var(--accent-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .page{min-height:100vh;display:flex;flex-direction:column;}
+
+    /* HEADER */
+    header{
+      position:sticky;
+      top:0;
+      z-index:30;
+      background:rgba(249,250,251,0.97);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(148,163,184,0.5);
+    }
+    .nav{
+      max-width:1200px;
+      margin:0 auto;
+      padding:8px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .nav-left{display:flex;align-items:center;gap:10px;}
+    .logo-chip{
+      width:32px;height:32px;border-radius:12px;
+      background:radial-gradient(circle at 30% 0,#f97316 0,#facc15 25%,#22c55e 50%,#0ea5e9 75%,#eff6ff 100%);
+      position:relative;overflow:hidden;
+      box-shadow:
+        0 0 0 1px rgba(148,163,184,0.35),
+        0 8px 18px rgba(15,23,42,0.25);
+    }
+    .logo-chip::before{
+      content:"";position:absolute;inset:18%;
+      border-radius:10px;border:1px solid rgba(148,163,184,0.4);
+      background:radial-gradient(circle at 10% 0,rgba(255,255,255,0.9) 0,rgba(248,250,252,0.9) 60%);
+    }
+    .logo-dot{
+      position:absolute;inset:35%;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 30%,rgba(132,204,22,0.9),rgba(34,197,94,0.3) 40%,transparent 72%);
+      box-shadow:0 0 10px rgba(74,222,128,0.7);
+      mix-blend-mode:screen;
+    }
+    .nav-title{display:flex;flex-direction:column;gap:2px;}
+    .nav-title-main{
+      font-size:15px;font-weight:650;letter-spacing:.03em;text-transform:uppercase;
+    }
+    .nav-title-sub{font-size:11px;color:var(--muted);}
+
+    .nav-pill{
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:11px;
+      color:var(--muted);
+      background:radial-gradient(circle at 0 0,rgba(59,130,246,0.1) 0,transparent 70%);
+      border:1px solid rgba(148,163,184,0.7);
+      display:inline-flex;align-items:center;gap:6px;
+    }
+    .nav-pill span{
+      width:14px;height:14px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;
+      background:#eff6ff;font-size:10px;color:var(--accent-2);
+    }
+
+    .btn{
+      padding:8px 14px;
+      border-radius:999px;
+      background:radial-gradient(circle at 0 0,rgba(37,99,235,0.95) 0,rgba(59,130,246,0.95) 60%);
+      color:#ffffff;
+      font-size:12px;
+      font-weight:600;
+      border:none;
+      cursor:pointer;
+      box-shadow:0 8px 16px rgba(37,99,235,0.35);
+      transition:all .2s ease-out;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 20px rgba(37,99,235,0.45);
+    }
+
+    /* LAYOUT */
+    .layout-shell{
+      display:grid;
+      grid-template-columns:240px minmax(0,1fr);
+      max-width:1200px;
+      margin:0 auto;
+      padding:12px;
+      gap:14px;
+    }
+    @media (max-width:960px){
+      .layout-shell{grid-template-columns:minmax(0,1fr);}
+      .sidebar{position:static;top:auto;max-height:none;}
+    }
+
+    /* SIDEBAR */
+    .sidebar{
+      position:sticky;
+      top:70px;
+      align-self:flex-start;
+      padding:10px;
+      border-radius:12px;
+      background:#fff;
+      border:1px solid var(--border-subtle);
+      font-size:12px;
+      max-height:calc(100vh - 90px);
+      overflow:auto;
+      box-shadow:0 10px 24px rgba(15,23,42,0.08);
+    }
+    .sidebar-title{
+      font-size:12px;text-transform:uppercase;
+      letter-spacing:.12em;color:var(--muted);
+      margin-bottom:6px;
+    }
+    .toc-section-label{
+      font-size:11px;font-weight:600;color:var(--muted);
+      margin:6px 0 3px;
+    }
+    .toc-list{margin:0;padding:0;list-style:none;}
+    .toc-list li{margin-bottom:3px;}
+    .toc-link{
+      display:block;
+      padding:4px 6px;
+      border-radius:999px;
+      color:var(--muted);
+      text-decoration:none;
+      transition:background .18s ease-out,color .18s ease-out;
+    }
+    .toc-link:hover{
+      background:#e5e7eb;
+      color:#2563eb;
+    }
+    .toc-link.active{
+      background:radial-gradient(circle at 0 0,rgba(37,99,235,0.95) 0,rgba(59,130,246,0.95) 60%);
+      color:#f9fafb;
+      box-shadow:0 8px 16px rgba(37,99,235,0.35);
+    }
+
+    /* MAIN */
+    main{display:flex;flex-direction:column;gap:16px;}
+
+    /* SECTION CARDS */
+    .section{
+      background:#ffffff;
+      border-radius:22px;
+      padding:20px;
+      box-shadow:var(--shadow-soft);
+      border:1px solid rgba(148,163,184,0.6);
+    }
+
+    h2{
+      font-size:24px;
+      line-height:1.25;
+      font-weight:650;
+      margin:0 0 12px;
+      color:var(--text);
+    }
+
+    h3{
+      font-size:18px;
+      font-weight:600;
+      margin:20px 0 10px;
+      color:var(--text);
+    }
+
+    p{
+      color:var(--muted);
+      line-height:1.6;
+      margin:0 0 12px;
+    }
+
+    ul, ol{
+      color:var(--muted);
+      line-height:1.6;
+      margin:0 0 12px;
+      padding-left:20px;
+    }
+
+    li{
+      margin-bottom:6px;
+    }
+
+    /* GRID */
+    .grid{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+    .grid-2{grid-template-columns:repeat(2,1fr);}
+    .grid-3{grid-template-columns:repeat(3,1fr);}
+    @media (max-width:768px){
+      .grid-2,.grid-3{grid-template-columns:1fr;}
+    }
+
+    /* KPI CARDS */
+    .kpi-card{
+      background:
+        radial-gradient(circle at 0 0,rgba(37,99,235,0.08) 0,transparent 60%),
+        #ffffff;
+      border-radius:16px;
+      padding:16px;
+      border:1px solid rgba(148,163,184,0.5);
+      box-shadow:0 4px 12px rgba(15,23,42,0.06);
+    }
+    .kpi-value{
+      font-size:20px;
+      font-weight:700;
+      color:var(--text);
+      margin-bottom:6px;
+    }
+    .kpi-label{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    /* SUB CARDS */
+    .sub-card{
+      background:#f9fafb;
+      border-radius:12px;
+      padding:14px;
+      border:1px solid rgba(148,163,184,0.35);
+    }
+
+    /* CODE BLOCKS */
+    code{
+      background:rgba(0,0,0,0.05);
+      padding:2px 6px;
+      border-radius:4px;
+      font-size:13px;
+      font-family:monospace;
+    }
+
+    pre{
+      background:#0f172a;
+      color:#e2e8f0;
+      padding:16px;
+      border-radius:12px;
+      overflow-x:auto;
+      font-size:13px;
+      line-height:1.5;
+      border:1px solid rgba(148,163,184,0.3);
+    }
+
+    pre code{
+      background:none;
+      padding:0;
+      color:inherit;
+    }
+
+    /* IMAGES */
+    img{
+      max-width:100%;
+      border-radius:12px;
+      border:1px solid var(--border-subtle);
+      margin:12px 0;
+      box-shadow:0 4px 12px rgba(15,23,42,0.08);
+    }
+
+    .img-caption{
+      font-size:11px;
+      color:var(--muted);
+      text-align:center;
+      margin-top:-8px;
+      margin-bottom:12px;
+    }
+
+    /* ACCORDION */
+    .accordion-item{
+      border:1px solid rgba(148,163,184,0.35);
+      border-radius:12px;
+      margin-bottom:10px;
+      overflow:hidden;
+      background:#ffffff;
+    }
+    .accordion-header{
+      padding:12px 16px;
+      cursor:pointer;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-weight:600;
+      color:var(--text);
+      background:#f9fafb;
+      transition:background .2s ease-out;
+    }
+    .accordion-header:hover{
+      background:#f1f5f9;
+    }
+    .accordion-header::after{
+      content:"▼";
+      font-size:10px;
+      color:var(--muted);
+      transition:transform .2s ease-out;
+    }
+    .accordion-item.open .accordion-header::after{
+      transform:rotate(-180deg);
+    }
+    .accordion-body{
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .3s ease-out;
+      padding:0 16px;
+    }
+    .accordion-item.open .accordion-body{
+      padding:12px 16px;
+    }
+
+    /* FOOTER */
+    footer{
+      margin-top:20px;
+      padding:16px;
+      text-align:center;
+      background:#f9fafb;
+      border-radius:12px;
+      border:1px solid rgba(148,163,184,0.35);
+    }
+    footer p{
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      .sidebar, .btn, header { display: none; }
+      .layout-shell { grid-template-columns: 1fr; }
+      .section { page-break-inside: avoid; }
+      .aurora { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="aurora"></div>
+<div class="page">
+  <header>
+    <div class="nav">
+      <div class="nav-left">
+        <div class="logo-chip">
+          <div class="logo-dot"></div>
+        </div>
+        <div class="nav-title">
+          <div class="nav-title-main">JBM GOCC</div>
+          <div class="nav-title-sub">Product Architecture</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <span class="nav-pill"><span>v1.0</span> Jan 2026</span>
+        <span class="nav-pill">GOCC + Retail</span>
+        <button class="btn" onclick="window.print()">Print / Save PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout-shell">
+    <aside class="sidebar">
+      <div class="sidebar-title">Contents</div>
+      <ul class="toc-list" id="nav">
+        <li><a href="#overview" class="toc-link active">Overview</a></li>
+        <li><a href="#workspaces" class="toc-link">Workspaces model</a></li>
+        <li><a href="#users" class="toc-link">Users & flows</a></li>
+        <li><a href="#platform" class="toc-link">Platform architecture</a></li>
+        <li><a href="#data" class="toc-link">Data model</a></li>
+        <li><a href="#api" class="toc-link">API spec</a></li>
+        <li><a href="#roadmap" class="toc-link">Roadmap</a></li>
+      </ul>
+    </aside>
+
+    <main>
+      <section id="overview" class="section">
+        <h2>Overview</h2>
+        <p>
+          GOCC is a centralized, cloud-connected command platform for EV bus fleet & depot operations, integrating telematics, alerts, analytics, warranty and maintenance lifecycle, plus role-based dashboards across stakeholders.
+        </p>
+        
+        <div class="grid grid-3">
+          <div class="kpi-card">
+            <div class="kpi-value">Multi-tenant</div>
+            <div class="kpi-label">Org isolation via RLS + workspace scoping</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value">Real-time</div>
+            <div class="kpi-label">Kafka/Flink alerts + live fleet monitoring</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value">Lifecycle</div>
+            <div class="kpi-label">Warranty + scheduled maintenance + ticketing</div>
+          </div>
+        </div>
+
+        <h3>Workspace-centric navigation</h3>
+        <p>Internal users get full modules; Retail users see a restricted set (vehicle list, warranty, maintenance, tickets, reports).</p>
+        <img src="/static/jbm_gocc/images/navigation_flowchart.png" alt="Workspace navigation flow" />
+        <p class="img-caption">Diagram: Workspace-centric navigation flow. [chart:36]</p>
+      </section>
+
+      <section id="workspaces" class="section">
+        <h2>Workspaces model</h2>
+        <p>
+          Workspaces are hierarchical groupings (max 6 levels) that organize assets (buses, batteries, chargers) and permissions (workspace-users), enabling scalable multi-depot and multi-operator management.
+        </p>
+        
+        <div class="grid grid-2">
+          <div class="sub-card">
+            <h3>Typical hierarchy</h3>
+            <ul>
+              <li>Region → Zone → Hub → Depot/Dealer → Fleet → Vehicle</li>
+              <li>Same model supports GCC depots and Retail operators</li>
+            </ul>
+          </div>
+          <div class="sub-card">
+            <h3>Why it matters</h3>
+            <ul>
+              <li>Fast filtering for dashboards + reports</li>
+              <li>Delegated access control without custom rules per depot</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Accordion Example -->
+        <div style="margin-top:20px;">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Workspace Hierarchy Details
+            </div>
+            <div class="accordion-body">
+              <p>The workspace model supports deep hierarchies with:</p>
+              <ul>
+                <li>Up to 6 levels of nesting</li>
+                <li>Flexible naming conventions per organization</li>
+                <li>Automatic permission inheritance</li>
+                <li>Cross-workspace reporting capabilities</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Permission Management
+            </div>
+            <div class="accordion-body">
+              <p>Role-based access control (RBAC) enables:</p>
+              <ul>
+                <li>Granular permissions at workspace level</li>
+                <li>Inherited access from parent workspaces</li>
+                <li>Custom role definitions per organization</li>
+                <li>Audit logging for all permission changes</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="users" class="section">
+        <h2>Users & flows</h2>
+        
+        <div class="sub-card">
+          <h3>Primary roles</h3>
+          <p>EV Fleet Admin, Depot Manager, Driver, RSA/Support, RD/Product, Manufacturing/Service, Retail Fleet Operator.</p>
+        </div>
+
+        <h3>Flow: Workstreams dependency map</h3>
+        <img src="/static/jbm_gocc/images/roadmap_1.png" alt="Roadmap dependencies" />
+        <p class="img-caption">Diagram: High-level dependency map for GOCC workstreams. [chart:35]</p>
+      </section>
+
+      <section id="platform" class="section">
+        <h2>Platform architecture (high level)</h2>
+        <ul>
+          <li>Frontend: React/Angular web dashboards + optional mobile apps</li>
+          <li>API: Gateway + Auth (JWT/OIDC) + domain services</li>
+          <li>Streaming: Kafka topics + Flink/Kafka Streams for real-time rules</li>
+          <li>Data: Postgres (master/transactions) + TSDB (telemetry) + object store (video)</li>
+        </ul>
+
+        <h3>Wireframe layout (Workspace Dashboard)</h3>
+        <img src="/static/jbm_gocc/images/wireframe.png" alt="Workspace dashboard wireframe" />
+        <p class="img-caption">Diagram: Wireframe layout – Workspace Dashboard. [chart:37]</p>
+
+        <!-- Architecture Components Accordion -->
+        <div style="margin-top:20px;">
+          <div class="accordion-item open">
+            <div class="accordion-header">
+              Frontend Architecture
+            </div>
+            <div class="accordion-body">
+              <p>Modern web-based dashboard with:</p>
+              <ul>
+                <li>React 18+ with TypeScript</li>
+                <li>Redux Toolkit for state management</li>
+                <li>Material-UI or Ant Design component library</li>
+                <li>WebSocket connections for real-time updates</li>
+                <li>Progressive Web App (PWA) capabilities</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Backend Services
+            </div>
+            <div class="accordion-body">
+              <p>Microservices architecture includes:</p>
+              <ul>
+                <li>Auth Service (JWT/OAuth2)</li>
+                <li>Fleet Management Service</li>
+                <li>Telematics Ingestion Service</li>
+                <li>Alert Processing Service</li>
+                <li>Warranty Management Service</li>
+                <li>Reporting & Analytics Service</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Data Storage Strategy
+            </div>
+            <div class="accordion-body">
+              <p>Multi-tier storage approach:</p>
+              <ul>
+                <li><strong>PostgreSQL:</strong> Master data, transactions, user management</li>
+                <li><strong>TimescaleDB:</strong> Time-series telemetry data with automatic compression</li>
+                <li><strong>Redis:</strong> Session caching, real-time data buffering</li>
+                <li><strong>S3/MinIO:</strong> Object storage for videos, documents, images</li>
+                <li><strong>Elasticsearch:</strong> Full-text search and log aggregation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="data" class="section">
+        <h2>Data model (summary)</h2>
+        <p>
+          Core entities: Organisation, User/Role, Workspace, Asset (Vehicle/Battery/Charger), Telematics, Trips, Alerts, Warranty, Service Jobs, Tickets.
+        </p>
+        
+        <h3>Telematics table pattern (TimescaleDB)</h3>
+        <pre><code>CREATE TABLE vehicle_telemetry (
+  ts_utc timestamptz NOT NULL,
+  vehicle_id bigint NOT NULL,
+  device_id bigint NOT NULL,
+  lat numeric(10,7), 
+  lon numeric(10,7),
+  soc_pct numeric(5,2),
+  odo_km numeric(12,3),
+  speed_kmph numeric(6,2),
+  batt_temp_c numeric(5,2),
+  raw_extra jsonb,
+  PRIMARY KEY (vehicle_id, ts_utc)
+);
+
+-- Create hypertable for time-series optimization
+SELECT create_hypertable('vehicle_telemetry', 'ts_utc');
+
+-- Add compression policy (7 days)
+ALTER TABLE vehicle_telemetry SET (
+  timescaledb.compress,
+  timescaledb.compress_segmentby = 'vehicle_id'
+);
+
+SELECT add_compression_policy('vehicle_telemetry', INTERVAL '7 days');</code></pre>
+
+        <!-- Data Model Accordion -->
+        <div style="margin-top:20px;">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Core Tables Overview
+            </div>
+            <div class="accordion-body">
+              <p>Primary database tables:</p>
+              <ul>
+                <li><code>organisations</code> - Top-level tenant entities</li>
+                <li><code>workspaces</code> - Hierarchical groupings</li>
+                <li><code>users</code> - User accounts and profiles</li>
+                <li><code>roles</code> - Permission definitions</li>
+                <li><code>workspace_users</code> - User-workspace assignments</li>
+                <li><code>vehicles</code> - Vehicle master data</li>
+                <li><code>batteries</code> - Battery pack information</li>
+                <li><code>chargers</code> - Charging infrastructure</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Operational Tables
+            </div>
+            <div class="accordion-body">
+              <p>Transaction and event tables:</p>
+              <ul>
+                <li><code>trips</code> - Journey records with start/end times</li>
+                <li><code>alerts</code> - System-generated notifications</li>
+                <li><code>tickets</code> - Support and maintenance tickets</li>
+                <li><code>service_jobs</code> - Scheduled and completed services</li>
+                <li><code>warranty_claims</code> - Warranty submissions and approvals</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="api" class="section">
+        <h2>API specification (OpenAPI)</h2>
+        <p>RESTful API with JWT authentication and role-based access control.</p>
+        
+        <div class="sub-card">
+          <h3>Key endpoints</h3>
+          <ul>
+            <li><code>POST /auth/login</code> - User authentication</li>
+            <li><code>GET /workspaces</code> - List accessible workspaces</li>
+            <li><code>GET /vehicles</code> - Retrieve vehicle list</li>
+            <li><code>GET /vehicles/{id}/telemetry</code> - Real-time vehicle data</li>
+            <li><code>POST /alerts</code> - Create alert</li>
+            <li><code>GET /reports/fleet-summary</code> - Fleet analytics</li>
+          </ul>
+        </div>
+
+        <!-- API Details Accordion -->
+        <div style="margin-top:20px;">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Authentication Flow
+            </div>
+            <div class="accordion-body">
+              <p>JWT-based authentication with refresh tokens:</p>
+              <ol>
+                <li>Client sends credentials to <code>/auth/login</code></li>
+                <li>Server validates and returns access + refresh tokens</li>
+                <li>Access token (short-lived, 15 min) used for API calls</li>
+                <li>Refresh token (long-lived, 7 days) used to obtain new access tokens</li>
+                <li>Tokens include user roles and workspace permissions</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Rate Limiting & Throttling
+            </div>
+            <div class="accordion-body">
+              <p>API rate limits by endpoint type:</p>
+              <ul>
+                <li><strong>Authentication:</strong> 10 requests/minute</li>
+                <li><strong>Read operations:</strong> 100 requests/minute</li>
+                <li><strong>Write operations:</strong> 50 requests/minute</li>
+                <li><strong>Bulk operations:</strong> 10 requests/minute</li>
+                <li><strong>Real-time telemetry:</strong> WebSocket connection (no polling)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="roadmap" class="section">
+        <h2>Implementation roadmap (deck-ready)</h2>
+        <p>Use the dependency map to sequence delivery. Suggested 16-week V1 with MVP in ~8 weeks.</p>
+        <ul>
+          <li><strong>Weeks 1–2:</strong> Foundations (IAM, RLS, Workspaces, org setup)</li>
+          <li><strong>Weeks 3–6:</strong> Telematics ingest + live fleet + alert engine</li>
+          <li><strong>Weeks 7–8:</strong> Depot Ops dashboards + reporting + ticketing basics</li>
+          <li><strong>Weeks 9–12:</strong> Warranty + Maintenance + Retail portal</li>
+          <li><strong>Weeks 13–16:</strong> Analytics hardening + optional video telematics</li>
+        </ul>
+        
+        <img src="/static/jbm_gocc/images/roadmap_1.png" alt="Dependency map repeated for convenience" />
+        <p class="img-caption">Diagram reused: Dependency map. [chart:35]</p>
+
+        <!-- Roadmap Details Accordion -->
+        <div style="margin-top:20px;">
+          <div class="accordion-item open">
+            <div class="accordion-header">
+              Phase 1: Foundation (Weeks 1-2)
+            </div>
+            <div class="accordion-body">
+              <p><strong>Deliverables:</strong></p>
+              <ul>
+                <li>Multi-tenant database schema with RLS policies</li>
+                <li>Authentication service with JWT implementation</li>
+                <li>Workspace hierarchy and permission models</li>
+                <li>Organization onboarding workflow</li>
+                <li>Basic admin dashboard</li>
+              </ul>
+              <p><strong>Success criteria:</strong> Admin can create orgs, workspaces, and assign users with proper isolation.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Phase 2: Telematics & Monitoring (Weeks 3-6)
+            </div>
+            <div class="accordion-body">
+              <p><strong>Deliverables:</strong></p>
+              <ul>
+                <li>Kafka ingestion pipeline for vehicle telemetry</li>
+                <li>TimescaleDB storage with compression policies</li>
+                <li>Real-time fleet map view</li>
+                <li>Alert rule engine (Flink/Kafka Streams)</li>
+                <li>WebSocket API for live updates</li>
+                <li>Basic notification system (email/SMS)</li>
+              </ul>
+              <p><strong>Success criteria:</strong> System processes 1000+ vehicles with <1s latency for critical alerts.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Phase 3: Operations (Weeks 7-8)
+            </div>
+            <div class="accordion-body">
+              <p><strong>Deliverables:</strong></p>
+              <ul>
+                <li>Depot manager dashboard</li>
+                <li>Fleet performance reports (utilization, efficiency)</li>
+                <li>Ticketing system for maintenance requests</li>
+                <li>Trip history and analytics</li>
+                <li>Driver assignment module</li>
+              </ul>
+              <p><strong>Success criteria:</strong> Depot managers can monitor fleet, create tickets, and generate reports.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Phase 4: Lifecycle Management (Weeks 9-12)
+            </div>
+            <div class="accordion-body">
+              <p><strong>Deliverables:</strong></p>
+              <ul>
+                <li>Warranty management system</li>
+                <li>Scheduled maintenance tracker</li>
+                <li>Service history logging</li>
+                <li>Retail operator portal (restricted views)</li>
+                <li>Spare parts inventory integration</li>
+              </ul>
+              <p><strong>Success criteria:</strong> Complete warranty and maintenance lifecycle tracking operational.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              Phase 5: Advanced Features (Weeks 13-16)
+            </div>
+            <div class="accordion-body">
+              <p><strong>Deliverables:</strong></p>
+              <ul>
+                <li>Advanced analytics dashboard (ML-based insights)</li>
+                <li>Predictive maintenance algorithms</li>
+                <li>Video telematics integration (optional)</li>
+                <li>Mobile app for drivers</li>
+                <li>API documentation and developer portal</li>
+                <li>Performance optimization and load testing</li>
+              </ul>
+              <p><strong>Success criteria:</strong> System handles 5000+ vehicles with predictive insights and video storage.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <p>JBM GOCC Product Architecture – Interactive Edition. Print using the button above to generate a PDF.</p>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script>
+  // Smooth scroll for navigation links
+  document.querySelectorAll("[data-scroll]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      var selector = el.getAttribute("data-scroll");
+      var target = document.querySelector(selector);
+      if (!target) return;
+      window.scrollTo({
+        top: target.getBoundingClientRect().top + window.scrollY - 80,
+        behavior: "smooth"
+      });
+    });
+  });
+
+  // Smooth scroll + active state for sidebar TOC
+  var tocLinks = document.querySelectorAll(".toc-link");
+  tocLinks.forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      var href = link.getAttribute("href");
+      if (!href || href.charAt(0) !== "#") return;
+      e.preventDefault();
+      var target = document.querySelector(href);
+      if (!target) return;
+      window.scrollTo({
+        top: target.getBoundingClientRect().top + window.scrollY - 80,
+        behavior: "smooth"
+      });
+    });
+  });
+
+  // Build section map for scroll-based active state
+  var sectionMap = [];
+  tocLinks.forEach(function (link) {
+    var href = link.getAttribute("href");
+    if (!href || href.charAt(0) !== "#") return;
+    var sec = document.querySelector(href);
+    if (sec) sectionMap.push({ link: link, section: sec });
+  });
+
+  // Update active TOC link based on scroll position
+  function updateToc() {
+    var scrollPos = window.scrollY + 90;
+    var active = null;
+    sectionMap.forEach(function (item) {
+      if (item.section.offsetTop <= scrollPos) active = item;
+    });
+    tocLinks.forEach(function (l) { l.classList.remove("active"); });
+    if (active && active.link) active.link.classList.add("active");
+  }
+  window.addEventListener("scroll", updateToc);
+  window.addEventListener("load", updateToc);
+
+  // Accordion functionality
+  document.querySelectorAll(".accordion-header").forEach(function (head) {
+    head.addEventListener("click", function () {
+      var item = head.parentElement;
+      var body = item.querySelector(".accordion-body");
+      var isOpen = item.classList.contains("open");
+      if (isOpen) {
+        body.style.maxHeight = "0px";
+        item.classList.remove("open");
+      } else {
+        body.style.maxHeight = body.scrollHeight + "px";
+        item.classList.add("open");
+      }
+    });
+  });
+
+  // Initialize accordion items that are marked as open
+  window.addEventListener("load", function () {
+    document.querySelectorAll(".accordion-item.open .accordion-body").forEach(function (body) {
+      body.style.maxHeight = body.scrollHeight + "px";
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+openapi: 3.0.3
+info:
+  title: JBM GOCC API
+  version: "1.0.0"
+  description: API specification for GOCC + Retail portal (workspace-based, multi-tenant).
+servers:
+  - url: https://api.gocc.example.com
+tags:
+  - name: Auth
+  - name: Workspaces
+  - name: Assets
+  - name: Vehicles
+  - name: Telemetry
+  - name: Alerts
+  - name: Warranty
+  - name: Maintenance
+  - name: Tickets
+paths:
+  /health:
+    get:
+      tags: [Auth]
+      summary: Health check
+      responses:
+        "200":
+          description: OK
+
+  /workspaces:
+    get:
+      tags: [Workspaces]
+      summary: List workspaces for current org (RLS)
+      parameters:
+        - in: query
+          name: parentId
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Workspaces
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Workspace" }
+    post:
+      tags: [Workspaces]
+      summary: Create workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/WorkspaceCreate" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Workspace" }
+
+  /workspaces/{workspaceId}/assets:
+    get:
+      tags: [Workspaces]
+      summary: List assets assigned to a workspace
+      parameters:
+        - in: path
+          name: workspaceId
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Assets
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Asset" }
+
+  /assets:
+    get:
+      tags: [Assets]
+      summary: List assets (org-scoped)
+      parameters:
+        - in: query
+          name: type
+          schema: { type: string, enum: [VEHICLE, BATTERY, CHARGER, DEVICE] }
+        - in: query
+          name: status
+          schema: { type: string }
+      responses:
+        "200":
+          description: Assets
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Asset" }
+
+  /vehicles/{vehicleId}/telemetry:
+    get:
+      tags: [Telemetry]
+      summary: Query telemetry by time range
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema: { type: integer }
+        - in: query
+          name: from
+          schema: { type: string, format: date-time }
+        - in: query
+          name: to
+          schema: { type: string, format: date-time }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 500, maximum: 5000 }
+      responses:
+        "200":
+          description: Telemetry records
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/TelemetryRecord" }
+
+  /alerts:
+    get:
+      tags: [Alerts]
+      summary: List alert events
+      parameters:
+        - in: query
+          name: vehicleId
+          schema: { type: integer }
+        - in: query
+          name: severity
+          schema: { type: string, enum: [INFO, WARN, CRITICAL] }
+      responses:
+        "200":
+          description: Alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/AlertEvent" }
+
+  /vehicles/{vehicleId}/warranty:
+    get:
+      tags: [Warranty]
+      summary: Get warranty coverage for a vehicle
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Warranty coverage
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WarrantyCoverage" }
+
+  /vehicles/{vehicleId}/services:
+    get:
+      tags: [Maintenance]
+      summary: List scheduled/overdue service jobs for a vehicle
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Service jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ServiceJob" }
+    post:
+      tags: [Maintenance]
+      summary: Create/book a service job
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ServiceJobCreate" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ServiceJob" }
+
+  /tickets:
+    get:
+      tags: [Tickets]
+      summary: List tickets (RSA/Warranty/Service)
+      parameters:
+        - in: query
+          name: type
+          schema: { type: string, enum: [RSA, WARRANTY, SERVICE, GENERAL] }
+        - in: query
+          name: status
+          schema: { type: string, enum: [OPEN, IN_PROGRESS, CLOSED] }
+      responses:
+        "200":
+          description: Tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Ticket" }
+    post:
+      tags: [Tickets]
+      summary: Create a ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TicketCreate" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Ticket" }
+
+components:
+  schemas:
+    Workspace:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        type: { type: string }
+        parentId: { type: integer, nullable: true }
+        level: { type: integer }
+        path: { type: string }
+    WorkspaceCreate:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        type: { type: string }
+        parentId: { type: integer, nullable: true }
+    Asset:
+      type: object
+      properties:
+        id: { type: integer }
+        type: { type: string }
+        sku: { type: string }
+        status: { type: string }
+        vin: { type: string, nullable: true }
+        metadata: { type: object, additionalProperties: true }
+    TelemetryRecord:
+      type: object
+      properties:
+        tsUtc: { type: string, format: date-time }
+        vehicleId: { type: integer }
+        lat: { type: number }
+        lon: { type: number }
+        socPct: { type: number }
+        speedKmph: { type: number }
+        odoKm: { type: number }
+        battTempC: { type: number }
+        rawExtra: { type: object, additionalProperties: true }
+    AlertEvent:
+      type: object
+      properties:
+        id: { type: integer }
+        occurredAt: { type: string, format: date-time }
+        vehicleId: { type: integer, nullable: true }
+        severity: { type: string }
+        rule: { type: string }
+        payload: { type: object, additionalProperties: true }
+    WarrantyCoverage:
+      type: object
+      properties:
+        coverageId: { type: integer }
+        vehicleId: { type: integer }
+        status: { type: string }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+        kmLimit: { type: number }
+    ServiceJob:
+      type: object
+      properties:
+        id: { type: integer }
+        vehicleId: { type: integer }
+        plannedDate: { type: string, format: date }
+        dueKm: { type: number }
+        status: { type: string, enum: [PLANNED, OVERDUE, COMPLETED] }
+        createdSource: { type: string }
+    ServiceJobCreate:
+      type: object
+      required: [plannedDate]
+      properties:
+        plannedDate: { type: string, format: date }
+        notes: { type: string }
+    Ticket:
+      type: object
+      properties:
+        id: { type: integer }
+        type: { type: string }
+        status: { type: string }
+        priority: { type: string }
+        subject: { type: string }
+        relatedVehicleId: { type: integer, nullable: true }
+        openedAt: { type: string, format: date-time }
+        closedAt: { type: string, format: date-time, nullable: true }
+    TicketCreate:
+      type: object
+      required: [type, subject]
+      properties:
+        type: { type: string, enum: [RSA, WARRANTY, SERVICE, GENERAL] }
+        subject: { type: string }
+        relatedVehicleId: { type: integer, nullable: true }
+        description: { type: string }
+        channel: { type: string, enum: [GOCC, RETAIL, APP] }

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add User – ConnectM</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Inter, sans-serif;
+}
+
+/* ===== AURORA BACKGROUND ===== */
+
+body{
+margin:0;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+background:#020617;
+}
+
+.aurora{
+position:fixed;
+inset:-50%;
+filter:blur(120px);
+z-index:-1;
+background:
+radial-gradient(circle at 20% 30%, #22d3ee 0%, transparent 40%),
+radial-gradient(circle at 70% 40%, #3b82f6 0%, transparent 45%),
+radial-gradient(circle at 50% 70%, #facc15 0%, transparent 45%);
+animation:auroraMove 18s ease-in-out infinite alternate;
+}
+
+@keyframes auroraMove{
+0%{transform:translate(0,0);}
+100%{transform:translate(200px,-150px);}
+}
+
+/* ===== CARD ===== */
+
+.container{
+width:100%;
+max-width:1100px;
+padding:20px;
+}
+
+.section-card{
+background:rgba(255,255,255,.92);
+backdrop-filter:blur(12px);
+border-radius:18px;
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+max-width:420px;
+margin:auto;
+}
+
+.section-header{
+padding:30px;
+border-bottom:1px solid #eee;
+text-align:center;
+}
+
+.logo-img{
+width:160px;
+margin-bottom:8px;
+}
+
+.section-tag{
+font-size:13px;
+color:#666;
+margin-top:4px;
+}
+
+.section-body{
+padding:28px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:16px;
+border:1px solid #ddd;
+border-radius:10px;
+font-size:14px;
+}
+
+input:focus{
+outline:none;
+border-color:#2563eb;
+}
+
+/* BUTTON */
+
+.hero-btn{
+padding:12px;
+border-radius:12px;
+border:none;
+font-weight:600;
+cursor:pointer;
+}
+
+.hero-btn.primary{
+background:linear-gradient(135deg,#22d3ee,#2563eb);
+color:white;
+width:100%;
+}
+
+.hero-btn.primary:hover{
+opacity:.9;
+}
+
+.back-link{
+display:block;
+text-align:center;
+margin-top:15px;
+font-size:13px;
+color:#666;
+text-decoration:none;
+}
+
+.footer{
+text-align:center;
+margin-top:18px;
+font-size:12px;
+color:#888;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="aurora"></div>
+
+<div class="container">
+
+  <div class="section-card">
+
+    <div class="section-header">
+
+      <img
+        src="https://www.connectm.com/wp-content/uploads/2025/11/logo-ConnectM-1.svg"
+        alt="ConnectM logo"
+        class="logo-img"
+      />
+
+      <div class="section-tag">Add New User</div>
+
+    </div>
+
+    <div class="section-body">
+
+      <form method="post">
+
+        <input name="username" placeholder="New Username" required>
+
+        <input type="password" name="password" placeholder="New Password" required>
+
+        <button class="hero-btn primary">Create User</button>
+
+      </form>
+
+      <a href="/" class="back-link">← Back to Dashboard</a>
+
+      <div class="footer">
+        © ConnectM
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ConnectM — Asset & Product Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  background: #020617;
+  color: #e2e8f0;
+  overflow-x: hidden;
+}
+
+/* ── Aurora ── */
+.aurora {
+  position: fixed; inset: -50%; filter: blur(120px); z-index: -1;
+  background:
+    radial-gradient(circle at 20% 30%, #22d3ee 0%, transparent 40%),
+    radial-gradient(circle at 70% 40%, #3b82f6 0%, transparent 45%),
+    radial-gradient(circle at 50% 70%, #facc15 0%, transparent 45%);
+  animation: auroraMove 18s ease-in-out infinite alternate;
+}
+@keyframes auroraMove {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(200px, -150px); }
+}
+
+/* ── Top nav ── */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(2,6,23,0.82); backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 0 36px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.topnav-brand {
+  font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+  background: linear-gradient(135deg, #22d3ee, #3b82f6);
+  background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.topnav-sub { font-size: 12px; color: #64748b; margin-left: 14px; }
+.topnav-right { display: flex; align-items: center; gap: 14px; }
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg,#22d3ee,#2563eb);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+}
+
+/* ── Tab bar ── */
+.tabbar {
+  display: flex; align-items: center;
+  background: rgba(2,6,23,0.55); backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0 36px; overflow-x: auto;
+}
+.tab {
+  padding: 14px 22px; font-size: 13px; font-weight: 600;
+  color: #64748b; cursor: pointer; border-bottom: 2px solid transparent;
+  white-space: nowrap; transition: all 0.2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.tab:hover { color: #cbd5e1; }
+.tab.active { color: #7dd3fc; border-bottom-color: #3b82f6; }
+.tab .tab-count {
+  background: rgba(37,99,235,0.2); color: #7dd3fc;
+  font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px;
+}
+
+/* ── Layout ── */
+.layout { display: flex; min-height: calc(100vh - 109px); }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 260px; flex-shrink: 0;
+  background: rgba(255,255,255,0.03);
+  border-right: 1px solid rgba(255,255,255,0.06);
+  padding: 28px 0;
+  position: sticky; top: 109px;
+  height: calc(100vh - 109px); overflow-y: auto;
+}
+.sidebar-group-title {
+  font-size: 9.5px; letter-spacing: 1.5px; font-weight: 700;
+  color: #334155; text-transform: uppercase; padding: 0 20px 10px;
+}
+.sidebar-item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 10px 20px; cursor: pointer;
+  font-size: 13px; font-weight: 500; color: #64748b;
+  transition: all 0.18s; margin-bottom: 2px;
+}
+.sidebar-item i { width: 16px; text-align: center; font-size: 13px; }
+.sidebar-item:hover { background: rgba(255,255,255,0.05); color: #cbd5e1; }
+.sidebar-item.active {
+  background: rgba(37,99,235,0.18); color: #7dd3fc;
+  border-left: 3px solid #2563eb; padding-left: 17px;
+}
+.sidebar-item .pill {
+  margin-left: auto; font-size: 9px; font-weight: 700;
+  padding: 2px 7px; border-radius: 10px;
+}
+.pill-blue  { background: rgba(34,211,238,0.15); color: #22d3ee; }
+.pill-red   { background: rgba(239,68,68,0.15);  color: #f87171; }
+.pill-yellow{ background: rgba(250,204,21,0.15);  color: #facc15; }
+.sidebar-divider { height: 1px; background: rgba(255,255,255,0.05); margin: 14px 20px; }
+
+/* ── Main ── */
+.main { flex: 1; padding: 32px 40px; overflow-y: auto; }
+
+/* ── Views ── */
+.view { display: none; animation: fadeIn 0.3s ease; }
+.view.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+/* ── Page header ── */
+.page-header { margin-bottom: 28px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.page-header h2 { font-family: 'Syne',sans-serif; font-size: 24px; font-weight: 800; color: #f8fafc; margin-bottom: 4px; }
+.page-header p { font-size: 13px; color: #64748b; }
+.page-header-actions { display: flex; gap: 10px; flex-shrink: 0; }
+
+/* ── Asset identity bar ── */
+.asset-bar {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; padding: 16px 24px;
+  display: flex; align-items: center; gap: 20px;
+  margin-bottom: 24px; flex-wrap: wrap;
+}
+.asset-bar-id { font-family: 'Syne',sans-serif; font-size: 18px; font-weight: 800; color: #f8fafc; }
+.asset-bar-sep { color: #334155; font-size: 18px; }
+.asset-bar-meta { font-size: 12.5px; color: #64748b; }
+.asset-bar-meta span { color: #94a3b8; font-weight: 500; }
+
+/* ── Cards ── */
+.card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  margin-bottom: 22px; overflow: hidden; color: #1e293b;
+}
+.card-header {
+  padding: 18px 24px 14px; border-bottom: 1px solid #f1f5f9;
+  display: flex; align-items: center; gap: 12px;
+}
+.card-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg,#22d3ee22,#3b82f622);
+  display: flex; align-items: center; justify-content: center;
+  color: #2563eb; font-size: 15px; flex-shrink: 0;
+}
+.card-title { font-family: 'Syne',sans-serif; font-size: 15px; font-weight: 700; color: #0f172a; }
+.card-subtitle { font-size: 11.5px; color: #94a3b8; margin-top: 1px; }
+.card-body { padding: 22px 24px; }
+.card-header-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+/* ── KPI row ── */
+.kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 22px; }
+.kpi-tile {
+  background: rgba(255,255,255,0.92);
+  border-radius: 16px; padding: 18px 20px;
+  box-shadow: 0 16px 32px rgba(0,0,0,0.2); color: #1e293b;
+}
+.kpi-tile-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b; margin-bottom: 8px; }
+.kpi-tile-val { font-size: 28px; font-weight: 800; color: #0f172a; line-height: 1; }
+.kpi-tile-sub { font-size: 11.5px; color: #94a3b8; margin-top: 5px; }
+.delta-up   { color: #16a34a; font-weight: 700; }
+.delta-down { color: #dc2626; font-weight: 700; }
+
+/* ── Two-col layout ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+
+/* ── Product mix col (col-4/col-8) ── */
+.product-layout { display: grid; grid-template-columns: 320px 1fr; gap: 22px; }
+
+/* ── Chips ── */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: 20px; font-size: 11px; font-weight: 700;
+}
+.chip-blue   { background: #dbeafe; color: #1d4ed8; }
+.chip-green  { background: #dcfce7; color: #15803d; }
+.chip-red    { background: #fee2e2; color: #dc2626; }
+.chip-yellow { background: #fef9c3; color: #92400e; }
+.chip-gray   { background: #f1f5f9; color: #475569; }
+.chip-cyan   { background: #cffafe; color: #0e7490; }
+.chip-orange { background: #ffedd5; color: #c2410c; }
+.chip-void   { background: #fee2e2; color: #dc2626; font-size: 10px; }
+.chip-active { background: #dcfce7; color: #15803d; font-size: 10px; }
+
+/* ── Tables ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th {
+  background: #f8fafc; color: #64748b;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.7px; padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+.data-table td { padding: 11px 14px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #f8fafc; }
+
+/* ── SOH progress bar ── */
+.soh-bar { display: flex; align-items: center; gap: 8px; }
+.soh-bar-track {
+  flex: 1; height: 5px; background: #e2e8f0; border-radius: 3px; overflow: hidden;
+}
+.soh-bar-fill { height: 100%; border-radius: 3px; }
+
+/* ── Map placeholder ── */
+.map-placeholder {
+  background: linear-gradient(135deg, #dbeafe, #eff6ff);
+  border-radius: 12px; height: 220px;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 10px; color: #1e40af;
+  border: 1.5px dashed #bfdbfe;
+}
+.map-placeholder i { font-size: 32px; opacity: 0.5; }
+.map-placeholder p { font-size: 13px; font-weight: 600; opacity: 0.7; }
+
+/* ── Timeline ── */
+.timeline { list-style: none; padding: 0; position: relative; }
+.timeline::before {
+  content: ''; position: absolute; left: 9px; top: 4px;
+  bottom: 4px; width: 2px; background: #e2e8f0; border-radius: 2px;
+}
+.timeline li {
+  padding: 0 0 16px 30px; position: relative;
+  font-size: 13px; color: #334155;
+}
+.timeline li:last-child { padding-bottom: 0; }
+.timeline li::before {
+  content: ''; position: absolute; left: 4px; top: 4px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: #3b82f6; border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #3b82f620;
+}
+.timeline li .tl-date { font-size: 10.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.timeline li .tl-text { font-weight: 500; }
+
+/* ── Add asset search ── */
+.search-add-row {
+  display: flex; gap: 10px; margin-bottom: 18px;
+}
+.search-input {
+  flex: 1; padding: 11px 16px;
+  border: 1.5px solid #e2e8f0; border-radius: 11px;
+  font-size: 13.5px; font-family: 'DM Sans',sans-serif;
+  background: #f8fafc; color: #1e293b; outline: none;
+  transition: border 0.2s;
+}
+.search-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.12); background: #fff; }
+
+/* ── Product mix SVG donut ── */
+.product-mix-wrap { display: flex; justify-content: center; margin-bottom: 20px; position: relative; }
+.product-mix-wrap svg { width: 160px; height: 160px; }
+.product-mix-center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); text-align: center;
+}
+.product-mix-center .val { font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1; }
+.product-mix-center .lbl { font-size: 9.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+.mix-legend { display: flex; flex-direction: column; gap: 10px; }
+.mix-legend-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: #334155; }
+.mix-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Buttons ── */
+.btn {
+  padding: 10px 20px; border-radius: 11px; border: none;
+  font-weight: 600; font-size: 13px; cursor: pointer;
+  transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'DM Sans',sans-serif;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #22d3ee, #2563eb);
+  color: #fff; box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(37,99,235,0.4); }
+.btn-ghost { background: transparent; color: #94a3b8; border: 1.5px solid rgba(255,255,255,0.12); }
+.btn-ghost:hover { background: rgba(255,255,255,0.06); color: #e2e8f0; }
+.btn-ghost-dark { background: transparent; color: #475569; border: 1.5px solid #e2e8f0; }
+.btn-ghost-dark:hover { background: #f8fafc; }
+.btn-sm { padding: 6px 13px; font-size: 12px; }
+.btn-xs { padding: 4px 10px; font-size: 11px; border-radius: 8px; }
+
+/* ── Chart wrap ── */
+.chart-wrap { position: relative; height: 180px; }
+.chart-wrap-sm { position: relative; height: 140px; }
+
+/* ── Sidebar telemetry section ── */
+.telem-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 12.5px;
+}
+.telem-row:last-child { border-bottom: none; }
+.telem-row .k { color: #64748b; }
+.telem-row .v { font-weight: 600; color: #f8fafc; }
+.telem-row .v.green { color: #4ade80; }
+.telem-row .v.blue  { color: #7dd3fc; }
+.telem-row .v.yellow{ color: #fbbf24; }
+.telem-row .v.red   { color: #f87171; }
+
+/* ── Asset detail panel ── */
+.detail-panel {
+  background: rgba(2,6,23,0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px; padding: 22px;
+  color: #e2e8f0; position: sticky; top: 20px;
+}
+.detail-panel h4 {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  color: #22d3ee; text-transform: uppercase; margin-bottom: 14px;
+}
+.detail-panel .asset-name { font-family:'Syne',sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 3px; }
+.detail-panel .asset-sub  { font-size: 11.5px; color: #475569; margin-bottom: 16px; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+@media(max-width:900px){
+  .sidebar { display:none; }
+  .kpi-row { grid-template-columns:1fr 1fr; }
+  .two-col,.three-col,.product-layout { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<div class="aurora"></div>
+
+<!-- ── TOP NAV ── -->
+<nav class="topnav">
+  <div style="display:flex;align-items:center;gap:6px">
+    <span class="topnav-brand">ConnectM</span>
+    <span class="topnav-sub">/ Asset &amp; Product Dashboard</span>
+  </div>
+  <div class="topnav-right">
+    <button class="btn btn-ghost" style="font-size:12px;padding:7px 14px"><i class="fas fa-bell"></i></button>
+    <button class="btn btn-primary" style="font-size:12px;padding:7px 16px"><i class="fas fa-plus"></i> Add Asset</button>
+    <div class="avatar">JB</div>
+  </div>
+</nav>
+
+<!-- ── TAB BAR ── -->
+<div class="tabbar">
+  <div class="tab active" onclick="switchTab('asset')"><i class="fas fa-car-battery"></i> Asset Dashboard</div>
+  <div class="tab" onclick="switchTab('product')"><i class="fas fa-box-open"></i> Product Dashboard</div>
+  <div class="tab" onclick="switchTab('workspace')"><i class="fas fa-folder-plus"></i> Assets of Interest <span class="tab-count">2</span></div>
+</div>
+
+<!-- ── LAYOUT ── -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-group-title">Asset View</div>
+    <div class="sidebar-item active" onclick="switchTab('asset')"><i class="fas fa-info-circle"></i> Asset Overview</div>
+    <div class="sidebar-item" onclick="switchTab('asset')"><i class="fas fa-wave-square"></i> Telemetry</div>
+    <div class="sidebar-item" onclick="switchTab('asset')"><i class="fas fa-shield-alt"></i> Warranty &amp; Claims <span class="pill pill-red">2</span></div>
+    <div class="sidebar-item" onclick="switchTab('asset')"><i class="fas fa-bell"></i> Events &amp; Alerts</div>
+    <div class="sidebar-item" onclick="switchTab('asset')"><i class="fas fa-history"></i> Transfer History</div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-group-title">Product View</div>
+    <div class="sidebar-item" onclick="switchTab('product')"><i class="fas fa-heartbeat"></i> Fleet Health <span class="pill pill-blue">92%</span></div>
+    <div class="sidebar-item" onclick="switchTab('product')"><i class="fas fa-th-large"></i> Product Mix</div>
+    <div class="sidebar-item" onclick="switchTab('product')"><i class="fas fa-file-exclamation"></i> Pending Renewals <span class="pill pill-yellow">14</span></div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-group-title">Workspace</div>
+    <div class="sidebar-item" onclick="switchTab('workspace')"><i class="fas fa-search-plus"></i> Assets of Interest</div>
+    <div class="sidebar-item" onclick="switchTab('workspace')"><i class="fas fa-stream"></i> Activity Timeline</div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- ══════════════════ ASSET DASHBOARD ══════════════════ -->
+    <div class="view active" id="view-asset">
+      <div class="page-header">
+        <div>
+          <h2>Asset Dashboard</h2>
+          <p>Deep-dive telemetry, warranty, and location for a single asset unit</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-ghost-dark btn-sm"><i class="fas fa-download"></i> Export</button>
+          <button class="btn btn-primary btn-sm"><i class="fas fa-file-invoice"></i> Raise Claim</button>
+        </div>
+      </div>
+
+      <!-- Asset identity bar -->
+      <div class="asset-bar">
+        <span class="asset-bar-id">EXD-BAT-000234</span>
+        <span class="asset-bar-sep">·</span>
+        <span class="asset-bar-meta"><span>Product</span> EV LFP Battery 48V/100Ah</span>
+        <span class="asset-bar-sep">·</span>
+        <span class="asset-bar-meta"><span>OEM</span> Exide Industries</span>
+        <span class="asset-bar-sep">·</span>
+        <span class="asset-bar-meta"><span>Workspace</span> Dealer – Bangalore North</span>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <span class="chip chip-green"><i class="fas fa-circle" style="font-size:7px"></i> Operational</span>
+          <span class="chip chip-blue">In Warranty</span>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-row">
+        <div class="kpi-tile">
+          <div class="kpi-tile-label">State of Health</div>
+          <div class="kpi-tile-val" style="color:#16a34a">91%</div>
+          <div class="kpi-tile-sub"><span class="delta-down">↓ 4%</span> over 5 weeks</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-tile-label">Charge Cycles</div>
+          <div class="kpi-tile-val">1,248</div>
+          <div class="kpi-tile-sub">of 1,500 max</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-tile-label">Current Status</div>
+          <div class="kpi-tile-val" style="font-size:20px">Operational</div>
+          <div class="kpi-tile-sub"><span class="delta-up">Active</span> · No faults</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-tile-label">Warranty State</div>
+          <div class="kpi-tile-val" style="font-size:20px">In Warranty</div>
+          <div class="kpi-tile-sub">Expires Jan 2028</div>
+        </div>
+      </div>
+
+      <!-- Telemetry chart + live panel -->
+      <div class="product-layout" style="grid-template-columns:1fr 280px">
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon"><i class="fas fa-heartbeat"></i></div>
+              <div>
+                <div class="card-title">Battery Health Trend</div>
+                <div class="card-subtitle">SOH % over time — 5-week rolling</div>
+              </div>
+              <div class="card-header-right">
+                <span class="chip chip-blue" style="font-size:10px">Live</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrap">
+                <canvas id="healthChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Voltage + Temp charts row -->
+          <div class="two-col">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-icon" style="color:#f59e0b;background:linear-gradient(135deg,#fef9c322,#92400e22)"><i class="fas fa-bolt"></i></div>
+                <div><div class="card-title">Voltage & Current</div><div class="card-subtitle">Last 24h</div></div>
+              </div>
+              <div class="card-body">
+                <div class="chart-wrap-sm"><canvas id="voltChart"></canvas></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-icon" style="color:#ef4444;background:linear-gradient(135deg,#fee2e222,#dc262622)"><i class="fas fa-thermometer-half"></i></div>
+                <div><div class="card-title">Cell Temperature</div><div class="card-subtitle">Max cell temp trend</div></div>
+              </div>
+              <div class="card-body">
+                <div class="chart-wrap-sm"><canvas id="tempChart"></canvas></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Warranty & Claims -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon" style="color:#16a34a;background:linear-gradient(135deg,#dcfce722,#15803d22)"><i class="fas fa-shield-alt"></i></div>
+              <div><div class="card-title">Warranty &amp; Claims</div><div class="card-subtitle">All claims linked to this asset</div></div>
+              <div class="card-header-right">
+                <button class="btn btn-ghost-dark btn-sm"><i class="fas fa-plus"></i> Raise Claim</button>
+              </div>
+            </div>
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Claim ID</th><th>Type</th><th>Status</th>
+                    <th>Detected By</th><th>Date</th><th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>CLM-1092</strong></td>
+                    <td><span class="chip chip-orange">Over-Temp</span></td>
+                    <td><span class="chip chip-green">Approved</span></td>
+                    <td>IoT Rule</td><td>12-Jan-2026</td>
+                    <td><button class="btn btn-ghost-dark btn-xs">View</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>CLM-1034</strong></td>
+                    <td><span class="chip chip-red">Abuse</span></td>
+                    <td><span class="chip chip-red">Rejected</span></td>
+                    <td>AI Pattern</td><td>02-Dec-2025</td>
+                    <td><button class="btn btn-ghost-dark btn-xs">View</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Live location -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div><div class="card-title">Live Location</div><div class="card-subtitle">GPS / Telematics Integration</div></div>
+              <div class="card-header-right">
+                <span class="chip chip-cyan" style="font-size:10px"><i class="fas fa-satellite-dish" style="font-size:9px"></i> Live GPS</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="map-placeholder">
+                <i class="fas fa-map-marked-alt"></i>
+                <p>Bangalore North · Last ping 2 min ago</p>
+                <span class="chip chip-green" style="font-size:10px">12.9716° N, 77.5946° E</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live telemetry panel -->
+        <div>
+          <div class="detail-panel">
+            <h4>Live Telemetry</h4>
+            <div class="asset-name">EXD-BAT-000234</div>
+            <div class="asset-sub">EV LFP · 48V / 100Ah</div>
+            <div class="telem-row"><span class="k">Voltage</span><span class="v green">47.9 V</span></div>
+            <div class="telem-row"><span class="k">Current</span><span class="v">42.3 A</span></div>
+            <div class="telem-row"><span class="k">SOC</span><span class="v green">82%</span></div>
+            <div class="telem-row"><span class="k">SOH</span><span class="v green">91%</span></div>
+            <div class="telem-row"><span class="k">Cell Temp (max)</span><span class="v yellow">38 °C</span></div>
+            <div class="telem-row"><span class="k">Charge Cycles</span><span class="v">1,248</span></div>
+            <div class="telem-row"><span class="k">Cell Imbalance</span><span class="v green">12 mV</span></div>
+            <div class="telem-row"><span class="k">Connectivity</span><span class="v blue">4G-LTE · Online</span></div>
+            <div style="margin-top:16px">
+              <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#64748b;text-transform:uppercase;margin-bottom:10px">Events</div>
+              <div style="font-size:11.5px;color:#94a3b8;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+                <span style="color:#fbbf24">⚡</span> Thermal alert — 13 Jan
+              </div>
+              <div style="font-size:11.5px;color:#94a3b8;padding:6px 0">
+                <span style="color:#4ade80">✓</span> Charge completed — 14 Jan
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ PRODUCT DASHBOARD ══════════════════ -->
+    <div class="view" id="view-product">
+      <div class="page-header">
+        <div>
+          <h2>Product Dashboard</h2>
+          <p>Fleet-wide health, product mix breakdown, and operational monitor</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-ghost-dark btn-sm"><i class="fas fa-download"></i> Export</button>
+          <button class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> Refresh</button>
+        </div>
+      </div>
+
+      <!-- KPI tiles -->
+      <div class="kpi-row">
+        <div class="kpi-tile">
+          <div class="kpi-tile-label">Total Fleet Health</div>
+          <div class="kpi-tile-val" style="color:#16a34a">92.4%</div>
+          <div class="kpi-tile-sub"><span class="delta-up">↑ 2.1%</span> from last month</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-tile-label">Pending Renewals</div>
+          <div class="kpi-tile-val" style="color:#ea580c">14</div>
+          <div class="kpi-tile-sub">Insurance &amp; Fitness &lt; 30 days</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-tile-label">Total Assets</div>
+          <div class="kpi-tile-val">1,400</div>
+          <div class="kpi-tile-sub">Across 3 product types</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-tile-label">Void Warnings</div>
+          <div class="kpi-tile-val" style="color:#dc2626">3</div>
+          <div class="kpi-tile-sub"><span class="delta-down">Needs review</span></div>
+        </div>
+      </div>
+
+      <!-- Product mix + Operational health table -->
+      <div class="product-layout">
+        <!-- Product mix card -->
+        <div class="card" style="align-self:start">
+          <div class="card-header">
+            <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
+            <div><div class="card-title">Product Mix</div><div class="card-subtitle">Fleet composition by type</div></div>
+          </div>
+          <div class="card-body">
+            <div class="product-mix-wrap">
+              <svg viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#f1f5f9" stroke-width="4"/>
+                <!-- EV 2W: 40% -->
+                <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#3b82f6" stroke-width="4"
+                  stroke-dasharray="40 100" stroke-dashoffset="0" transform="rotate(-90 18 18)"/>
+                <!-- EV 3W: 30% -->
+                <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#22c55e" stroke-width="4"
+                  stroke-dasharray="30 100" stroke-dashoffset="-40" transform="rotate(-90 18 18)"/>
+                <!-- Batteries: 30% -->
+                <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#f59e0b" stroke-width="4"
+                  stroke-dasharray="30 100" stroke-dashoffset="-70" transform="rotate(-90 18 18)"/>
+              </svg>
+              <div class="product-mix-center">
+                <div class="val">1.4k</div>
+                <div class="lbl">Assets</div>
+              </div>
+            </div>
+            <div class="mix-legend">
+              <div class="mix-legend-item">
+                <span style="display:flex;align-items:center;gap:8px"><span class="mix-dot" style="background:#3b82f6"></span>EV 2-Wheeler</span>
+                <span style="color:#94a3b8">560</span>
+              </div>
+              <div class="mix-legend-item">
+                <span style="display:flex;align-items:center;gap:8px"><span class="mix-dot" style="background:#22c55e"></span>EV 3-Wheeler</span>
+                <span style="color:#94a3b8">420</span>
+              </div>
+              <div class="mix-legend-item">
+                <span style="display:flex;align-items:center;gap:8px"><span class="mix-dot" style="background:#f59e0b"></span>Standalone Batteries</span>
+                <span style="color:#94a3b8">420</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operational health monitor -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="color:#16a34a;background:linear-gradient(135deg,#dcfce722,#15803d22)"><i class="fas fa-monitor-heart-rate"></i></div>
+            <div><div class="card-title">Operational Health Monitor</div><div class="card-subtitle">Live stream — all active assets</div></div>
+            <div class="card-header-right">
+              <span class="chip chip-cyan" style="font-size:10px">Live Stream</span>
+              <button class="btn btn-ghost-dark btn-sm">View All <i class="fas fa-external-link-alt"></i></button>
+            </div>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Asset ID</th>
+                  <th>Product Type</th>
+                  <th>Core Metric (IoT)</th>
+                  <th>Warranty Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>#BATT-4492</strong></td>
+                  <td><span class="chip chip-orange">Battery</span></td>
+                  <td>
+                    <div class="soh-bar">
+                      <span style="font-size:13px;font-weight:700;color:#1e293b">82% <span style="font-size:10px;color:#94a3b8;font-weight:500">SoH</span></span>
+                      <div class="soh-bar-track"><div class="soh-bar-fill" style="width:82%;background:#f59e0b"></div></div>
+                    </div>
+                  </td>
+                  <td><span class="chip-active chip">Active</span></td>
+                  <td><button class="btn btn-ghost-dark btn-xs"><i class="fas fa-chevron-right"></i></button></td>
+                </tr>
+                <tr>
+                  <td><strong>#ACE-EV-001</strong></td>
+                  <td><span class="chip chip-blue">LCV (Ace)</span></td>
+                  <td><span style="font-size:13px;font-weight:700;color:#1e293b">45.2 <span style="font-size:10px;color:#94a3b8;font-weight:500">KM Today</span></span></td>
+                  <td><span class="chip-void chip">Void Warning</span></td>
+                  <td><button class="btn btn-ghost-dark btn-xs"><i class="fas fa-chevron-right"></i></button></td>
+                </tr>
+                <tr>
+                  <td><strong>#EV3W-0821</strong></td>
+                  <td><span class="chip chip-green">3-Wheeler</span></td>
+                  <td>
+                    <div class="soh-bar">
+                      <span style="font-size:13px;font-weight:700;color:#1e293b">94% <span style="font-size:10px;color:#94a3b8;font-weight:500">SoH</span></span>
+                      <div class="soh-bar-track"><div class="soh-bar-fill" style="width:94%;background:#22c55e"></div></div>
+                    </div>
+                  </td>
+                  <td><span class="chip-active chip">Active</span></td>
+                  <td><button class="btn btn-ghost-dark btn-xs"><i class="fas fa-chevron-right"></i></button></td>
+                </tr>
+                <tr>
+                  <td><strong>#BATT-3310</strong></td>
+                  <td><span class="chip chip-orange">Battery</span></td>
+                  <td>
+                    <div class="soh-bar">
+                      <span style="font-size:13px;font-weight:700;color:#dc2626">68% <span style="font-size:10px;color:#94a3b8;font-weight:500">SoH</span></span>
+                      <div class="soh-bar-track"><div class="soh-bar-fill" style="width:68%;background:#ef4444"></div></div>
+                    </div>
+                  </td>
+                  <td><span class="chip-void chip">Void Warning</span></td>
+                  <td><button class="btn btn-ghost-dark btn-xs"><i class="fas fa-chevron-right"></i></button></td>
+                </tr>
+                <tr>
+                  <td><strong>#EV2W-1102</strong></td>
+                  <td><span class="chip chip-cyan">2-Wheeler</span></td>
+                  <td><span style="font-size:13px;font-weight:700;color:#1e293b">38.7 <span style="font-size:10px;color:#94a3b8;font-weight:500">KM Today</span></span></td>
+                  <td><span class="chip-active chip">Active</span></td>
+                  <td><button class="btn btn-ghost-dark btn-xs"><i class="fas fa-chevron-right"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fleet health trend chart -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+          <div><div class="card-title">Fleet Health Trend</div><div class="card-subtitle">Average SOH % across all product types — last 6 weeks</div></div>
+        </div>
+        <div class="card-body">
+          <div class="chart-wrap"><canvas id="fleetHealthChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ ASSETS OF INTEREST ══════════════════ -->
+    <div class="view" id="view-workspace">
+      <div class="page-header">
+        <div>
+          <h2>Assets of Interest</h2>
+          <p>Manually tracked or rule-triggered assets within this workspace</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-primary btn-sm" onclick="handleAddAsset()"><i class="fas fa-plus"></i> Add Asset</button>
+        </div>
+      </div>
+
+      <!-- Add asset row -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon"><i class="fas fa-search-plus"></i></div>
+          <div><div class="card-title">Search &amp; Add Asset</div><div class="card-subtitle">Search by Asset ID, VIN, or Battery ID</div></div>
+        </div>
+        <div class="card-body">
+          <div class="search-add-row">
+            <input class="search-input" id="assetSearch" placeholder="e.g. EXD-BAT-00231 · VIN12345 · Battery ID">
+            <select id="assetReason" style="padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:11px;font-size:13px;font-family:'DM Sans',sans-serif;background:#f8fafc;color:#334155;outline:none">
+              <option value="">Reason for tracking...</option>
+              <option>Repeated thermal alerts</option>
+              <option>SOH drop &gt; 9%</option>
+              <option>Customer complaint</option>
+              <option>Manual review</option>
+              <option>Rule-triggered</option>
+            </select>
+            <button class="btn btn-primary" onclick="handleAddAsset()"><i class="fas fa-plus"></i> Add Asset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assets table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="color:#f59e0b;background:linear-gradient(135deg,#fef9c322,#92400e22)"><i class="fas fa-star"></i></div>
+          <div><div class="card-title">Tracked Assets</div><div class="card-subtitle">Assets added manually or via rules</div></div>
+          <div class="card-header-right">
+            <button class="btn btn-ghost-dark btn-sm"><i class="fas fa-filter"></i> Filter</button>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0">
+          <table class="data-table" id="assetsOfInterestTable">
+            <thead>
+              <tr><th>Asset ID</th><th>Reason for Tracking</th><th>Source</th><th>Added</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody id="assetsOfInterestBody">
+              <tr>
+                <td><strong>EXD-BAT-00231</strong></td>
+                <td>Repeated thermal alerts</td>
+                <td><span class="chip chip-gray">Manual</span></td>
+                <td>13 Jan 2026</td>
+                <td><span class="chip chip-red">Needs Attention</span></td>
+                <td><button class="btn btn-ghost-dark btn-xs">View</button></td>
+              </tr>
+              <tr>
+                <td><strong>EXD-BAT-00245</strong></td>
+                <td>SOH drop &gt; 9%</td>
+                <td><span class="chip chip-blue">Rule</span></td>
+                <td>14 Jan 2026</td>
+                <td><span class="chip chip-yellow">Monitoring</span></td>
+                <td><button class="btn btn-ghost-dark btn-xs">View</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Activity timeline -->
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fas fa-stream"></i></div>
+            <div><div class="card-title">Workspace Activity Timeline</div><div class="card-subtitle">Recent actions in this workspace</div></div>
+          </div>
+          <div class="card-body">
+            <ul class="timeline">
+              <li>
+                <div class="tl-date">15 Jan 2026</div>
+                <div class="tl-text">Claim <strong>CLM-1092</strong> approved by ConnectM</div>
+              </li>
+              <li>
+                <div class="tl-date">14 Jan 2026</div>
+                <div class="tl-text">Claim raised from workspace — Over-Temp event on EXD-BAT-00231</div>
+              </li>
+              <li>
+                <div class="tl-date">13 Jan 2026</div>
+                <div class="tl-text">Dealer added asset <strong>EXD-BAT-00231</strong> to tracked list</div>
+              </li>
+              <li>
+                <div class="tl-date">12 Jan 2026</div>
+                <div class="tl-text">OEM user reviewed SOH trend for Bangalore North workspace</div>
+              </li>
+              <li>
+                <div class="tl-date">11 Jan 2026</div>
+                <div class="tl-text">Rule triggered: SOH drop &gt; 9% — EXD-BAT-00245 auto-added</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+            <div><div class="card-title">Workspace Summary</div><div class="card-subtitle">Aggregated stats for tracked assets</div></div>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#f8fafc;border-radius:12px;border:1.5px solid #e2e8f0">
+                <span style="font-size:13px;font-weight:600;color:#334155"><i class="fas fa-star" style="color:#f59e0b;margin-right:8px"></i>Tracked Assets</span>
+                <span style="font-size:22px;font-weight:800;color:#0f172a">2</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#fef2f2;border-radius:12px;border:1.5px solid #fecaca">
+                <span style="font-size:13px;font-weight:600;color:#dc2626"><i class="fas fa-exclamation-triangle" style="margin-right:8px"></i>Need Attention</span>
+                <span style="font-size:22px;font-weight:800;color:#dc2626">1</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#fffbeb;border-radius:12px;border:1.5px solid #fde68a">
+                <span style="font-size:13px;font-weight:600;color:#92400e"><i class="fas fa-eye" style="margin-right:8px"></i>Under Monitoring</span>
+                <span style="font-size:22px;font-weight:800;color:#92400e">1</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#eff6ff;border-radius:12px;border:1.5px solid #bfdbfe">
+                <span style="font-size:13px;font-weight:600;color:#1d4ed8"><i class="fas fa-file-invoice" style="margin-right:8px"></i>Claims Raised</span>
+                <span style="font-size:22px;font-weight:800;color:#1d4ed8">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+/* ── Tab switching ── */
+function switchTab(tab) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + tab).classList.add('active');
+  const tabs = ['asset','product','workspace'];
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', tabs[i] === tab));
+  const sidebarMap = [
+    ['asset'],['asset'],['asset'],['asset'],['asset'],
+    ['product'],['product'],['product'],
+    ['workspace'],['workspace']
+  ];
+  document.querySelectorAll('.sidebar-item').forEach((s, i) => {
+    s.classList.toggle('active', sidebarMap[i]?.includes(tab));
+  });
+}
+
+/* ── Add Asset ── */
+let assetCount = 2;
+function handleAddAsset() {
+  const search = document.getElementById('assetSearch');
+  const reason = document.getElementById('assetReason');
+  const id = (search.value.trim() || `EXD-BAT-0030${assetCount + 1}`);
+  const rsn = reason.value || 'Manual review';
+  const body = document.getElementById('assetsOfInterestBody');
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  const tr = document.createElement('tr');
+  tr.style.animation = 'fadeIn 0.3s ease';
+  tr.innerHTML = `
+    <td><strong>${id}</strong></td>
+    <td>${rsn}</td>
+    <td><span class="chip chip-gray">Manual</span></td>
+    <td>${dateStr}</td>
+    <td><span class="chip chip-yellow">Monitoring</span></td>
+    <td><button class="btn btn-ghost-dark btn-xs">View</button></td>`;
+  body.appendChild(tr);
+  assetCount++;
+  search.value = '';
+  reason.value = '';
+  // update tab count
+  document.querySelector('.tab-count').textContent = assetCount;
+  switchTab('workspace');
+}
+
+/* ── Charts ── */
+window.addEventListener('DOMContentLoaded', () => {
+  // Asset: SOH trend
+  new Chart(document.getElementById('healthChart'), {
+    type: 'line',
+    data: {
+      labels: ['W1','W2','W3','W4','W5'],
+      datasets: [{
+        label: 'SOH %',
+        data: [95,94,93,92,91],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,0.08)',
+        tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#3b82f6'
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { min: 88, max: 97, ticks: { callback: v => v + '%' } } }
+    }
+  });
+
+  // Asset: Voltage
+  new Chart(document.getElementById('voltChart'), {
+    type: 'line',
+    data: {
+      labels: ['00:00','04:00','08:00','12:00','16:00','20:00'],
+      datasets: [
+        { label: 'Voltage (V)', data: [47.2,47.8,47.5,48.1,47.9,47.6], borderColor: '#f59e0b', tension: 0.4, pointRadius: 2, fill: false },
+        { label: 'Current (A)', data: [38,44,42,46,43,40], borderColor: '#3b82f6', tension: 0.4, pointRadius: 2, fill: false }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { family: 'DM Sans' }, boxWidth: 10 } } },
+      scales: { y: { beginAtZero: false } }
+    }
+  });
+
+  // Asset: Cell temp
+  new Chart(document.getElementById('tempChart'), {
+    type: 'line',
+    data: {
+      labels: ['00:00','04:00','08:00','12:00','16:00','20:00'],
+      datasets: [{
+        label: 'Max Cell Temp (°C)',
+        data: [32,34,36,39,38,35],
+        borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.08)',
+        tension: 0.4, fill: true, pointRadius: 2
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: false } }
+    }
+  });
+
+  // Product: Fleet health trend
+  new Chart(document.getElementById('fleetHealthChart'), {
+    type: 'line',
+    data: {
+      labels: ['W1','W2','W3','W4','W5','W6'],
+      datasets: [
+        { label: 'EV 2-Wheeler', data: [94,93.5,93,92.8,92.4,92.0], borderColor: '#3b82f6', tension: 0.4, pointRadius: 3, fill: false },
+        { label: 'EV 3-Wheeler', data: [91,91.5,92,91.8,92.2,92.8], borderColor: '#22c55e', tension: 0.4, pointRadius: 3, fill: false },
+        { label: 'Standalone Battery', data: [93,92,91.5,91,90.5,90], borderColor: '#f59e0b', tension: 0.4, pointRadius: 3, fill: false }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { family: 'DM Sans' }, boxWidth: 10 } } },
+      scales: { y: { min: 88, ticks: { callback: v => v + '%' } } }
+    }
+  });
+});
+</script>
+</body>
+</html>

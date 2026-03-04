@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBM | Retail Fleet Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --jbm-blue: #0046B8; --jbm-dark: #002D7A; --bg: #F8FAFC; --accent: #10B981; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; font-size: 14px; color: #1e293b; }
+        
+        /* SIDEBAR NAVIGATION */
+        .sidebar { width: 240px; background: white; height: 100vh; position: fixed; border-right: 1px solid #e2e8f0; padding: 20px; }
+        .nav-link { color: #64748b; font-weight: 500; padding: 12px 15px; border-radius: 10px; margin-bottom: 5px; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { background: var(--jbm-blue); color: white !important; }
+        
+        /* CONTENT AREA */
+        .main-content { margin-left: 240px; padding: 30px; }
+        
+        /* CUSTOM CARDS */
+        .stat-card { background: white; border-radius: 16px; border: 1px solid #e2e8f0; padding: 20px; position: relative; overflow: hidden; }
+        .stat-card::after { content: ""; position: absolute; right: -10px; bottom: -10px; font-family: "Font Awesome 6 Free"; font-weight: 900; font-size: 4rem; opacity: 0.05; }
+        .card-warranty::after { content: "\f555"; }
+        .card-service::after { content: "\f0ad"; }
+        .card-alert::after { content: "\f071"; }
+
+        .btn-jbm { background: var(--jbm-blue); color: white; border-radius: 8px; font-weight: 600; padding: 10px 20px; border: none; }
+        .btn-jbm:hover { background: var(--jbm-dark); color: white; }
+
+        .bus-status-tag { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
+        .status-in-warranty { background: #dcfce7; color: #166534; }
+        .status-low-soc { background: #fee2e2; color: #991b1b; }
+
+        .tab-pane { padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar d-flex flex-column">
+        <div class="mb-5 px-3">
+            <h4 class="fw-bold text-primary italic"><img src="images/WEB LOGO copy.png" width="150" height="45" alt=""/></h4>
+        </div>
+        <nav class="nav flex-column flex-grow-1">
+            <a class="nav-link active" href="#" onclick="showSection('overview')"><i class="fas fa-th-large me-2"></i> Dashboard</a>
+          
+            <a class="nav-link" href="#" onclick="showSection('warranty')"><i class="fas fa-shield-alt me-2"></i> Warranty & Claims</a>
+            <a class="nav-link" href="#" onclick="showSection('maintenance')"><i class="fas fa-tools me-2"></i> Maintenance</a>
+            <a class="nav-link" href="../Login.html" onclick=""><i class="fas fa-bell me-2"></i>Log Out</a>
+        </nav>
+        <div class="border-top pt-3">
+            <div class="d-flex align-items-center gap-3 px-3">
+                <div class="bg-primary text-white rounded-circle p-2" style="width:35px;height:35px; text-align:center">AO</div>
+                <div class="small">
+                    <div class="fw-bold">Alpha Ops Ltd.</div>
+                    <a href="#" class="text-danger x-small text-decoration-none">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="section-overview">
+            <h4 class="fw-bold mb-4">Retail and Aftersales</h4>
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="stat-card card-warranty">
+                        <div class="text-muted small fw-bold">WARRANTY STATUS</div>
+                        <h3 class="fw-bold mt-2">18 / 20</h3>
+                        <div class="small text-success">Buses in Coverage</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card card-service">
+                        <div class="text-muted small fw-bold">UPCOMING SERVICE</div>
+                        <h3 class="fw-bold mt-2">04</h3>
+                        <div class="small text-warning">Due this week</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card card-alert">
+                        <div class="text-muted small fw-bold">OPEN CLAIMS</div>
+                        <h3 class="fw-bold mt-2">02</h3>
+                        <div class="small text-primary">In Progress</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card" style="background: var(--jbm-blue); color: white;">
+                        <div class="small fw-bold opacity-75">FLEET UPTIME</div>
+                        <h3 class="fw-bold mt-2">97.8%</h3>
+                        <div class="small opacity-75">Avg. last 30 days</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="report-card bg-white p-4 rounded-4 border shadow-sm">
+                        <h6 class="fw-bold border-bottom pb-3 mb-3">Live Fleet Status</h6>
+                        <table class="table align-middle">
+                            <thead class="small text-muted">
+                                <tr>
+									<th>VIN / Name</th>
+									<th>SOC</th>
+									<th>Odometer</th>
+									<th>Health</th>
+									<th>Warranty</th>
+									<th>Track</th>
+								</tr>
+                            </thead>
+                            <tbody>
+                                <tr style="cursor: pointer;" onclick="showSection('bus-detail')">
+                                    <td><div class="fw-bold">JBM-EV-1024</div><small class="text-muted">ECOLIFE 12M</small></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress w-50" style="height: 6px;"><div class="progress-bar bg-success" style="width: 82%"></div></div>
+                                            <span class="small fw-bold">82%</span>
+                                        </div>
+                                    </td>
+                                    <td>12,450 KM</td>
+                                    <td><span class="bus-status-tag status-in-warranty"><i class="fas fa-heart me-1"></i> Good</span></td>
+                                    <td><span class="text-success small fw-bold">Active</span></td>
+									 <td><span class="text-success small fw-bold"><a href="Live Tracking.html" target="_blank" style="text-decoration: none;">Live Tracking</a></span></td>
+									
+                                </tr>
+								<tr>
+                                    <td><div class="fw-bold">JBM-EV-1025</div><small class="text-muted">ECOLIFE 12M</small></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress w-50" style="height: 6px;"><div class="progress-bar bg-danger" style="width: 15%"></div></div>
+                                            <span class="small fw-bold">15%</span>
+                                        </div>
+                                    </td>
+                                    <td>14,120 KM</td>
+                                    <td><span class="bus-status-tag status-low-soc"><i class="fas fa-exclamation-circle me-1"></i> Critical SOC</span></td>
+                                    <td><span class="text-warning small fw-bold">Expiring</span></td>
+									 <td><span class="text-success small fw-bold"><a href="Live Tracking.html" target="_blank" style="text-decoration: none;">Live Tracking</a></span></td>
+                                </tr>
+								<tr style="cursor: pointer;" onclick="showSection('bus-detail')">
+                                    <td><div class="fw-bold">JBM-EV-1024</div><small class="text-muted">ECOLIFE 12M</small></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress w-50" style="height: 6px;"><div class="progress-bar bg-success" style="width: 82%"></div></div>
+                                            <span class="small fw-bold">82%</span>
+                                        </div>
+                                    </td>
+                                    <td>12,450 KM</td>
+                                    <td><span class="bus-status-tag status-in-warranty"><i class="fas fa-heart me-1"></i> Good</span></td>
+                                    <td><span class="text-success small fw-bold">Active</span></td>
+									 <td><span class="text-success small fw-bold"><a href="Live Tracking.html" target="_blank" style="text-decoration: none;">Live Tracking</a></span></td>
+									
+                                </tr>
+								<tr style="cursor: pointer;" onclick="showSection('bus-detail')">
+                                    <td><div class="fw-bold">JBM-EV-1024</div><small class="text-muted">ECOLIFE 12M</small></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress w-50" style="height: 6px;"><div class="progress-bar bg-success" style="width: 82%"></div></div>
+                                            <span class="small fw-bold">82%</span>
+                                        </div>
+                                    </td>
+                                    <td>12,450 KM</td>
+                                    <td><span class="bus-status-tag status-in-warranty"><i class="fas fa-heart me-1"></i> Good</span></td>
+                                    <td><span class="text-success small fw-bold">Active</span></td>
+									 <td><span class="text-success small fw-bold"><a href="Live Tracking.html" target="_blank" style="text-decoration: none;">Live Tracking</a></span></td>
+									
+                                </tr>
+								<tr>
+                                    <td><div class="fw-bold">JBM-EV-1025</div><small class="text-muted">ECOLIFE 12M</small></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress w-50" style="height: 6px;"><div class="progress-bar bg-danger" style="width: 15%"></div></div>
+                                            <span class="small fw-bold">15%</span>
+                                        </div>
+                                    </td>
+                                    <td>14,120 KM</td>
+                                    <td><span class="bus-status-tag status-low-soc"><i class="fas fa-exclamation-circle me-1"></i> Critical SOC</span></td>
+                                    <td><span class="text-warning small fw-bold">Expiring</span></td>
+									 <td><span class="text-success small fw-bold"><a href="Live Tracking.html" target="_blank" style="text-decoration: none;">Live Tracking</a></span></td>
+                                </tr>
+								<tr style="cursor: pointer;" onclick="showSection('bus-detail')">
+                                    <td><div class="fw-bold">JBM-EV-1024</div><small class="text-muted">ECOLIFE 12M</small></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress w-50" style="height: 6px;"><div class="progress-bar bg-success" style="width: 82%"></div></div>
+                                            <span class="small fw-bold">82%</span>
+                                        </div>
+                                    </td>
+                                    <td>12,450 KM</td>
+                                    <td><span class="bus-status-tag status-in-warranty"><i class="fas fa-heart me-1"></i> Good</span></td>
+                                    <td><span class="text-success small fw-bold">Active</span></td>
+									 <td><span class="text-success small fw-bold"><a href="Live Tracking.html" target="_blank" style="text-decoration: none;">Live Tracking</a></span></td>
+									
+                                </tr>
+                                <tr>
+                                    <td><div class="fw-bold">JBM-EV-1025</div><small class="text-muted">ECOLIFE 12M</small></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress w-50" style="height: 6px;"><div class="progress-bar bg-danger" style="width: 15%"></div></div>
+                                            <span class="small fw-bold">15%</span>
+                                        </div>
+                                    </td>
+                                    <td>14,120 KM</td>
+                                    <td><span class="bus-status-tag status-low-soc"><i class="fas fa-exclamation-circle me-1"></i> Critical SOC</span></td>
+                                    <td><span class="text-warning small fw-bold">Expiring</span></td>
+									 <td><span class="text-success small fw-bold"><a href="Live Tracking.html" target="_blank" style="text-decoration: none;">Live Tracking</a></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="report-card bg-white p-4 rounded-4 border shadow-sm h-100">
+                        <h6 class="fw-bold border-bottom pb-3 mb-3">Active Alerts</h6>
+                        <div class="alert alert-warning py-2 small border-0 shadow-none mb-2">
+                            <i class="fas fa-bolt me-2"></i> Low Insulation Detected - JBM-EV-1029
+                        </div>
+                        <div class="alert alert-info py-2 small border-0 shadow-none mb-2">
+                            <i class="fas fa-calendar-check me-2"></i> Service Appointment Tomorrow (R1 Depot)
+                        </div>
+                        <div class="alert alert-danger py-2 small border-0 shadow-none">
+                            <i class="fas fa-shield-virus me-2"></i> Warranty Breach Risk: Odo > 100k (JBM-EV-1004)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-bus-detail" style="display:none;">
+            <button class="btn btn-sm btn-link mb-3 text-decoration-none" onclick="showSection('overview')">← Back to Dashboard</button>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0">Vehicle Detail: JBM-EV-1024</h4>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-sm" onclick="showSection('warranty')">Raise Claim</button>
+                    <button class="btn btn-jbm btn-sm" onclick="showSection('maintenance')">Book Service</button>
+                </div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <h6 class="card-title small fw-bold text-muted">STATIC INFO</h6>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-2"><span>Model</span><span class="fw-bold">ECOLIFE 12M</span></div>
+                        <div class="d-flex justify-content-between mb-2"><span>Commissioned</span><span class="fw-bold">12-Oct-2023</span></div>
+                        <div class="d-flex justify-content-between mb-2"><span>Chassis No</span><span class="fw-bold">4X2EB00912</span></div>
+                        <div class="d-flex justify-content-between"><span>Region</span><span class="fw-bold">New Delhi</span></div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="stat-card h-100">
+                        <h6 class="card-title small fw-bold text-muted">LIVE TELEMETRY</h6>
+                        <div class="row text-center mt-4">
+                            <div class="col-4 border-right">
+                                <h2 class="fw-bold text-primary">82%</h2>
+                                <div class="small text-muted">Battery SOC</div>
+                            </div>
+                            <div class="col-4 border-right">
+                                <h2 class="fw-bold text-primary">12,450</h2>
+                                <div class="small text-muted">Current Odo</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="text-success small fw-bold mt-2"><i class="fas fa-signal"></i> Connected</div>
+                                <div class="small text-muted">Last: 2 mins ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-warranty" style="display:none;">
+            <div class="d-flex justify-content-between mb-4">
+                <h4 class="fw-bold">Warranty Management</h4>
+                <button class="btn btn-jbm" data-bs-toggle="modal" data-bs-target="#claimModal"><i class="fas fa-plus me-2"></i>Raise Warranty Ticket</button>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="report-card bg-white p-4 rounded-4 border shadow-sm">
+                        <h6 class="fw-bold mb-3">Warranty Expiry Heatmap</h6>
+                        <canvas id="warrantyChart" height="150"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="report-card bg-white p-4 rounded-4 border shadow-sm">
+                        <h6 class="fw-bold mb-3">Open Claim Status</h6>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3"><i class="fas fa-clipboard-list text-primary"></i></div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">W-CLAIM-9921</div>
+                                <div class="small text-muted">Suspension Issue | Submitted: 02 Nov</div>
+                            </div>
+                            <span class="badge bg-warning">Under Review</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-maintenance" style="display:none;">
+            <h4 class="fw-bold mb-4">Service & Maintenance</h4>
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="report-card bg-white p-4 rounded-4 border shadow-sm">
+                        <h6 class="fw-bold mb-4">Service Calendar</h6>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between px-0">
+                                <div>
+                                    <div class="fw-bold">JBM-EV-1024</div>
+                                    <small class="text-muted">Second Periodic Service (20k KM)</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="text-success fw-bold">Due in 5 Days</div>
+                                    <button class="btn btn-xs btn-outline-primary py-0" style="font-size:10px">Schedule</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="report-card bg-white p-4 rounded-4 border shadow-sm h-100">
+                        <h6 class="fw-bold mb-3">Book a Service Slot</h6>
+                        <div class="mb-3">
+                            <label class="small fw-bold">Vehicle</label>
+                            <select class="form-select"><option>JBM-EV-1024</option></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold">Service Location</label>
+                            <select class="form-select"><option>JBM Central Workshop - Okhla</option></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold">Preferred Slot</label>
+                            <input type="datetime-local" class="form-control">
+                        </div>
+                        <button class="btn btn-jbm w-100">Confirm Booking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="claimModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="fw-bold">Raise Warranty Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="small fw-bold text-muted">Vehicle Context</label>
+                        <div class="p-2 bg-light rounded small fw-bold">JBM-EV-1024 (In-Warranty)</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="small fw-bold">Problem Category</label>
+                        <select class="form-select">
+                            <option>Battery Performance</option>
+                            <option>Drivetrain/Motor</option>
+                            <option>Chassis/Body</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="small fw-bold">Description</label>
+                        <textarea class="form-control" rows="3" placeholder="Describe the issue..."></textarea>
+                    </div>
+                    <button class="btn btn-jbm w-100 py-2">Submit Claim</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('[id^="section-"]').forEach(el => el.style.display = 'none');
+            // Show target section
+            document.getElementById('section-' + sectionId).style.display = 'block';
+            
+            // Update Sidebar Active State
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            // (Optional logic to highlight correct nav link)
+        }
+
+        // Dummy Chart for Warranty Heatmap
+        new Chart(document.getElementById('warrantyChart'), {
+            type: 'bar',
+            data: {
+                labels: ['< 6m Left', '6-12m Left', '> 1yr Left'],
+                datasets: [{
+                    label: 'Buses',
+                    data: [2, 5, 13],
+                    backgroundColor: ['#ef4444', '#f59e0b', '#10b981']
+                }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        });
+    </script>
+</body>
+</html>

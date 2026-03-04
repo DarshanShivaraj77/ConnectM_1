@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBM Regional Manager Console</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #F5F7FB;
+            color: #1a1a1a;
+        }
+
+        /* HEADER */
+        .header {
+            background: white;
+            padding: 16px 30px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0046B8;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .sync-badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* TAB NAVIGATION */
+        .tab-navigation {
+            background: white;
+            padding: 0 30px;
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #e0e0e0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .tab-btn {
+            padding: 14px 24px;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #999;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: #0046B8;
+        }
+
+        .tab-btn.active {
+            color: #0046B8;
+            border-bottom-color: #0046B8;
+        }
+
+        /* CONTENT AREA */
+        .container {
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* KPI GRID */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-left: 4px solid #0046B8;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0046B8;
+            margin-bottom: 8px;
+        }
+
+        .kpi-change {
+            font-size: 12px;
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .kpi-change.negative {
+            color: #f44336;
+        }
+
+        .kpi-subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        /* CHARTS */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+		.chart-grid3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chart-canvas {
+            position: relative;
+            height: 300px;
+        }
+
+        .chart-canvas.tall {
+            height: 400px;
+        }
+
+        /* TABLE */
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: #f5f7fb;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            color: #666;
+            border: 1px solid #e0e0e0;
+        }
+
+        td {
+            padding: 14px;
+            border: 1px solid #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        /* BADGES & STATUS */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-stable {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .status-warning {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        .status-critical {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .status-good {
+            background: #bbdefb;
+            color: #1565c0;
+        }
+
+        /* METRICS BOX */
+        .metrics-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+            margin-bottom: 16px;
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0046B8;
+        }
+
+        /* DEPOT MAP */
+        .map-placeholder {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+            min-height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+            background: linear-gradient(135deg, #f5f7fb 0%, #e8eef7 100%);
+        }
+
+        /* INCIDENT FEED */
+        .incident-feed {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+        }
+
+        .incident-item {
+            padding: 14px;
+            border-left: 3px solid #ff9800;
+            background: #fff8f0;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .incident-item.critical {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+
+        .incident-item.resolved {
+            border-left-color: #4caf50;
+            background: #f1f8e9;
+        }
+
+        .incident-time {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .incident-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .incident-detail {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* GRID LAYOUTS */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+       
+		
+		 .grid-6 {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 16px;
+            }
+            .container {
+                padding: 16px;
+            }
+            .tab-navigation {
+                padding: 0 16px;
+                overflow-x: auto;
+            }
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #999; }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-left">
+        <h1><img src="images/WEB LOGO copy.png" width="150" height="45" alt=""/> &nbsp;&nbsp; Regional Manager Console</h1>
+    </div>
+    <div class="header-right">
+        <span>10 depots · 2,500 buses · 4 contracts</span>
+        <span class="sync-badge">✓ Last sync: 5 min ago</span>
+		 <input type="text" placeholder="Search driver..." style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px; width: 200px;"/>
+                <span style="font-size: 18px; cursor: pointer;">🔔</span>
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #0046B8, #0066ff); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">RM</div>
+                <span>Rama Malgudi<br><span style="font-size: 11px; color: #999;">Operations</span></span>
+    </div>
+</div>
+
+<!-- TAB NAVIGATION -->
+<div class="tab-navigation">
+    <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+    <button class="tab-btn" onclick="switchTab('depots')">🏢 Depot & Routes</button>
+    <button class="tab-btn" onclick="switchTab('fleet')">🚌 Fleet & Maintenance</button>
+    <button class="tab-btn" onclick="switchTab('contracts')">📋 Contracts & KPI</button>
+</div>
+
+	
+	
+	
+	
+	
+	   <div class="container">
+	
+	 <style>
+				.main_left_menu {
+					width: 240px; 
+					float:left; 
+					height:590px; 
+					background: #095aa3; 
+					margin-right: 20px; 
+					border-radius:20px; 
+					border:1px solid #ffffff; 
+				}
+				.menu_item a { 
+					color: #FFFFFF; 
+					font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif; 
+					font-size: 13px;  
+					width:200px; 
+					float: left; 
+					padding:10px 10px 15px 20px; 
+					border-bottom: 2px solid #437eb3; 
+					border-radius: 20px; 
+					text-decoration: none; 
+					margin-bottom: 10px; 
+					background-color: rgba(26, 74, 117, 0.3); 
+					transition: background-color 0.5s ease-out;
+					transition: padding 0.3s ease-in-out;
+				}
+				.menu_item a:hover { 
+					background-color: rgba(26, 74, 117, 1); 
+					padding:10px 10px 15px 30px; 
+				}
+				.menu_active { 
+					background-color: rgba(26, 74, 117, 1) !important; 
+					padding:10px 10px 15px 30px !important; 
+				}
+			</style>
+		<div class="kpi-card main_left_menu">
+			<div class="menu_item"><a href="Regional Manager Console.html" class="menu_active">Dashboard</a></div>
+			<div class="menu_item"><a href="Driver Management Console.html">Driver Management</a></div>
+			<div class="menu_item"><a href="Depot Manager Console.html" >Depot Management</a></div>
+
+			<div class="menu_item"><a href="../Login.html" >Log Out</a></div>
+		</div>
+	
+	
+<!-- DASHBOARD TAB -->
+<div id="dashboard" class="tab-content active">
+ 
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Fleet Availability</div>
+                <div class="kpi-value">92.4%</div>
+                <div class="kpi-change">+1.3% vs last week</div>
+                <div class="kpi-subtitle">2,310 buses in service · 190 in maintenance</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">On-Time Performance</div>
+                <div class="kpi-value">88.6%</div>
+                <div class="kpi-change negative">-2.1% vs target</div>
+                <div class="kpi-subtitle">184 delayed trips today · 27 critical</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Daily Ridership</div>
+                <div class="kpi-value">164,200</div>
+                <div class="kpi-change">+4.8% vs last week</div>
+                <div class="kpi-subtitle">Avg load factor 71% across contracts</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Safety & Incidents</div>
+                <div class="kpi-value">0.42</div>
+                <div class="kpi-change">incidents / 10k km</div>
+                <div class="kpi-subtitle">3 minor · 0 major incidents last 24h</div>
+            </div>
+        </div>
+
+        <div class="chart-grid3">
+            <div class="chart-card">
+                <div class="chart-title">Contract-Wise Daily Ridership (Last 7 Days)</div>
+                <div class="chart-canvas"><canvas id="ridershipChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Fleet Status Distribution Today</div>
+                <div class="chart-canvas"><canvas id="fleetStatusChart"></canvas></div>
+            </div>
+			<div class="chart-card" >
+                <div class="chart-title">On-Time Performance by Contract vs SLA Target</div>
+                <div class="chart-canvas"><canvas id="otpChart"></canvas></div>
+            </div>
+        </div>
+
+        <div class="chart-grid full">
+            
+        </div>
+
+        <div class="table-card">
+            <div class="chart-title" style="margin-bottom: 16px;">Depot Summary (10 Depots - Sorted by Risk)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Depot Name</th>
+                        <th>Buses</th>
+                        <th>Availability</th>
+                        <th>On-Time %</th>
+                        <th>Contract</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>D01 - North Hub</strong></td><td>280</td><td>89%</td><td>84%</td><td>Contract A</td><td><span class="status-badge status-critical">Capacity strain</span></td></tr>
+                    <tr><td><strong>D02 - Airport</strong></td><td>240</td><td>93%</td><td>87%</td><td>Contract B</td><td><span class="status-badge status-warning">Congestion delays</span></td></tr>
+                    <tr><td><strong>D03 - East City</strong></td><td>260</td><td>95%</td><td>91%</td><td>Contract A</td><td><span class="status-badge status-stable">Stable</span></td></tr>
+                    <tr><td><strong>D04 - South Ring</strong></td><td>210</td><td>88%</td><td>82%</td><td>Contract C</td><td><span class="status-badge status-critical">OTP breach risk</span></td></tr>
+                    <tr><td><strong>D05 - West Suburb</strong></td><td>230</td><td>91%</td><td>86%</td><td>Contract D</td><td><span class="status-badge status-warning">Staff shortage</span></td></tr>
+                    <tr><td><strong>D06 - IT Corridor</strong></td><td>260</td><td>94%</td><td>90%</td><td>Contract B</td><td><span class="status-badge status-stable">Stable</span></td></tr>
+                    <tr><td><strong>D07 - Industrial</strong></td><td>220</td><td>90%</td><td>85%</td><td>Contract C</td><td><span class="status-badge status-warning">Late departures</span></td></tr>
+                    <tr><td><strong>D08 - Metro Link</strong></td><td>240</td><td>96%</td><td>93%</td><td>Contract A</td><td><span class="status-badge status-good">High performer</span></td></tr>
+                    <tr><td><strong>D09 - University</strong></td><td>220</td><td>93%</td><td>89%</td><td>Contract D</td><td><span class="status-badge status-stable">Stable</span></td></tr>
+                    <tr><td><strong>D10 - Rural Feeder</strong></td><td>140</td><td>87%</td><td>80%</td><td>Contract C</td><td><span class="status-badge status-critical">Route coverage</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grid-2">
+            <div class="incident-feed">
+                <div class="chart-title" style="margin-bottom: 16px;">Live Incident Feed (Last 60 min)</div>
+                <div style="font-size: 12px; color: #666; margin-bottom: 16px;">3 open · 11 resolved today</div>
+                <div class="incident-item critical">
+                    <div class="incident-time">08:47</div>
+                    <div class="incident-title">🚦 Delay > 20 min</div>
+                    <div class="incident-detail">Route 41A, Depot D02 · Signal failure</div>
+                </div>
+                <div class="incident-item critical">
+                    <div class="incident-time">08:35</div>
+                    <div class="incident-title">🔧 Bus Breakdown</div>
+                    <div class="incident-detail">Route 18C, Depot D04 · Tow arranged</div>
+                </div>
+                <div class="incident-item">
+                    <div class="incident-time">08:18</div>
+                    <div class="incident-title">👥 Crowding Alert</div>
+                    <div class="incident-detail">Depot D01 · Route 7B · Load > 120%</div>
+                </div>
+                <div class="incident-item">
+                    <div class="incident-time">07:56</div>
+                    <div class="incident-title">👤 Driver No-Show</div>
+                    <div class="incident-detail">Depot D05 · Morning shift</div>
+                </div>
+            </div>
+            <div class="metrics-box">
+                <div class="chart-title" style="margin-bottom: 16px;">Maintenance & Readiness (Next 7 Days)</div>
+                <div style="font-size: 12px; color: #666; margin-bottom: 16px;">Scheduled: 184 | Overdue: 23</div>
+                <div style="background: #ffebee; border-left: 3px solid #f44336; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                    <strong style="color: #c62828;">Critical: 9 buses (D01, D04, D10)</strong>
+                    <div style="font-size: 11px; color: #999; margin-top: 4px;">Monitor closely - maintenance overdue</div>
+                </div>
+                <div style="background: #fff3e0; padding: 12px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #ff9800;">
+                    <div style="font-size: 12px; font-weight: 600;">🔧 Engine Service (15k km)</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">Contract B · D06 · Due in 2 days</div>
+                </div>
+                <div style="background: #fff3e0; padding: 12px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #ff9800;">
+                    <div style="font-size: 12px; font-weight: 600;">🔍 Brake Inspection</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">Contract C · D10 · Overdue 5 days</div>
+                </div>
+                <div style="background: #fff3e0; padding: 12px; border-radius: 6px; border-left: 3px solid #ff9800;">
+                    <div style="font-size: 12px; font-weight: 600;">🔋 HV Battery Check</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">Contract A · D03 · Next slot Thursday</div>
+                </div>
+            </div>
+       
+    </div>
+</div>
+
+<!-- DEPOT & ROUTES TAB -->
+<div id="depots" class="tab-content">
+    
+        <div class="chart-title" style="margin-bottom: 24px;">Depots & Routes Network Map</div>
+        <div class="grid-2">
+            <div class="map-placeholder" style="background: #FFFFFF">
+              <img src="images/Map for html copy.png" width="100%" height="auto" alt=""/> 
+            </div>
+            <div class="metrics-box">
+                <div class="chart-title" style="margin-bottom: 16px; font-size: 14px;">Route Performance Summary</div>
+                <div style="border-bottom: 1px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 12px;">
+                    <div class="metric-label">Total Routes Active</div>
+                    <div class="metric-value" style="font-size:36px;">156</div>
+                </div>
+                <div style="border-bottom: 1px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 12px;">
+                    <div class="metric-label">Avg Route Distance</div>
+                    <div class="metric-value" style="font-size:36px;">24.5 km</div>
+                </div>
+                <div style="border-bottom: 1px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 12px;">
+                    <div class="metric-label">Peak Hour Load Factor</div>
+                    <div class="metric-value" style="font-size:36px;">78%</div>
+                </div>
+                <div>
+                    <div class="metric-label">Routes with OTP Issues</div>
+                    <div class="metric-value" style="color: #f44336; font-size:36px;">18</div>
+                </div>
+            </div>
+        </div>
+        <div class="table-card" style="margin-top: 30px;">
+            <div class="chart-title" style="margin-bottom: 16px;">Top Routes - Daily Performance</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Route ID</th>
+                        <th>From - To</th>
+                        <th>Distance</th>
+                        <th>Scheduled Trips</th>
+                        <th>Completed</th>
+                        <th>OTP %</th>
+                        <th>Avg Load %</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>R-001</strong></td><td>North Hub - Airport</td><td>32 km</td><td>12</td><td>12</td><td>92%</td><td>85%</td><td><span class="status-badge status-good">Excellent</span></td></tr>
+                    <tr><td><strong>R-041A</strong></td><td>Airport - East City</td><td>28 km</td><td>10</td><td>9</td><td>78%</td><td>82%</td><td><span class="status-badge status-warning">Delays</span></td></tr>
+                    <tr><td><strong>R-007B</strong></td><td>South Ring - Metro Link</td><td>22 km</td><td>14</td><td>13</td><td>82%</td><td>88%</td><td><span class="status-badge status-warning">Monitor</span></td></tr>
+                    <tr><td><strong>R-018C</strong></td><td>IT Corridor - Industrial</td><td>18 km</td><td>16</td><td>15</td><td>88%</td><td>76%</td><td><span class="status-badge status-good">Good</span></td></tr>
+                    <tr><td><strong>R-042D</strong></td><td>University - Rural Feeder</td><td>35 km</td><td>8</td><td>7</td><td>75%</td><td>68%</td><td><span class="status-badge status-critical">Risk</span></td></tr>
+                </tbody>
+            </table>
+   
+    </div>
+</div>
+
+<!-- FLEET & MAINTENANCE TAB -->
+<div id="fleet" class="tab-content">
+ 
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Total Fleet Size</div>
+                <div class="kpi-value">2,500</div>
+                <div class="kpi-change">Across 10 depots</div>
+                <div class="kpi-subtitle">AC buses: 1,840 | Seater: 660</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Vehicles In Service</div>
+                <div class="kpi-value">2,310</div>
+                <div class="kpi-change">+1.3% vs last week</div>
+                <div class="kpi-subtitle">92.4% fleet availability</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Maintenance Queue</div>
+                <div class="kpi-value">184</div>
+                <div class="kpi-change">Scheduled services</div>
+                <div class="kpi-subtitle">23 overdue · 9 critical</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Fleet Age (Avg)</div>
+                <div class="kpi-value">4.2 yrs</div>
+                <div class="kpi-change">Good condition</div>
+                <div class="kpi-subtitle">Oldest: 8.5 yrs | Newest: 0.3 yrs</div>
+            </div>
+        </div>
+
+        <div class="chart-grid3">
+           
+            <div class="chart-card">
+                <div class="chart-title">Maintenance Schedule (Next 30 Days)</div>
+                <div class="chart-canvas"><canvas id="maintenanceScheduleChart"></canvas></div>
+            </div>
+			 <div class="chart-card">
+                <div class="chart-title">Fleet Status Distribution</div>
+                <div class="chart-canvas"><canvas id="maintenanceStatusChart"></canvas></div>
+            </div>
+			 <div class="chart-card">
+                <div class="chart-title">Fleet Age Distribution</div>
+                <div class="chart-canvas"><canvas id="fleetAgeChart"></canvas></div>
+            </div>
+        </div>
+
+       
+
+        <div class="table-card">
+            <div class="chart-title" style="margin-bottom: 16px;">Maintenance Details - Next 7 Days</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bus ID</th>
+                        <th>Depot</th>
+                        <th>Service Type</th>
+                        <th>Last Service</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Est. Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>JBM-D01-0845</strong></td><td>D01 - North Hub</td><td>Engine Service (15k km)</td><td>Dec 10, 2025</td><td>Dec 20, 2025</td><td><span class="status-badge status-critical">Overdue</span></td><td>₹15,000</td></tr>
+                    <tr><td><strong>JBM-D04-1230</strong></td><td>D04 - South Ring</td><td>Brake Inspection</td><td>Nov 28, 2025</td><td>Dec 18, 2025</td><td><span class="status-badge status-warning">Due Soon</span></td><td>₹8,500</td></tr>
+                    <tr><td><strong>JBM-D10-0567</strong></td><td>D10 - Rural Feeder</td><td>HV Battery Health Check</td><td>Nov 15, 2025</td><td>Dec 22, 2025</td><td><span class="status-badge status-warning">Scheduled</span></td><td>₹5,200</td></tr>
+                    <tr><td><strong>JBM-D06-2140</strong></td><td>D06 - IT Corridor</td><td>General Service (12 months)</td><td>Dec 05, 2025</td><td>Dec 25, 2025</td><td><span class="status-badge status-warning">Scheduled</span></td><td>₹12,000</td></tr>
+                    <tr><td><strong>JBM-D03-0975</strong></td><td>D03 - East City</td><td>Tire Replacement</td><td>Sep 20, 2025</td><td>Dec 21, 2025</td><td><span class="status-badge status-warning">Scheduled</span></td><td>₹22,000</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grid-2">
+            <div class="chart-card">
+                <div class="chart-title">Monthly Maintenance Cost (Last 6 Months)</div>
+                <div class="chart-canvas"><canvas id="maintenanceCostChart"></canvas></div>
+            </div>
+            <div class="metrics-box">
+                <div class="chart-title" style="margin-bottom: 16px; font-size: 14px;">Maintenance KPIs</div>
+                <div style="border-bottom: 1px solid #f0f0f0; padding: 12px 0; margin-bottom: 12px;">
+                    <div class="metric-label">Avg Downtime per Repair</div>
+                    <div class="metric-value">2.3 hrs</div>
+                </div>
+                <div style="border-bottom: 1px solid #f0f0f0; padding: 12px 0; margin-bottom: 12px;">
+                    <div class="metric-label">First Time Fix Rate</div>
+                    <div class="metric-value">86%</div>
+                </div>
+                <div style="border-bottom: 1px solid #f0f0f0; padding: 12px 0; margin-bottom: 12px;">
+                    <div class="metric-label">Technician Utilization</div>
+                    <div class="metric-value">82%</div>
+                </div>
+                <div>
+                    <div class="metric-label">Monthly Maintenance Budget</div>
+                    <div class="metric-value">₹28.5L</div>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+<!-- CONTRACTS & KPI TAB -->
+<div id="contracts" class="tab-content">
+   
+        <div class="chart-title" style="margin-bottom: 24px;">Contract Performance Overview</div>
+        <div class="grid-6">
+            <div class="kpi-card">
+                <div class="kpi-label">Contract A</div>
+                <div class="kpi-value">800</div>
+                <div class="kpi-change">buses deployed</div>
+                <div class="kpi-subtitle">SLA: 95% · Current: 93.2%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Contract B</div>
+                <div class="kpi-value">600</div>
+                <div class="kpi-change">buses deployed</div>
+                <div class="kpi-subtitle">SLA: 92% · Current: 90.8%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Contract C</div>
+                <div class="kpi-value">670</div>
+                <div class="kpi-change">buses deployed</div>
+                <div class="kpi-subtitle">SLA: 90% · Current: 86.4%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Contract D</div>
+                <div class="kpi-value">430</div>
+                <div class="kpi-change">buses deployed</div>
+                <div class="kpi-subtitle">SLA: 93% · Current: 91.2%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Total Revenue</div>
+                <div class="kpi-value">₹18.2Cr</div>
+                <div class="kpi-change">Monthly MRR</div>
+                <div class="kpi-subtitle">+3.1% vs last month</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">SLA Penalties</div>
+                <div class="kpi-value">₹8.4L</div>
+                <div class="kpi-change negative">This month</div>
+                <div class="kpi-subtitle">-12% vs last month</div>
+            </div>
+        </div>
+
+        <div class="chart-grid3">
+            <div class="chart-card">
+                <div class="chart-title">Contract Revenue Distribution</div>
+                <div class="chart-canvas"><canvas id="revenueChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">SLA Compliance vs Penalties</div>
+                <div class="chart-canvas"><canvas id="slaChart"></canvas></div>
+            </div>
+			 <div class="chart-card">
+                <div class="chart-title">Contract KPI Trend (Last 6 Months)</div>
+                <div class="chart-canvas"><canvas id="contractTrendChart"></canvas></div>
+            </div>
+        </div>
+
+   
+        <div class="table-card">
+            <div class="chart-title" style="margin-bottom: 16px;">Contract Details & Financials</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Contract</th>
+                        <th>Operator</th>
+                        <th>Duration</th>
+                        <th>Depots</th>
+                        <th>Fleet Size</th>
+                        <th>Monthly Revenue</th>
+                        <th>SLA %</th>
+                        <th>Penalties</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Contract A</strong></td><td>DTC Delhi</td><td>Dec 2023 - Nov 2028</td><td>5 depots</td><td>800</td><td>₹5.2Cr</td><td>93.2%</td><td>₹2.1L</td><td><span class="status-badge status-good">Good</span></td></tr>
+                    <tr><td><strong>Contract B</strong></td><td>BMTC Bangalore</td><td>Mar 2024 - Feb 2030</td><td>2 depots</td><td>600</td><td>₹4.8Cr</td><td>90.8%</td><td>₹1.8L</td><td><span class="status-badge status-good">Good</span></td></tr>
+                    <tr><td><strong>Contract C</strong></td><td>BEST Mumbai</td><td>Jun 2022 - May 2027</td><td>2 depots</td><td>670</td><td>₹4.1Cr</td><td>86.4%</td><td>₹2.8L</td><td><span class="status-badge status-critical">At Risk</span></td></tr>
+                    <tr><td><strong>Contract D</strong></td><td>PMPML Pune</td><td>Sep 2023 - Aug 2029</td><td>1 depot</td><td>430</td><td>₹4.1Cr</td><td>91.2%</td><td>₹1.7L</td><td><span class="status-badge status-good">Good</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grid-2" style="margin-top: 30px;">
+            <div class="chart-card">
+                <div class="chart-title">SLA Penalty Breakdown (This Month)</div>
+                <div class="chart-canvas tall"><canvas id="penaltyChart"></canvas></div>
+            </div>
+            <div class="metrics-box">
+                <div class="chart-title" style="margin-bottom: 16px; font-size: 14px;">SLA Performance Metrics</div>
+                <div style="border-bottom: 1px solid #f0f0f0; padding: 12px 0; margin-bottom: 12px;">
+                    <div class="metric-label">Avg Fleet Uptime</div>
+                    <div class="metric-value">90.4%</div>
+                </div>
+                <div style="border-bottom: 1px solid #f0f0f0; padding: 12px 0; margin-bottom: 12px;">
+                    <div class="metric-label">Avg On-Time %</div>
+                    <div class="metric-value">88.6%</div>
+                </div>
+                <div style="border-bottom: 1px solid #f0f0f0; padding: 12px 0; margin-bottom: 12px;">
+                    <div class="metric-label">Avg Load Factor</div>
+                    <div class="metric-value">71%</div>
+                </div>
+                <div style="border-bottom: 1px solid #f0f0f0; padding: 12px 0; margin-bottom: 12px;">
+                    <div class="metric-label">Safety Incidents</div>
+                    <div class="metric-value">0.42 / 10k km</div>
+                </div>
+                <div style="background: #e8f5e9; padding: 12px; border-radius: 6px; margin-top: 16px;">
+                    <div style="color: #2e7d32; font-weight: 600;">✓ 3 Contracts Meeting SLA</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">Contract C needs improvement</div>
+                </div>
+            </div>
+      
+    </div>
+</div>
+	</div>
+
+<script>
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+}
+
+const chartConfig = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            display: true,
+            position: 'bottom',
+            labels: { font: { size: 12 }, padding: 16 }
+        }
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    initCharts();
+});
+
+function initCharts() {
+    if (document.getElementById('ridershipChart')) {
+        new Chart(document.getElementById('ridershipChart'), {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [
+                    { label: 'Contract A', data: [42000, 43200, 41500, 44100, 45200, 38500, 35600], borderColor: '#0046B8', backgroundColor: 'rgba(0,70,184,0.1)', tension: 0.4, borderWidth: 2 },
+                    { label: 'Contract B', data: [28000, 29100, 28500, 30200, 31000, 26500, 24800], borderColor: '#ff9800', backgroundColor: 'rgba(255,152,0,0.1)', tension: 0.4, borderWidth: 2 },
+                    { label: 'Contract C', data: [35000, 36200, 34800, 37100, 38000, 32000, 30200], borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.1)', tension: 0.4, borderWidth: 2 },
+                    { label: 'Contract D', data: [20000, 20800, 20200, 21500, 22100, 18900, 17800], borderColor: '#9c27b0', backgroundColor: 'rgba(156,39,176,0.1)', tension: 0.4, borderWidth: 2 }
+                ]
+            },
+            options: chartConfig
+        });
+    }
+
+    if (document.getElementById('fleetStatusChart')) {
+        new Chart(document.getElementById('fleetStatusChart'), {
+            type: 'doughnut',
+            data: { labels: ['In Service', 'Charging', 'Maintenance', 'Breakdown'], datasets: [{ data: [2310, 120, 50, 20], backgroundColor: ['#4caf50', '#2196f3', '#ff9800', '#f44336'], borderColor: 'white', borderWidth: 2 }] },
+            options: chartConfig
+        });
+    }
+
+    if (document.getElementById('otpChart')) {
+        new Chart(document.getElementById('otpChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Contract A', 'Contract B', 'Contract C', 'Contract D', 'Regional Avg'],
+                datasets: [
+                    { label: 'OTP %', data: [93.2, 90.8, 86.4, 91.2, 88.6], backgroundColor: ['#0046B8', '#ff9800', '#f44336', '#4caf50', '#2196f3'], borderRadius: 8 },
+                    { label: 'SLA Target', data: [95, 92, 90, 93, 92.5], backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 8 }
+                ]
+            },
+            options: chartConfig
+        });
+    }
+
+    if (document.getElementById('maintenanceStatusChart')) {
+        new Chart(document.getElementById('maintenanceStatusChart'), {
+            type: 'doughnut',
+            data: { labels: ['In Service', 'Scheduled Maint', 'Unscheduled', 'Repair', 'Breakdown'], datasets: [{ data: [2310, 110, 40, 30, 10], backgroundColor: ['#4caf50', '#2196f3', '#ff9800', '#f44336', '#9e9e9e'] }] },
+            options: chartConfig
+        });
+    }
+
+    if (document.getElementById('maintenanceScheduleChart')) {
+        new Chart(document.getElementById('maintenanceScheduleChart'), {
+            type: 'bar',
+            data: { labels: ['Day 1-7', 'Day 8-14', 'Day 15-21', 'Day 22-30'], datasets: [{ label: 'Services Due', data: [38, 45, 52, 49], backgroundColor: '#0046B8', borderRadius: 6 }] },
+            options: chartConfig
+        });
+    }
+
+    if (document.getElementById('fleetAgeChart')) {
+        new Chart(document.getElementById('fleetAgeChart'), {
+            type: 'bar',
+            data: { labels: ['0-2 yrs', '2-4 yrs', '4-6 yrs', '6-8 yrs', '8+ yrs'], datasets: [{ label: 'Number of Buses', data: [450, 620, 810, 450, 170], backgroundColor: '#0046B8', borderRadius: 6 }] },
+            options: chartConfig
+        });
+    }
+
+    if (document.getElementById('maintenanceCostChart')) {
+        new Chart(document.getElementById('maintenanceCostChart'), {
+            type: 'line',
+            data: { labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], datasets: [{ label: 'Monthly Cost (₹ L)', data: [24.2, 26.5, 28.1, 27.3, 29.2, 28.5], borderColor: '#f44336', backgroundColor: 'rgba(244,67,54,0.1)', tension: 0.4, borderWidth: 2, fill: true }] },
+            options: chartConfig
+        });
+    }
+
+    if (document.getElementById('revenueChart')) {
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'doughnut',
+            data: { labels: ['Contract A', 'Contract B', 'Contract C', 'Contract D'], datasets: [{ data: [5.2, 4.8, 4.1, 4.1], backgroundColor: ['#0046B8', '#ff9800', '#f44336', '#4caf50'] }] },
+            options: chartConfig
+        });
+    }
+
+    if (document.getElementById('slaChart')) {
+        new Chart(document.getElementById('slaChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Contract A', 'Contract B', 'Contract C', 'Contract D'],
+                datasets: [
+                    { label: 'SLA Compliance %', data: [93.2, 90.8, 86.4, 91.2], backgroundColor: '#0046B8', yAxisID: 'y' },
+                    { label: 'Penalties (₹ L)', data: [2.1, 1.8, 2.8, 1.7], backgroundColor: '#f44336', yAxisID: 'y1' }
+                ]
+            },
+            options: { ...chartConfig, scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'SLA %' } }, y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Penalties (₹ L)' }, grid: { drawOnChartArea: false } } } }
+        });
+    }
+
+    if (document.getElementById('contractTrendChart')) {
+        new Chart(document.getElementById('contractTrendChart'), {
+            type: 'line',
+            data: {
+                labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [
+                    { label: 'Fleet Availability %', data: [88.2, 89.1, 90.2, 90.8, 91.5, 92.4], borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.1)', tension: 0.4, borderWidth: 2 },
+                    { label: 'OTP %', data: [84.3, 85.2, 86.1, 87.0, 87.8, 88.6], borderColor: '#0046B8', backgroundColor: 'rgba(0,70,184,0.1)', tension: 0.4, borderWidth: 2 },
+                    { label: 'Load Factor %', data: [68, 68.5, 69, 69.8, 70.5, 71], borderColor: '#ff9800', backgroundColor: 'rgba(255,152,0,0.1)', tension: 0.4, borderWidth: 2 }
+                ]
+            },
+            options: chartConfig
+        });
+    }
+
+    if (document.getElementById('penaltyChart')) {
+        new Chart(document.getElementById('penaltyChart'), {
+            type: 'bar',
+            data: { labels: ['OTP Failures', 'Fleet Availability', 'Maintenance QA', 'Safety Issues'], datasets: [{ label: 'Penalty Amount (₹ L)', data: [3.2, 2.8, 1.5, 0.9], backgroundColor: ['#f44336', '#ff9800', '#2196f3', '#9c27b0'], borderRadius: 6 }] },
+            options: chartConfig
+        });
+    }
+}
+</script>
+
+</body>
+</html>

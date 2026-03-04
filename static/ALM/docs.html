@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALM Documentation - Complete Guide</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+nav {
+  width: 280px;
+  position: fixed;
+  height: 100vh;
+  background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+nav h3 {
+  color: #ecf0f1;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #3498db;
+}
+
+nav a {
+  display: block;
+  color: #ecf0f1;
+  text-decoration: none;
+  padding: 10px 12px;
+  margin: 4px 0;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-size: 0.95em;
+}
+
+nav a:hover {
+  background: #3498db;
+  padding-left: 16px;
+}
+
+main {
+  margin-left: 280px;
+  padding: 40px 60px;
+  max-width: 1200px;
+}
+
+section {
+  margin-bottom: 60px;
+  padding: 30px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 2.5em;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 15px;
+}
+
+h2 {
+  color: #34495e;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 1.8em;
+}
+
+h3 {
+  color: #555;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.3em;
+}
+
+pre {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 6px;
+  overflow-x: auto;
+  border-left: 4px solid #3498db;
+  margin: 15px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+th {
+  background: #3498db;
+  color: white;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+tr:hover {
+  background: #e8f4f8;
+}
+
+ul, ol {
+  margin: 15px 0 15px 30px;
+}
+
+li {
+  margin: 8px 0;
+}
+
+b {
+  color: #2c3e50;
+}
+
+svg {
+  margin: 20px 0;
+  display: block;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 60px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.hero h1 {
+  color: white;
+  border: none;
+  margin: 0;
+  font-size: 3em;
+}
+
+.hero p {
+  font-size: 1.3em;
+  margin-top: 15px;
+  opacity: 0.95;
+}
+
+@media (max-width: 768px) {
+  nav {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  
+  main {
+    margin-left: 0;
+    padding: 20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <h3>ALM Docs</h3>
+  <a href="#overview">Executive Overview</a>
+  <a href="#asset-lifecycle">Asset Lifecycle</a>
+  <a href="#db-schema">Database Schema</a>
+  <a href="#workspace-model">Platform Failure & Rollback</a>
+  <a href="#traceability">Traceability Matrix</a>
+  <a href="#glossary">Glossary</a>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>Asset Lifecycle Management Platform</h1>
+    <p>Complete technical and business documentation for enterprise asset management</p>
+  </div>
+
+  <section id="overview">
+    <h1>Executive Overview</h1>
+    <p>The Asset Lifecycle Management (ALM) Platform is a comprehensive solution designed to manage physical assets throughout their entire lifecycle, from manufacturing to decommissioning. This platform provides multi-tenant architecture with robust security, state management, and traceability features.</p>
+    
+    <h2>Key Features</h2>
+    <ul>
+      <li>Complete asset lifecycle tracking from operational to decommissioned states</li>
+      <li>Multi-tenant architecture with row-level security (RLS)</li>
+      <li>Hierarchical workspace organization</li>
+      <li>Automated warranty and fraud detection</li>
+      <li>Asset transfer and ownership management</li>
+      <li>Real-time status tracking and audit trails</li>
+    </ul>
+  </section>
+
+  <section id="asset-lifecycle">
+    <h1>Asset Lifecycle Domain</h1>
+
+    <h2>Asset State Machine</h2>
+    <pre>
+[manufactured]
+      |
+      v
+[operational] <------.
+      |               |
+      v               |
+[maintenance] --------'
+      |
+      v
+[breakdown]
+      |
+      v
+[in-transit]
+      |
+      v
+[decommissioned / second-life]
+    </pre>
+
+    <h2>State Transition Rules</h2>
+    <ul>
+      <li>Only operational assets can enter maintenance</li>
+      <li>Breakdown requires fault code or manual override</li>
+      <li>Transfer forces state to <b>in-transit</b></li>
+      <li>Decommissioned is terminal</li>
+    </ul>
+
+    <h2>Asset State Machine Visualization</h2>
+    <svg width="860" height="260">
+      <rect x="20" y="40" width="140" height="40" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="50" y="65" font-family="Arial" font-size="14">Operational</text>
+      
+      <rect x="220" y="40" width="160" height="40" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+      <text x="245" y="65" font-family="Arial" font-size="14">Maintenance</text>
+      
+      <rect x="440" y="40" width="160" height="40" fill="#ffebee" stroke="#f44336" stroke-width="2"/>
+      <text x="475" y="65" font-family="Arial" font-size="14">Breakdown</text>
+      
+      <rect x="660" y="40" width="160" height="40" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+      <text x="695" y="65" font-family="Arial" font-size="14">In-Transit</text>
+
+      <line x1="160" y1="60" x2="220" y2="60" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <line x1="380" y1="60" x2="440" y2="60" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <line x1="600" y1="60" x2="660" y2="60" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+      
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+        </marker>
+      </defs>
+    </svg>
+
+    <h2>State Descriptions</h2>
+    <table>
+      <tr>
+        <th>State</th>
+        <th>Description</th>
+        <th>Valid Transitions</th>
+      </tr>
+      <tr>
+        <td><b>Manufactured</b></td>
+        <td>Asset is newly produced and ready for deployment</td>
+        <td>Operational</td>
+      </tr>
+      <tr>
+        <td><b>Operational</b></td>
+        <td>Asset is actively in use and functioning normally</td>
+        <td>Maintenance, In-Transit</td>
+      </tr>
+      <tr>
+        <td><b>Maintenance</b></td>
+        <td>Asset is undergoing scheduled or preventive maintenance</td>
+        <td>Operational, Breakdown</td>
+      </tr>
+      <tr>
+        <td><b>Breakdown</b></td>
+        <td>Asset has experienced a failure requiring repair</td>
+        <td>In-Transit, Operational (after repair)</td>
+      </tr>
+      <tr>
+        <td><b>In-Transit</b></td>
+        <td>Asset is being transferred between locations or owners</td>
+        <td>Operational, Decommissioned</td>
+      </tr>
+      <tr>
+        <td><b>Decommissioned</b></td>
+        <td>Asset has reached end of life or entered second-life program</td>
+        <td>None (terminal state)</td>
+      </tr>
+    </table>
+  </section>
+
+  <section id="db-schema">
+    <h1>Database Schema</h1>
+
+    <h2>Core Tables</h2>
+    <table>
+      <tr>
+        <th>Table</th>
+        <th>Purpose</th>
+        <th>Key Fields</th>
+      </tr>
+      <tr>
+        <td><b>products</b></td>
+        <td>Global OEM catalog</td>
+        <td>product_id, name, manufacturer, specifications</td>
+      </tr>
+      <tr>
+        <td><b>organizations</b></td>
+        <td>Tenant boundary</td>
+        <td>org_id, name, settings, subscription_tier</td>
+      </tr>
+      <tr>
+        <td><b>users</b></td>
+        <td>Org-scoped users</td>
+        <td>user_id, org_id, email, role, permissions</td>
+      </tr>
+      <tr>
+        <td><b>assets</b></td>
+        <td>Physical assets</td>
+        <td>asset_id, org_id, product_id, serial_number, current_state</td>
+      </tr>
+      <tr>
+        <td><b>workspaces</b></td>
+        <td>Hierarchical grouping</td>
+        <td>workspace_id, org_id, parent_id, path (ltree)</td>
+      </tr>
+      <tr>
+        <td><b>asset_status</b></td>
+        <td>Lifecycle history</td>
+        <td>status_id, asset_id, state, timestamp, metadata</td>
+      </tr>
+      <tr>
+        <td><b>asset_transfers</b></td>
+        <td>Ownership changes</td>
+        <td>transfer_id, asset_id, from_org, to_org, status, initiated_at</td>
+      </tr>
+    </table>
+
+    <h2>Entity Relationship Diagram</h2>
+    <pre>
+organizations ──< users
+      │
+      ├──< assets ──< asset_status
+      │       │
+      │       └──< asset_transfers >── workspaces
+      │
+      └──< workspaces ──< workspace_assets >── assets
+    </pre>
+
+    <h2>Key Relationships</h2>
+    <ul>
+      <li><b>organizations → users</b>: One-to-many relationship with org_id foreign key</li>
+      <li><b>organizations → assets</b>: Assets belong to a single organization</li>
+      <li><b>assets → asset_status</b>: Historical timeline of all state changes</li>
+      <li><b>assets → workspaces</b>: Many-to-many through workspace_assets junction table</li>
+      <li><b>asset_transfers</b>: Connects assets, organizations, and workspaces during ownership changes</li>
+    </ul>
+
+    <h2>Security Model</h2>
+    <p>All core tables implement Row-Level Security (RLS) to enforce tenant isolation:</p>
+    <ul>
+      <li>Users can only access data within their organization</li>
+      <li>Cross-organization transfers require explicit approval workflow</li>
+      <li>Audit logs capture all data access and modifications</li>
+      <li>Workspace hierarchy enforces additional access controls via ltree paths</li>
+    </ul>
+  </section>
+
+  <section id="workspace-model">
+    <h1>Platform Failure & Rollback Flows</h1>
+
+    <h2>Transfer Failure Handling</h2>
+    <pre>
+Transfer Requested
+     |
+     v
+Approval Granted
+     |
+     v
+Completion Fails
+     |
+     v
+Rollback Triggered
+     |
+     v
+Asset Restored to From-Org
+     |
+     v
+Status → operational
+     |
+     v
+Audit Logged
+    </pre>
+
+    <h2>Warranty Claim Failure</h2>
+    <pre>
+Claim Raised
+    |
+    v
+Evidence Insufficient
+    |
+    v
+Claim Rejected
+    |
+    v
+Abuse Flag Raised
+    |
+    v
+User / OEM Notified
+    </pre>
+
+    <h2>Failure Handling Visualization</h2>
+    <svg width="750" height="220">
+      <rect x="20" y="40" width="160" height="40" fill="#e0f7fa" stroke="#00bcd4" stroke-width="2"/>
+      <text x="70" y="65" font-family="Arial" font-size="14">Request</text>
+      
+      <rect x="240" y="40" width="160" height="40" fill="#fff9c4" stroke="#ffc107" stroke-width="2"/>
+      <text x="285" y="65" font-family="Arial" font-size="14">Approve</text>
+      
+      <rect x="460" y="40" width="200" height="40" fill="#ffcdd2" stroke="#f44336" stroke-width="2"/>
+      <text x="520" y="65" font-family="Arial" font-size="14">Rollback</text>
+      
+      <line x1="180" y1="60" x2="240" y2="60" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="400" y1="60" x2="460" y2="60" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+      
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+        </marker>
+      </defs>
+    </svg>
+
+    <h2>Rollback Mechanisms</h2>
+    <table>
+      <tr>
+        <th>Failure Type</th>
+        <th>Rollback Action</th>
+        <th>Recovery Time</th>
+      </tr>
+      <tr>
+        <td>Transfer Completion Failure</td>
+        <td>Restore asset to source organization with original status</td>
+        <td>Immediate</td>
+      </tr>
+      <tr>
+        <td>Warranty Claim Rejection</td>
+        <td>Flag abuse pattern, notify stakeholders, maintain audit trail</td>
+        <td>N/A (notification only)</td>
+      </tr>
+      <tr>
+        <td>Status Update Conflict</td>
+        <td>Revert to last known good state, log conflict details</td>
+        <td>&lt; 1 minute</td>
+      </tr>
+      <tr>
+        <td>Workspace Assignment Error</td>
+        <td>Remove invalid assignments, restore previous workspace mapping</td>
+        <td>Immediate</td>
+      </tr>
+    </table>
+
+    <h2>Error Handling Principles</h2>
+    <ul>
+      <li><b>Atomicity</b>: All multi-step operations use database transactions</li>
+      <li><b>Idempotency</b>: API operations can be safely retried without side effects</li>
+      <li><b>Audit Trail</b>: All failures and rollbacks are permanently logged</li>
+      <li><b>User Notification</b>: Stakeholders receive real-time alerts on failure conditions</li>
+      <li><b>Graceful Degradation</b>: System remains operational even when subsystems fail</li>
+    </ul>
+  </section>
+
+  <section id="traceability">
+    <h1>Traceability Matrix</h1>
+
+    <h2>Business Objective → Platform Traceability</h2>
+    <table>
+      <tr>
+        <th>Business Objective</th>
+        <th>Feature</th>
+        <th>Schema</th>
+        <th>API</th>
+        <th>Flow</th>
+      </tr>
+      <tr>
+        <td>Reduce warranty cost</td>
+        <td>Rule Engine</td>
+        <td>asset_status, executable_rules</td>
+        <td>/api/assets, /api/claims</td>
+        <td>Warranty Claim Sequence</td>
+      </tr>
+      <tr>
+        <td>Prevent fraud</td>
+        <td>Usage Analytics</td>
+        <td>asset_status, telemetry</td>
+        <td>/api/assets/:id</td>
+        <td>Abuse Detection Flow</td>
+      </tr>
+      <tr>
+        <td>Enable asset recovery</td>
+        <td>Transfers</td>
+        <td>asset_transfers</td>
+        <td>/api/transfers</td>
+        <td>Transfer Lifecycle</td>
+      </tr>
+      <tr>
+        <td>Tenant isolation</td>
+        <td>RLS</td>
+        <td>all core tables</td>
+        <td>All</td>
+        <td>API Request Flow</td>
+      </tr>
+    </table>
+
+    <h2>Feature Implementation Coverage</h2>
+    <p>This matrix ensures that every business objective maps to concrete technical implementations across the stack:</p>
+    <ul>
+      <li><b>Schema</b>: Database tables and relationships that store relevant data</li>
+      <li><b>API</b>: REST endpoints that expose functionality to clients</li>
+      <li><b>Flow</b>: Business process workflows that orchestrate the feature</li>
+    </ul>
+
+    <h2>Quality Metrics</h2>
+    <table>
+      <tr>
+        <th>Metric</th>
+        <th>Target</th>
+        <th>Current</th>
+        <th>Status</th>
+      </tr>
+      <tr>
+        <td>Warranty Cost Reduction</td>
+        <td>25%</td>
+        <td>Pending Implementation</td>
+        <td>🟡 In Progress</td>
+      </tr>
+      <tr>
+        <td>Fraud Detection Accuracy</td>
+        <td>95%</td>
+        <td>Pending Implementation</td>
+        <td>🟡 In Progress</td>
+      </tr>
+      <tr>
+        <td>Asset Recovery Rate</td>
+        <td>90%</td>
+        <td>Pending Implementation</td>
+        <td>🟡 In Progress</td>
+      </tr>
+      <tr>
+        <td>Data Isolation Compliance</td>
+        <td>100%</td>
+        <td>100%</td>
+        <td>🟢 Complete</td>
+      </tr>
+    </table>
+  </section>
+
+  <section id="glossary">
+    <h1>Glossary</h1>
+    
+    <h2>Acronyms</h2>
+    <table>
+      <tr>
+        <th>Term</th>
+        <th>Full Form</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><b>ALM</b></td>
+        <td>Asset Lifecycle Management</td>
+        <td>The complete platform for managing assets from manufacturing to decommissioning</td>
+      </tr>
+      <tr>
+        <td><b>RLS</b></td>
+        <td>Row-Level Security</td>
+        <td>Database security mechanism that restricts data access based on user attributes</td>
+      </tr>
+      <tr>
+        <td><b>SOH</b></td>
+        <td>State of Health</td>
+        <td>Metric indicating the condition and performance level of an asset</td>
+      </tr>
+      <tr>
+        <td><b>ltree</b></td>
+        <td>Label Tree</td>
+        <td>PostgreSQL data type for representing hierarchical tree structures</td>
+      </tr>
+      <tr>
+        <td><b>OEM</b></td>
+        <td>Original Equipment Manufacturer</td>
+        <td>The company that originally manufactured the asset</td>
+      </tr>
+    </table>
+
+    <h2>Technical Terms</h2>
+    <ul>
+      <li><b>Asset</b>: A physical piece of equipment or device being tracked through its lifecycle</li>
+      <li><b>Workspace</b>: A hierarchical organizational unit for grouping related assets</li>
+      <li><b>Transfer</b>: The process of moving asset ownership between organizations or workspaces</li>
+      <li><b>State Machine</b>: A model defining valid states and transitions for asset lifecycle</li>
+      <li><b>Audit Trail</b>: Complete historical record of all changes and actions on an asset</li>
+      <li><b>Tenant</b>: An organization with isolated data within the multi-tenant platform</li>
+      <li><b>Telemetry</b>: Automated measurements and data transmitted from assets</li>
+      <li><b>Warranty Claim</b>: A request for repair or replacement under manufacturer warranty</li>
+    </ul>
+
+    <h2>Business Terms</h2>
+    <ul>
+      <li><b>Lifecycle</b>: The complete journey of an asset from creation to disposal</li>
+      <li><b>Decommissioning</b>: The process of retiring an asset from active service</li>
+      <li><b>Second-Life</b>: Reusing or repurposing an asset after its primary lifecycle</li>
+      <li><b>Abuse Detection</b>: Identifying patterns of misuse that may void warranties</li>
+      <li><b>Rollback</b>: Reverting a transaction or state change due to failure</li>
+    </ul>
+  </section>
+
+  <footer style="margin-top: 60px; padding: 30px; background: #2c3e50; color: #ecf0f1; border-radius: 8px; text-align: center;">
+    <p><b>Asset Lifecycle Management Platform Documentation</b></p>
+    <p style="margin-top: 10px; opacity: 0.8;">Version 1.0 | Last Updated: 2026</p>
+  </footer>
+</main>
+
+</body>
+</html>

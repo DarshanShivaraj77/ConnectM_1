@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ConnectM ALM – Unified UI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+/* ---------- DESIGN SYSTEM ---------- */
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --primary:#0f172a;
+  --secondary:#2563eb;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:#111827;
+}
+
+/* ---------- LAYOUT ---------- */
+header{
+  background:var(--primary);
+  color:#fff;
+  padding:14px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.container{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  height:calc(100vh - 56px);
+}
+
+nav{
+  background:#111827;
+  padding:16px;
+  color:#cbd5e1;
+}
+
+nav h3{margin-top:0;color:#fff}
+nav a{
+  display:block;
+  padding:10px;
+  color:#cbd5e1;
+  text-decoration:none;
+  border-radius:6px;
+  margin-bottom:6px;
+}
+nav a:hover{background:#1f2937}
+
+main{
+  padding:24px;
+  overflow:auto;
+}
+
+/* ---------- COMPONENTS ---------- */
+.card{
+  background:var(--card);
+  border-radius:10px;
+  padding:20px;
+  margin-bottom:20px;
+  border:1px solid var(--border);
+}
+
+.grid{
+  display:grid;
+  gap:16px;
+}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+
+.kpi{
+  font-size:26px;
+  font-weight:600;
+}
+.label{
+  font-size:12px;
+  color:var(--muted);
+}
+
+input,select,textarea,button{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border:1px solid var(--border);
+  border-radius:6px;
+}
+button{
+  background:var(--secondary);
+  color:#fff;
+  border:none;
+  cursor:pointer;
+}
+
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:14px;
+  font-size:12px;
+}
+.badge.actual{background:#dcfce7;color:#166534}
+.badge.operational{background:#fef3c7;color:#92400e}
+.badge.hierarchy{background:#e0e7ff;color:#1e3a8a}
+
+/* ---------- TABLE ---------- */
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  padding:10px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+}
+th{font-size:12px;color:var(--muted)}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>ConnectM · Asset Lifecycle Management</div>
+  <div>OEM Admin · Exide</div>
+</header>
+
+<div class="container">
+
+<!-- NAVIGATION -->
+<nav>
+  <h3>Navigation</h3>
+  <a href="#home">Home</a>
+  <a href="#product">Product Onboarding</a>
+  <a href="#asset">Asset Onboarding</a>
+  <a href="#assetDash">Asset Dashboard</a>
+  <a href="#workspace">Operational Workspace</a>
+</nav>
+
+<main>
+
+<!-- HOME -->
+<section id="home">
+  <h2>Workspace Home</h2>
+  <div class="grid grid-3">
+    <div class="card">
+      <span class="badge actual">Actual</span>
+      <h3>Dealer · Bangalore North</h3>
+      <div class="kpi">128</div>
+      <div class="label">Assets Present</div>
+    </div>
+    <div class="card">
+      <span class="badge hierarchy">Hierarchy</span>
+      <h3>South Zone</h3>
+      <div class="kpi">3,482</div>
+      <div class="label">Assets Under Region</div>
+    </div>
+    <div class="card">
+      <span class="badge operational">Operational</span>
+      <h3>SOH Drop Investigation</h3>
+      <div class="kpi">42</div>
+      <div class="label">Assets Flagged</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT -->
+<section id="product">
+  <h2>Product Onboarding</h2>
+  <div class="card grid grid-2">
+    <input value="EV Battery – LFP">
+    <input value="EXD-48V-100Ah">
+    <textarea>Warranty: 5 Years / 1500 Cycles / SOH ≥ 70%</textarea>
+    <textarea>Tracked CAN: Voltage, Current, SOH, Temp</textarea>
+  </div>
+</section>
+
+<!-- ASSET -->
+<section id="asset">
+  <h2>Asset Onboarding</h2>
+  <div class="card grid grid-2">
+    <input value="EXD-BAT-00231">
+    <input value="Batch-0923">
+    <input value="IoT-IMEI-88392">
+    <input value="Warranty Start: 12-Jan-2026">
+  </div>
+  <button>Activate Asset</button>
+</section>
+
+<!-- ASSET DASHBOARD -->
+<section id="assetDash">
+  <h2>Asset Dashboard · EXD-BAT-00231</h2>
+  <div class="grid grid-4">
+    <div class="card"><div class="kpi">91%</div><div class="label">SOH</div></div>
+    <div class="card"><div class="kpi">1248</div><div class="label">Cycles</div></div>
+    <div class="card"><div class="kpi">Operational</div><div class="label">Status</div></div>
+    <div class="card"><div class="kpi">In Warranty</div><div class="label">Warranty</div></div>
+  </div>
+
+  <div class="card">
+    <canvas id="assetHealth"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>Claims</h3>
+    <table>
+      <tr><th>ID</th><th>Type</th><th>Status</th><th>Source</th></tr>
+      <tr><td>CLM-1092</td><td>Over Temp</td><td>Approved</td><td>IoT Rule</td></tr>
+      <tr><td>CLM-1034</td><td>Abuse</td><td>Rejected</td><td>AI</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- WORKSPACE -->
+<section id="workspace">
+  <h2>Operational Workspace · SOH Drop &gt; 8%</h2>
+
+  <div class="grid grid-3">
+    <div class="card"><div class="kpi">42</div><div class="label">Assets</div></div>
+    <div class="card"><div class="kpi">9</div><div class="label">Claims Raised</div></div>
+    <div class="card"><div class="kpi">67%</div><div class="label">Approval Ratio</div></div>
+  </div>
+
+  <div class="card">
+    <canvas id="claimCorrelation"></canvas>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+new Chart(document.getElementById('assetHealth'),{
+  type:'line',
+  data:{
+    labels:['W1','W2','W3','W4'],
+    datasets:[{data:[95,94,92,91],label:'SOH %',borderColor:'#2563eb'}]
+  },
+  options:{plugins:{legend:{display:false}}}
+});
+
+new Chart(document.getElementById('claimCorrelation'),{
+  type:'bar',
+  data:{
+    labels:['Manufacturing','Usage','Abuse'],
+    datasets:[{data:[4,3,2],backgroundColor:['#2563eb','#22c55e','#f59e0b']}]
+  },
+  options:{plugins:{legend:{display:false}}}
+});
+</script>
+
+</body>
+</html>

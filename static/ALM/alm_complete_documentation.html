@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ALM Platform - Complete Research & Design Documentation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            min-height: 100vh;
+        }
+        
+        /* Navigation Sidebar */
+        nav {
+            background: #020617;
+            border-right: 1px solid #1e293b;
+            padding: 24px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        nav .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #1e293b;
+        }
+        
+        nav .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+            color: white;
+        }
+        
+        nav .logo-text {
+            font-weight: 800;
+            font-size: 18px;
+            color: #f1f5f9;
+        }
+        
+        nav .nav-section {
+            margin-bottom: 24px;
+        }
+        
+        nav .nav-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+        
+        nav a {
+            display: block;
+            padding: 10px 16px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            transition: all 0.2s;
+        }
+        
+        nav a:hover {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+        
+        nav a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        /* Main Content */
+        main {
+            background: #0f172a;
+            padding: 48px;
+            overflow-y: auto;
+            max-width: 1400px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 48px;
+            border-radius: 16px;
+            margin-bottom: 48px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: white;
+        }
+        
+        .header p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.9);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+        }
+        
+        h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #f1f5f9;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #334155;
+        }
+        
+        h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin: 32px 0 16px;
+        }
+        
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin: 24px 0 12px;
+        }
+        
+        p {
+            color: #94a3b8;
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+        
+        ul, ol {
+            margin: 16px 0 16px 24px;
+            color: #94a3b8;
+        }
+        
+        li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        /* Cards and Boxes */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 24px 0;
+        }
+        
+        .card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .card h4 {
+            margin-top: 0;
+            color: #38bdf8;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        
+        th {
+            background: #1e293b;
+            font-weight: 600;
+            color: #f1f5f9;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            color: #94a3b8;
+        }
+        
+        tr:hover td {
+            background: #1e293b;
+        }
+        
+        /* Code Blocks */
+        pre {
+            background: #020617;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        code {
+            color: #38bdf8;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .badge-info {
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+        
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            border-left: 4px solid #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .success-box {
+            border-left: 4px solid #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .warning-box {
+            border-left: 4px solid #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .danger-box {
+            border-left: 4px solid #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 48px;
+            color: #64748b;
+            font-size: 14px;
+            border-top: 1px solid #1e293b;
+            margin-top: 64px;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #1e293b;
+            }
+        }
+    
+
+/* Additional styles for merged sections */
+.merged-section {
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 3px solid #e5e7eb;
+}
+.section-label {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<header>
+ALM Platform — Complete Research, Architecture & Design Documentation
+</header>
+
+<div class="wrap">
+
+<nav>
+  <h3>📚 Complete Documentation</h3>
+  <a href="#overview">Overview & Introduction</a>
+  <a href="#research-1">Research & Documentation</a>
+  <a href="#architecture">Architecture Thread</a>
+  <a href="#decisions">Design Decisions</a>
+  <a href="#appendix">Appendix & Notes</a>
+</nav>
+
+<main>
+
+<div id="overview" class="section">
+<h2>📖 Overview</h2>
+<p>This document consolidates all research, architecture, and design decisions for the ALM (Asset Lifecycle Management) platform. It combines content from multiple research files into a single comprehensive reference.</p>
+
+<p><strong>Source Files Merged:</strong></p>
+<ul>
+<li>✅ research_1.html (57 KB) - Complete research & documentation</li>
+<li>✅ research_2.html (17 KB) - Architecture thread details</li>
+<li>✅ research_4.html (6 KB) - Design decisions log</li>
+<li>❌ research_3.html (5 KB) - Skipped (outline only, no detailed content)</li>
+</ul>
+
+<p><strong>Total Content:</strong> ~80 KB of comprehensive documentation</p>
+</div>
+
+<div id="research-1" class="section">
+<div class="section-label">📄 PRIMARY RESEARCH & DOCUMENTATION</div>
+
+            <div class="header">
+                <h1>🚀 ConnectM ALM Platform</h1>
+                <p>Complete Research, Architecture & Documentation<br>
+                <strong>Asset Lifecycle Management for IoT-Enabled Assets</strong><br>
+                <em>February 2026 | Production Ready</em></p>
+            </div>
+            
+            <!-- MASTER DOCUMENT SECTION -->
+            <section id="master-doc">
+                <h2>Master Document Overview</h2>
+                <p>This document is the <strong>single source of truth</strong> for the ALM platform, covering product requirements, UX rules, system architecture, database design, delivery planning, and engineering execution.</p>
+                
+                <div class="info-box">
+                    <strong>Start Date:</strong> 2 February 2026<br>
+                    <strong>Target Audience:</strong> Product, Engineering, Architecture, Security, Leadership<br>
+                    <strong>Document Status:</strong> Authoritative | Version 1.0
+                </div>
+            </section>
+            
+            <!-- PRODUCT OVERVIEW -->
+            <section id="product-overview">
+                <h2>1. Product Overview</h2>
+                
+                <h3>Objective</h3>
+                <p>Build a multi-tenant, audit-grade Asset Lifecycle Intelligence platform integrating IoT, operations, warranty, and finance into a single system of record.</p>
+                
+                <h3>Core Vision</h3>
+                <p>ConnectM ALM unifies IoT data, lifecycle governance, warranty intelligence, and compliance-grade auditability for physical assets including EVs, batteries, HVAC systems, and medical equipment.</p>
+                
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>🎯 Target Markets</h4>
+                        <ul>
+                            <li>EV & Battery OEMs</li>
+                            <li>Fleet Operators</li>
+                            <li>Financiers & Insurers</li>
+                            <li>Industrial Equipment Managers</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>🔑 Key Capabilities</h4>
+                        <ul>
+                            <li>Asset Lifecycle Governance</li>
+                            <li>Warranty Intelligence</li>
+                            <li>IoT & Analytics Native</li>
+                            <li>Battery Passport Ready</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>✨ Differentiators</h4>
+                        <ul>
+                            <li>Governance-First Design</li>
+                            <li>Multi-Stakeholder Model</li>
+                            <li>Immutable Audit Trails</li>
+                            <li>Enterprise Ready</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- PRODUCT REQUIREMENTS -->
+            <section id="prd">
+                <h2>2. Product Requirements (PRD)</h2>
+                
+                <h3>In Scope</h3>
+                <ul>
+                    <li>Multi-tenant organization model (DB-enforced isolation)</li>
+                    <li>Workspace hierarchy (max 6 levels)</li>
+                    <li>Asset lifecycle tracking (Inventory → Operations → Quarantine → Decommission)</li>
+                    <li>Warranty & usage analytics with fraud detection</li>
+                    <li>Rule-based alerts and recommendations</li>
+                    <li>Asset transfer workflows between organizations</li>
+                    <li>Battery passport and ESG compliance</li>
+                    <li>Multi-stakeholder collaboration (OEM, Financier, Fleet, 3PL)</li>
+                </ul>
+                
+                <h3>Out of Scope (V1)</h3>
+                <ul>
+                    <li>Custom BI builder</li>
+                    <li>Marketplace transactions</li>
+                    <li>ML model training pipelines</li>
+                    <li>Predictive maintenance (deferred to V2)</li>
+                </ul>
+            </section>
+            
+            <!-- PRODUCT HIERARCHY -->
+            <section id="hierarchy-logic">
+                <h2>3. Product Level Drill-Down Logic</h2>
+                
+                <p>The core logic follows a hierarchical template system. When a product is onboarded, it defines the "DNA" for all assets under it.</p>
+                
+                <div class="info-box">
+                    <strong>Hierarchy:</strong> Product Type (Industry Level) → OEM (Manufacturer) → Model → Variant (Specific Specs)
+                </div>
+                
+                <h3>Simulated Asset Path Example</h3>
+                <div class="card">
+                    <ul>
+                        <li><strong>Type:</strong> 4W Passenger Car</li>
+                        <li><strong>OEM:</strong> Tata</li>
+                        <li><strong>Model:</strong> Nexon</li>
+                        <li><strong>Variant:</strong> ZXI EV</li>
+                        <li><strong>Slots:</strong> Battery Pack, Traction Motor, IoT Gateway</li>
+                    </ul>
+                </div>
+                
+                <h3>Slot Provisioning Philosophy</h3>
+                <p>Intent is not to onboard every bolt, but to map critical sub-components that stream IoT data for lifecycle monitoring (e.g., Battery SoC, Motor RPM, Temperature sensors).</p>
+            </section>
+            
+            <!-- SIMULATED SPECS -->
+            <section id="specs">
+                <h2>4. Simulated Data Point Capture</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Type</th>
+                            <th>OEM & Model</th>
+                            <th>Sample Specs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>EV Battery</strong></td>
+                            <td>Exide Eltzis Smart</td>
+                            <td>LFP Chemistry, 3.2KW, 48V, Smart Connectivity</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EV 2W</strong></td>
+                            <td>Oben Rorr Performance</td>
+                            <td>2.8KW Battery, 100km Range, 72V Architecture</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EV 3W</strong></td>
+                            <td>Greaves Eltra Cargo</td>
+                            <td>10.8KWH Capacity, 520kg Payload, PU-City Variant</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EV LCV</strong></td>
+                            <td>Tata Ace EV Pro</td>
+                            <td>600kg Payload, CCS2 Charging, GVW Monitoring</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- ONBOARDING WIZARD -->
+            <section id="onboarding-wizard">
+                <h2>5. Onboarding Wizard</h2>
+                
+                <p>The onboarding UI provides a guided wizard to capture warranty terms, safety limits, and custom fields.</p>
+                
+                <h3>Key Features</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Product Information</h4>
+                        <ul>
+                            <li>Type, OEM, Model, Variant</li>
+                            <li>Technical specifications</li>
+                            <li>Component slots</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Warranty Terms</h4>
+                        <ul>
+                            <li>Period (Years)</li>
+                            <li>Max Kilometers/Cycles</li>
+                            <li>Coverage conditions</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Safety & Limits</h4>
+                        <ul>
+                            <li>Max Operating Temperature</li>
+                            <li>Peak Current Tolerances</li>
+                            <li>Operational thresholds</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Custom Properties</h4>
+                        <ul>
+                            <li>Dynamic field addition</li>
+                            <li>CAN bus mapping</li>
+                            <li>IoT parameter configuration</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>Code Example</h3>
+                <pre><code>&lt;!-- Technical Specs Section --&gt;
+&lt;div class="grid grid-cols-3 gap-6"&gt;
+    &lt;div&gt;
+        &lt;label class="uppercase text-xs font-bold"&gt;Max Payload (KG)&lt;/label&gt;
+        &lt;input type="number" value="600" class="w-full p-3 bg-slate-50"&gt;
+    &lt;/div&gt;
+    &lt;!-- Dynamic CAN Mapping --&gt;
+    &lt;button class="border-2 border-dashed"&gt;Add Custom Property&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+            </section>
+            
+            <!-- WARRANTY & SAFETY -->
+            <section id="warranty">
+                <h2>6. Warranty & Operational Limits</h2>
+                
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>🛡️ Warranty Terms</h4>
+                        <p>Period (Years), Max KMs, and Cycle Count (for batteries). Digitized into enforceable rules with automatic breach detection.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🌡️ Safety Limits</h4>
+                        <p>Max Operating Temp (°C) and Peak Current Tolerances. Real-time monitoring with immediate alerting.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🔧 Maintenance</h4>
+                        <p>Scheduled service recommendations based on Odometer triggers and usage patterns.</p>
+                    </div>
+                </div>
+                
+                <h3>Warranty Intelligence System</h3>
+                
+                <div class="success-box">
+                    <h4>Business Impact</h4>
+                    <div class="card-grid">
+                        <div>
+                            <div style="font-size: 32px; font-weight: 800; color: #38bdf8; margin-bottom: 8px;">20–40%</div>
+                            <p>Reduction in warranty claim costs through fraud detection</p>
+                        </div>
+                        <div>
+                            <div style="font-size: 32px; font-weight: 800; color: #38bdf8; margin-bottom: 8px;">30–50%</div>
+                            <p>Faster claim turnaround time with automated assessments</p>
+                        </div>
+                        <div>
+                            <div style="font-size: 32px; font-weight: 800; color: #38bdf8; margin-bottom: 8px;">25–30%</div>
+                            <p>Improvement in battery lifespan through proactive alerts</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>How ConnectM Solves Warranty Problems</h3>
+                <ul>
+                    <li><strong>Real-Time Battery Telemetry:</strong> Continuous monitoring of SOH, SOC, temperature, charge/discharge cycles, and fault codes</li>
+                    <li><strong>Warranty-Aware Rule Engine:</strong> Digitized warranty terms with automatic breach tracking</li>
+                    <li><strong>Usage & Health-Based Scoring:</strong> Comparative analytics across similar assets</li>
+                    <li><strong>Automated Claim Intelligence:</strong> Objective evidence supporting faster approve/reject decisions</li>
+                    <li><strong>Lifecycle Integration:</strong> Automatic flagging for quarantine or decommission</li>
+                    <li><strong>Battery Passport Linkage:</strong> Warranty history as part of permanent asset record</li>
+                </ul>
+            </section>
+            
+            <!-- DOCUMENT MANAGEMENT -->
+            <section id="documents">
+                <h2>7. Intelligent Document Management</h2>
+                
+                <p>Instead of generic file uploads, the platform requires naming and categorization to drive automated expiry alerts.</p>
+                
+                <h3>Document Categories</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Registration & Compliance</h4>
+                        <ul>
+                            <li>RC (Registration Certificate)</li>
+                            <li>Insurance Policies</li>
+                            <li>Fitness Certificates</li>
+                            <li>Emission Test Reports</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Technical Documents</h4>
+                        <ul>
+                            <li>Product Manuals</li>
+                            <li>Maintenance Schedules</li>
+                            <li>Safety Datasheets</li>
+                            <li>IoT Configuration Guides</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Warranty & Claims</h4>
+                        <ul>
+                            <li>Warranty Certificates</li>
+                            <li>Claim Documentation</li>
+                            <li>Service Records</li>
+                            <li>Inspection Reports</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>Automatic Expiry Tracking:</strong> The platform monitors document expiry dates and triggers alerts 30, 15, and 7 days before expiration.
+                </div>
+            </section>
+            
+            <!-- FLEET DASHBOARD -->
+            <section id="dashboard">
+                <h2>8. Fleet Management Dashboard</h2>
+                
+                <h3>Key Performance Indicators</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Fleet Health</h4>
+                        <div style="font-size: 32px; font-weight: 800; color: #10b981;">94.2%</div>
+                        <p>Overall fleet operational status</p>
+                    </div>
+                    <div class="card">
+                        <h4>Active Alerts</h4>
+                        <div style="font-size: 32px; font-weight: 800; color: #ef4444;">12</div>
+                        <p>Critical issues requiring attention</p>
+                    </div>
+                    <div class="card">
+                        <h4>Battery Mix</h4>
+                        <div style="font-size: 16px; font-weight: 600; margin-top: 12px;">45% 2W | 55% 3W</div>
+                        <p>Asset distribution by type</p>
+                    </div>
+                    <div class="card">
+                        <h4>Claims Pending</h4>
+                        <div style="font-size: 32px; font-weight: 800; color: #38bdf8;">04</div>
+                        <p>Warranty claims awaiting review</p>
+                    </div>
+                </div>
+                
+                <h3>Dashboard Features</h3>
+                <ul>
+                    <li><strong>Asset Mix Visualization:</strong> Donut charts showing asset distribution by type, manufacturer, and status</li>
+                    <li><strong>Energy Utilization:</strong> Line charts tracking battery usage and charging patterns</li>
+                    <li><strong>Live Tracking:</strong> Map view with real-time asset locations and geofencing</li>
+                    <li><strong>Historical Claims:</strong> Timeline of past warranty claims and their outcomes</li>
+                    <li><strong>Predictive Insights:</strong> AI-driven recommendations for maintenance and replacements</li>
+                </ul>
+            </section>
+            
+            <!-- IoT & CAN BUS -->
+            <section id="iot">
+                <h2>9. CAN Bus & IoT Integration</h2>
+                
+                <h3>IoT Configuration</h3>
+                <p>IoT telemetry is configured at the product level, ensuring consistent data collection across all assets of the same type.</p>
+                
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Protocol Support</h4>
+                        <ul>
+                            <li>MQTT (Primary)</li>
+                            <li>HTTPS/REST API</li>
+                            <li>CAN Bus (J1939, OBD-II)</li>
+                            <li>Modbus TCP/RTU</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Key Telemetry Points</h4>
+                        <ul>
+                            <li>Battery SoC, SoH, Temperature</li>
+                            <li>Motor RPM, Current, Voltage</li>
+                            <li>GPS Location, Speed</li>
+                            <li>Fault Codes, Diagnostics</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Data Processing</h4>
+                        <ul>
+                            <li>Real-time stream processing</li>
+                            <li>Rule-based evaluation</li>
+                            <li>Time-series storage</li>
+                            <li>Analytics & aggregation</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>Third-Party Device Onboarding</h3>
+                <p>The platform supports integration with existing IoT devices and gateways through a flexible adapter system.</p>
+            </section>
+            
+            <!-- ARCHITECTURE -->
+            <section id="architecture">
+                <h2>10. Technical Architecture</h2>
+                
+                <pre><code>IoT Devices / BMS
+      ↓
+MQTT / HTTPS
+      ↓
+Stream Layer (Kafka / Kinesis)
+      ↓
+Telemetry DB (TimescaleDB)
+      ↓
+Rule Engine (pg_cron)
+      ↓
+Core ALM DB (PostgreSQL + RLS + ltree)
+      ↓
+API Layer (Fastify)
+      ↓
+Web Dashboard / Partner APIs</code></pre>
+                
+                <h3>Architecture Principles</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Database-Enforced Isolation</h4>
+                        <p>Row-Level Security (RLS) ensures multi-tenant data isolation at the database level</p>
+                    </div>
+                    <div class="card">
+                        <h4>Immutable Audit Trails</h4>
+                        <p>All state changes are logged permanently with full attribution</p>
+                    </div>
+                    <div class="card">
+                        <h4>Executable Rule Engine</h4>
+                        <p>Rules are stored as executable code, not JSON, using pg_cron</p>
+                    </div>
+                    <div class="card">
+                        <h4>Telemetry Isolation</h4>
+                        <p>Telemetry data is separated from transactional data for performance</p>
+                    </div>
+                </div>
+                
+                <div class="success-box">
+                    <h4>Architecture Rating: 9.5/10</h4>
+                    <p>Multi-stakeholder model solves real OEM pain points with enterprise-grade scalability and security.</p>
+                </div>
+            </section>
+            
+            <!-- TECHNOLOGY STACK -->
+            <section id="stack">
+                <h2>11. Technology Stack</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Layer</th>
+                            <th>Technology</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Backend</strong></td>
+                            <td>Node.js, Fastify</td>
+                            <td>High-performance API server</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Database</strong></td>
+                            <td>PostgreSQL 15, TimescaleDB</td>
+                            <td>Transactional + time-series data</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security</strong></td>
+                            <td>JWT, RLS, pgcrypto</td>
+                            <td>Authentication & data isolation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Frontend</strong></td>
+                            <td>React, TypeScript, Tailwind</td>
+                            <td>Modern web application</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Streaming</strong></td>
+                            <td>Kafka / AWS Kinesis</td>
+                            <td>IoT data ingestion</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Infrastructure</strong></td>
+                            <td>AWS ECS/EKS, RDS, ALB, WAF</td>
+                            <td>Cloud deployment & security</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Monitoring</strong></td>
+                            <td>CloudWatch, Grafana</td>
+                            <td>Observability & alerting</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Scalability Roadmap</h3>
+                <div class="info-box">
+                    <strong>PHASE 1:</strong> 10K assets → PostgreSQL + TimescaleDB<br>
+                    <strong>PHASE 2:</strong> 100K assets → Read replicas + caching<br>
+                    <strong>PHASE 3:</strong> 1M assets → ClickHouse + Kafka
+                </div>
+                
+                <h3>Cost Model</h3>
+                <div class="success-box">
+                    <strong>AWS Infrastructure:</strong> ~$775/month for production<br>
+                    <strong>Per Asset Cost:</strong> $0.075/asset/month at 10K assets
+                </div>
+            </section>
+            
+            <!-- DATABASE SCHEMA -->
+            <section id="database">
+                <h2>12. Database Schema</h2>
+                
+                <h3>Core Tables</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Organization & Users</h4>
+                        <ul>
+                            <li>organizations</li>
+                            <li>users</li>
+                            <li>user_roles</li>
+                            <li>org_settings</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Product Catalog</h4>
+                        <ul>
+                            <li>products (global)</li>
+                            <li>product_variants</li>
+                            <li>product_specs</li>
+                            <li>component_slots</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Asset Management</h4>
+                        <ul>
+                            <li>assets</li>
+                            <li>asset_status</li>
+                            <li>asset_transfers</li>
+                            <li>asset_documents</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Workspaces</h4>
+                        <ul>
+                            <li>workspaces (ltree)</li>
+                            <li>workspace_users</li>
+                            <li>workspace_assets</li>
+                            <li>workspace_permissions</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Rules & Events</h4>
+                        <ul>
+                            <li>executable_rules</li>
+                            <li>rule_execution_log</li>
+                            <li>alerts</li>
+                            <li>events</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Warranty & Claims</h4>
+                        <ul>
+                            <li>warranty_terms</li>
+                            <li>warranty_breaches</li>
+                            <li>claims</li>
+                            <li>claim_approvals</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>All tenant-sensitive tables enforce Row Level Security (RLS)</strong> to ensure complete data isolation between organizations.
+                </div>
+                
+                <h3>Example: Products as Global Entities</h3>
+                <pre><code>-- Products are NOT scoped to organizations
+ALTER TABLE products DROP CONSTRAINT IF EXISTS products_org_id_fkey;
+
+-- Assets link to organizations
+CREATE TABLE assets (
+    asset_id UUID PRIMARY KEY,
+    product_id UUID REFERENCES products(product_id),
+    current_org_id UUID REFERENCES organizations(org_id),
+    -- Transfer history preserved
+    created_at TIMESTAMP DEFAULT NOW()
+);</code></pre>
+            </section>
+            
+            <!-- ERD -->
+            <section id="erd">
+                <h2>13. Entity Relationship Diagram</h2>
+                
+                <pre><code>ORGANIZATIONS
+ ├── USERS
+ ├── WORKSPACES (ltree hierarchy)
+ │    ├── WORKSPACE_USERS
+ │    └── WORKSPACE_ASSETS ── ASSETS
+ │                            ├── ASSET_STATUS
+ │                            ├── ASSET_TRANSFERS
+ │                            ├── WARRANTY_BREACHES
+ │                            └── EXECUTABLE_RULES ── RULE_EXECUTION_LOG
+ └── PRODUCTS (GLOBAL, NO ORG_ID)
+      └── PRODUCT_VARIANTS</code></pre>
+                
+                <h3>Key Relationships</h3>
+                <ul>
+                    <li><strong>Products are Global:</strong> Once approved, products are available to all organizations</li>
+                    <li><strong>Assets belong to One Org:</strong> But can be transferred with full audit trail</li>
+                    <li><strong>Workspaces use ltree:</strong> For efficient hierarchical queries (max 6 levels)</li>
+                    <li><strong>Physical vs Logical:</strong> Assets have one physical location but multiple stakeholder views</li>
+                </ul>
+            </section>
+            
+            <!-- SECURITY & RLS -->
+            <section id="rls">
+                <h2>14. Security & Row Level Security (RLS)</h2>
+                
+                <h3>Multi-Tenancy Strategy</h3>
+                <p>Database-enforced isolation using PostgreSQL Row Level Security (RLS) ensures complete tenant separation.</p>
+                
+                <h3>RLS Policy Example</h3>
+                <pre><code>-- Enable RLS on workspaces table
+ALTER TABLE workspaces ENABLE ROW LEVEL SECURITY;
+
+-- Create policy: Users can only see workspaces in their organization
+CREATE POLICY org_isolation ON workspaces 
+USING (org_id = current_setting('app.current_org_id')::uuid);
+
+-- Create policy: Workspace members can see workspace assets
+CREATE POLICY workspace_member_access ON workspace_assets
+USING (
+    workspace_id IN (
+        SELECT workspace_id 
+        FROM workspace_users 
+        WHERE user_id = current_setting('app.current_user_id')::uuid
+    )
+);</code></pre>
+                
+                <h3>Security Features</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Authentication</h4>
+                        <ul>
+                            <li>JWT token-based auth</li>
+                            <li>Role-based access control</li>
+                            <li>Multi-factor authentication</li>
+                            <li>Session management</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Data Protection</h4>
+                        <ul>
+                            <li>RLS for tenant isolation</li>
+                            <li>Encryption at rest (pgcrypto)</li>
+                            <li>TLS for data in transit</li>
+                            <li>Audit logging</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Infrastructure</h4>
+                        <ul>
+                            <li>AWS WAF for DDoS protection</li>
+                            <li>VPC isolation</li>
+                            <li>Security groups</li>
+                            <li>Regular backups</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="danger-box">
+                    <h4>🔥 Critical Security Rules</h4>
+                    <ul>
+                        <li><strong>Never bypass RLS</strong> in application queries</li>
+                        <li><strong>Always set session context</strong> (org_id, user_id) before queries</li>
+                        <li><strong>No cross-org joins</strong> in the application layer</li>
+                        <li><strong>Audit all sensitive operations</strong> in immutable logs</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- JIRA DELIVERY PLAN -->
+            <section id="jira">
+                <h2>15. Jira Delivery Plan</h2>
+                
+                <h3>Epic Breakdown (16-Week Delivery)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Epic</th>
+                            <th>Timeline</th>
+                            <th>Key Deliverables</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. Platform Foundation</strong></td>
+                            <td>Weeks 1–2</td>
+                            <td>Auth, multi-tenancy, RLS, basic API structure</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Workspace & Hierarchy</strong></td>
+                            <td>Weeks 3–4</td>
+                            <td>ltree implementation, workspace CRUD, permissions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Asset Lifecycle</strong></td>
+                            <td>Weeks 5–6</td>
+                            <td>Asset CRUD, status management, transfer workflows</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. Rule Engine</strong></td>
+                            <td>Weeks 7–8</td>
+                            <td>pg_cron setup, rule execution, alert system</td>
+                        </tr>
+                        <tr>
+                            <td><strong>5. IoT Integration</strong></td>
+                            <td>Weeks 9–10</td>
+                            <td>MQTT broker, telemetry ingestion, TimescaleDB</td>
+                        </tr>
+                        <tr>
+                            <td><strong>6. Warranty & Analytics</strong></td>
+                            <td>Weeks 11–12</td>
+                            <td>Warranty logic, claim management, dashboards</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7. Security & Hardening</strong></td>
+                            <td>Weeks 13–14</td>
+                            <td>Penetration testing, performance optimization</td>
+                        </tr>
+                        <tr>
+                            <td><strong>8. Pilot & GTM</strong></td>
+                            <td>Weeks 15–16</td>
+                            <td>Pilot deployment, customer onboarding, documentation</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- ENGINEERING GUIDE -->
+            <section id="engineering">
+                <h2>16. Engineering Guide</h2>
+                
+                <h3>First 30 Days Onboarding</h3>
+                <ul>
+                    <li>Understand domain invariants (asset, workspace, transfer)</li>
+                    <li>Review database schema and ERD thoroughly</li>
+                    <li>Never bypass RLS in queries</li>
+                    <li>Prefer database constraints over application logic</li>
+                    <li>Preserve history; never overwrite audit trails</li>
+                </ul>
+                
+                <h3>Golden Rules</h3>
+                <div class="danger-box">
+                    <ul>
+                        <li><strong>No cross-org joins</strong> – Always filter by org_id</li>
+                        <li><strong>No recursive hierarchy queries</strong> – Use ltree operators instead</li>
+                        <li><strong>No JSON-based business rules</strong> – Use executable pg_cron rules</li>
+                        <li><strong>No silent automation</strong> – Every action must have an audit log</li>
+                        <li><strong>No direct RLS bypass</strong> – Always set session context</li>
+                    </ul>
+                </div>
+                
+                <h3>Development Workflow</h3>
+                <ol>
+                    <li>Create feature branch from main</li>
+                    <li>Write tests first (TDD approach)</li>
+                    <li>Implement feature with RLS context</li>
+                    <li>Run security audit (automated)</li>
+                    <li>Code review by senior engineer</li>
+                    <li>Merge to main after approval</li>
+                </ol>
+            </section>
+            
+            <!-- DESIGN DECISIONS -->
+            <section id="design-decisions">
+                <h2>17. Design Decisions Log</h2>
+                
+                <div class="card">
+                    <h3>1. Core Platform Scope</h3>
+                    <p><strong>Decision:</strong> The platform is defined as an Asset Lifecycle Management (ALM) SaaS for IoT-enabled assets across batteries, vehicles, HVAC, and medical equipment. Focus areas include warranty risk, operational efficiency, and lifecycle intelligence rather than generic fleet management.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>2. Asset as Source of Truth</h3>
+                    <p><strong>Decision:</strong> Assets are treated as immutable entities with a unique identity. All telemetry, warranty, claims, transfers, and operational history attach to the asset. Assets can appear in multiple workspaces but are never duplicated.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>3. Multi-Tenancy & Data Isolation</h3>
+                    <p><strong>Decision:</strong> Organizations are strict tenants with isolation enforced at the data layer using RLS. Products are global once approved; assets are scoped to organizations with auditable transfer history.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>4. Workspace Model</h3>
+                    <p><strong>Decision:</strong> Workspaces are observational lenses, not ownership containers. Three types are defined: Actual (physical), Hierarchy (organizational), and Operational (problem-driven). Workspaces define KPI boundaries and collaboration scope.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>5. Operational Workspaces</h3>
+                    <p><strong>Decision:</strong> Operational workspaces are problem-driven and time-bound. Any user with access to at least 10 assets can create one. Assets enter via rules or manual pinning. These workspaces are temporary and can be archived.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>6. Product & Global Catalog</h3>
+                    <p><strong>Decision:</strong> OEMs onboard products and variants locally. ConnectM approves products to a global catalog. Once approved, products become reusable and immutable across all organizations.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>7. IoT & Rule Engine</h3>
+                    <p><strong>Decision:</strong> IoT telemetry is configured at product level for consistency. Rules are categorized into alerts, events, operational KPIs, and reports. Rule evaluation drives asset inclusion, alerts, and warranty logic. Rules are executable (pg_cron), not stored as JSON.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>8. Dashboards Strategy</h3>
+                    <p><strong>Decision:</strong> Three dashboard types: Asset Dashboard (single asset truth), Workspace Dashboard (aggregated KPIs), User KPI Dashboard (accountability). Landing page is always the workspace boundary dashboard.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>9. Claims & Warranty Model</h3>
+                    <p><strong>Decision:</strong> Claims are raised against assets and can be initiated from workspaces. Approval, rejection, and reasoning are fully auditable. Workspace-level claim correlation is a first-class view. Warranty terms are digitized and automatically enforced.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>10. Pricing Philosophy</h3>
+                    <p><strong>Decision:</strong> Pricing is aligned to warranty savings rather than users or devices. Model includes base platform fee, per-asset intelligence fee, and success-based savings share.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>11. Collaboration & External Users</h3>
+                    <p><strong>Decision:</strong> Workspace owners can invite internal and external users (OEM, Financier, 3PL). External users receive scoped access limited to workspace assets. Access is time-bound and revocable.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>12. Documentation & Execution</h3>
+                    <p><strong>Decision:</strong> Conversation history is preserved as a design intent archive. Execution artifacts include Jira-ready user stories, glossary, UI baseline, and decision logs.</p>
+                </div>
+            </section>
+            
+            <!-- CONVERSATION THREAD -->
+            <section id="thread">
+                <h2>18. Full Conversation Thread Summary</h2>
+                
+                <p>This section preserves the key moments from the complete design conversation that led to the current architecture.</p>
+                
+                <div class="info-box">
+                    <h4>Thread Timeline: January 13-14, 2026</h4>
+                    <p>11 major design iterations with Chief Architect reviews, culminating in a production-ready architecture rated 9.5/10.</p>
+                </div>
+                
+                <h3>Key Milestones</h3>
+                
+                <div class="card">
+                    <h4>Initial Requirement</h4>
+                    <p><em>"Once a product is on-boarded it should be available for multiple organisations to select that product however asset will be unique to organisation but can be transferred from one org to another"</em></p>
+                    <p><strong>Outcome:</strong> Products became global entities; assets gained transfer workflows.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>First Architecture Review</h4>
+                    <p><strong>Rating: 8.5/10</strong></p>
+                    <p>Strengths identified: Domain model clarity, scalability design, IoT-first approach</p>
+                    <p>Gaps identified: Missing multi-tenancy isolation, unlimited hierarchy depth</p>
+                </div>
+                
+                <div class="card">
+                    <h4>Multi-Tenancy Addition</h4>
+                    <p>Implemented Row Level Security (RLS), limited workspace hierarchy to 6 levels, standardized asset status tags.</p>
+                    <p><strong>Updated Rating: 9.2/10</strong></p>
+                </div>
+                
+                <div class="card">
+                    <h4>Stakeholder Complexity</h4>
+                    <p>Introduced dual group types (Physical vs Logical), multi-stakeholder model (OEM, Financier, Fleet, 3PL, Hub).</p>
+                    <p>Physical ownership is 1:1 with Hub; logical access is N:M with stakeholders.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>Production Review</h4>
+                    <p><strong>Rating: 8.8/10 - "Ship it. This is enterprise-grade."</strong></p>
+                    <p>Three red flags identified and fixed:</p>
+                    <ul>
+                        <li>N+1 Query Hell → Materialized Views</li>
+                        <li>No Rule Engine → pg_cron + State Machine</li>
+                        <li>ltree Path Explosion → Optimized indexing</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h4>Security Hardening</h4>
+                    <p>Added comprehensive security measures including WAF, VPC isolation, encryption, and audit logging.</p>
+                    <p>AWS infrastructure cost: ~$775/month for production.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>Final Architecture</h4>
+                    <p><strong>Rating: 9.5/10</strong></p>
+                    <p>Multi-stakeholder model solves real OEM pain points. Ready for pilot with 2 OEMs, then scale to production.</p>
+                </div>
+            </section>
+            
+            <!-- FOOTER -->
+            <footer>
+                <p><strong>ConnectM Technology Solutions</strong> | Asset Lifecycle Management Platform</p>
+                <p>Complete Research & Documentation | February 2026</p>
+                <p>Document Status: <span class="badge badge-success">PRODUCTION READY</span> | Version 1.0</p>
+                <p style="margin-top: 24px; font-size: 12px; color: #475569;">
+                    This document combines: Master Documentation, Product Design Thread, Architecture Thread, Design Decisions Log
+                </p>
+            </footer>
+        
+</div>
+
+<div id="architecture" class="section merged-section">
+<div class="section-label">🏗️ ARCHITECTURE THREAD (Additional Details)</div>
+
+
+        <div class="message" id="msg-1">
+            <div class="message-header">
+                <div>
+                    <strong>User Query</strong><br>
+                    <span class="timestamp">Jan 13, 2026 4:03 PM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <p><em>"Once a product is on-boarded it should available for multiple organisations to select that product however asset will be unique to organisation but can be transferred from one org to another"</em></p>
+                <div class="files">
+                    📎 Attached Files: 
+                    <a href="#">Grouping-Logics_Products.xlsx [file:3]</a>,
+                    <a href="#">ALM-Detailed-Documentation_V3-1.pdf [file:2]</a>,
+                    <a href="#">Advanced-Asset-Lifecycle-Management-platform-ALM-1.pdf [file:1]</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="message" id="msg-2">
+            <div class="message-header">
+                <div>
+                    <strong>Chief Architect Response</strong><br>
+                    <span class="timestamp">Jan 13, 2026 4:05 PM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <h2>Products onboarded as global/independent entities become selectable by multiple organizations, while assets link to a single owning organization at a time but support transfer workflows.[file:3]</h2>
+                <p>This aligns with grouping logics where Product Groups are independent (shared) and Organization/Dealer groups are hierarchical/dependent for assets.[file:3]</p>
+
+                <h3>Updated Schema</h3>
+                <pre><code>ALTER TABLE products DROP CONSTRAINT IF EXISTS products_org_id_fkey;</code></pre>
+
+                <h3>ERD Snippet</h3>
+                <pre><code>[Products] (Global Independent) * ---- 1 [ProductVariants]<br>                       |<br>                      * <br>                 [Assets] (current_org_id → [Organizations])</code></pre>
+
+                <h3>Workflow</h3>
+                <ul>
+                    <li>Onboard Product: Super Admin creates global product</li>
+                    <li>Select & Create Asset: Org admin selects product_id (global)</li>
+                    <li>Transfer Asset: From-org requests transfer → To-org approves → Trigger updates ownership</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="message" id="msg-3">
+            <div class="message-header">
+                <div>
+                    <strong>User Query: Architecture Opinion</strong><br>
+                    <span class="timestamp">Jan 13, 2026 4:16 PM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <p><em>"Honestly tell your opinion about the business and data model architecture"</em></p>
+            </div>
+        </div>
+
+        <div class="message" id="msg-4">
+            <div class="message-header">
+                <div>
+                    <strong>Chief Architect Rating: 8.5/10</strong><br>
+                    <span class="timestamp">Jan 13, 2026 4:18 PM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <div class="architecture-box">
+                    <strong>The ALM platform targets a compelling $13.9B warranty analytics market</strong>
+                </div>
+
+                <h3>Critical Issues (Fix Before Production)</h3>
+                <table>
+                    <tr><th>Issue</th><th>Impact</th><th>Fix</th></tr>
+                    <tr><td>No Product-Org Customization</td><td>OEMs need org-specific warranty</td><td>product_org_configs table</td></tr>
+                    <tr><td>Missing Multi-tenancy Isolation</td><td>Super Admin sees all data</td><td>RLS policies</td></tr>
+                    <tr><td>No Data Retention</td><td>Telemetry grows unbounded</td><td>Partition + TTL</td></tr>
+                </table>
+
+                <div class="warning">
+                    <strong>🚨 IoT Scale: 70-250 CAN params @ 10s freq = 1.3M rows/device/year</strong>
+                    <br>SOLUTION: TimescaleDB hypertables + compression
+                </div>
+            </div>
+        </div>
+
+        <div class="message" id="msg-5">
+            <div class="message-header">
+                <div>
+                    <strong>User Feedback & Refinement</strong><br>
+                    <span class="timestamp">Jan 13, 2026 4:21 PM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <p><em>"Apart from Missing Multi-tenancy Isolation and u can limit group hierarchy to level 6 and include tags status(in transit, operational, maintenance, break-down, non come..."</em></p>
+            </div>
+        </div>
+
+        <div class="message" id="msg-6">
+            <div class="message-header">
+                <div>
+                    <strong>Updated Rating: 9.2/10</strong><br>
+                    <span class="timestamp">Jan 13, 2026 4:29 PM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <div class="success">
+                    ✅ FIXED: Multi-tenancy → RLS policies<br>
+                    ✅ SIMPLIFIED: Groups → Workspaces (6-level limit)<br>
+                    ✅ STANDARDIZED: 5 status tags
+                </div>
+
+                <h3>Revised Schema</h3>
+                <pre><code>-- Simplified Groups → Workspaces (max 6 levels)<br>CREATE TABLE workspaces (<br>    level INTEGER CHECK (level >= 0 AND level <= 6)<br>);</code></pre>
+
+                <h3>RLS Policies</h3>
+                <pre><code>CREATE POLICY org_isolation ON workspaces <br>USING (org_id = current_setting('app.current_org_id')::integer);</code></pre>
+            </div>
+        </div>
+
+        <div class="message" id="msg-7">
+            <div class="message-header">
+                <div>
+                    <strong>User: Stakeholder Complexity</strong><br>
+                    <span class="timestamp">Jan 13, 2026 5:21 PM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <p><em>"A Group can be of two types Hierarchy and flat.. A flat Group can be created by user and add assets/ user . However the physical representation will always be with one Group only. A OEM-financier-fleet-hub-3 PL..."</em></p>
+            </div>
+        </div>
+
+        <div class="message" id="msg-8">
+            <div class="message-header">
+                <div>
+                    <strong>Dual Group Types + Stakeholder Model</strong><br>
+                    <span class="timestamp">Jan 13, 2026 5:29 PM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <h3>Physical vs Logical Ownership</h3>
+                <pre><code>Physical: [Assets] → 1:1 [Hub Group] (physical location/owner)<br>Logical:  [Assets] ← *:N [Stakeholder Groups] (OEM, Financier, Fleet, 3PL)</code></pre>
+
+                <h3>Stakeholder Workflow</h3>
+                <table>
+                    <tr><th>Stakeholder</th><th>Physical?</th><th>Interest</th><th>Typical Rules</th></tr>
+                    <tr><td>Hub</td><td>✅ YES</td><td>Full</td><td>Inventory, maintenance</td></tr>
+                    <tr><td>OEM</td><td>❌</td><td>Warranty</td><td>SOH degradation, claims</td></tr>
+                    <tr><td>Financier</td><td>❌</td><td>Leasing</td><td>Mileage limits, payments</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="message" id="msg-9">
+            <div class="message-header">
+                <div>
+                    <strong>Chief Architect: Production Review</strong><br>
+                    <span class="timestamp">Jan 13, 2026 5:45 PM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <div class="architecture-box">
+                    <strong>Overall Rating: 8.8/10 - "Ship it. This is enterprise-grade."</strong>
+                </div>
+
+                <h3>🔥 3 RED FLAGS (Fix Immediately)</h3>
+                <table>
+                    <tr><th>Issue</th><th>Risk</th><th>Fix</th></tr>
+                    <tr><td>N+1 Query Hell</td><td>1000 assets × 5 stakeholders = 5K queries</td><td>Materialized Views</td></tr>
+                    <tr><td>No Rule Engine</td><td>JSONB rules unexecutable</td><td>pg_cron + State Machine</td></tr>
+                    <tr><td>ltree Path Explosion</td><td>Query degradation</td><td>Separate path column + triggers</td></tr>
+                </table>
+
+                <h3>Scalability Roadmap</h3>
+                <pre><code>PHASE 1: 10K assets → PostgreSQL + TimescaleDB<br>PHASE 2: 100K assets → Read replicas<br>PHASE 3: 1M assets → ClickHouse + Kafka</code></pre>
+
+                <div class="success">
+                    <strong>💰 Cost Model: $750/mo for 10K assets = $0.075/asset/mo</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="message" id="msg-10">
+            <div class="message-header">
+                <div>
+                    <strong>Comprehensive PDF Generated</strong><br>
+                    <span class="timestamp">Jan 14, 2026 7:33 AM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <p>Complete 50+ page PDF with database schema, RLS, API code, ERDs, mind maps, Docker, Kubernetes ready for team deployment.</p>
+            </div>
+        </div>
+
+        <div class="message" id="msg-11">
+            <div class="message-header">
+                <div>
+                    <strong>Security & AWS Hardening</strong><br>
+                    <span class="timestamp">Jan 14, 2026 7:45 AM IST</span>
+                </div>
+            </div>
+            <div class="message-body">
+                <h3>3 Threats Fixed</h3>
+                <ul>
+                    <li><strong>N+1 → Materialized Views</strong>: 6000 queries → 1 query</li>
+                    <li><strong>Rule Engine → pg_cron</strong>: Rules actively evaluated</li>
+                    <li><strong>ltree → Optimized Indexing</strong>: Fast hierarchy queries</li>
+                </ul>
+
+                <h3>AWS Architecture</h3>
+                <pre><code>RDS Multi-AZ + ECS Fargate + ALB + WAF + CloudWatch<br>Cost: ~$775/month production infrastructure</code></pre>
+            </div>
+        </div>
+
+        <div class="thread-end">
+            <h2>🏆 Thread Complete: Production-Ready ALM Platform</h2>
+            <p><strong>Architecture Rating: 9.5/10</strong> | Multi-stakeholder model solves real OEM pain points<br>
+            <strong>Next Steps:</strong> Deploy Docker Compose → Pilot with 2 OEMs → Scale to production<br>
+            <em>ConnectM Technology Solutions | January 14, 2026</em></p>
+        </div>
+    </div>
+
+    <script>
+        // Generate Table of Contents
+        const toc = [];
+        document.querySelectorAll('.message').forEach((msg, index) => {
+            const id = msg.id;
+            const title = msg.querySelector('.message-header strong').textContent;
+            toc.push(`<li><a href="#${id}" onclick="scrollToMsg('${id}')">${index + 1}. ${title}</a></li>`);
+        });
+        
+        document.getElementById('toc').innerHTML = `<li><strong>Full Thread (${toc.length} Messages)</strong></li>${toc.join('')}`;
+
+        function scrollToMsg(id) {
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add print styles
+        window.addEventListener('beforeprint', () => {
+            document.querySelector('nav').style.display = 'none';
+        });
+        window.addEventListener('afterprint', () => {
+            document.querySelector('nav').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
+
+</div>
+
+<div id="decisions" class="section merged-section">
+<div class="section-label">🎯 DESIGN DECISIONS LOG</div>
+
+
+<div id="d1" class="section">
+  <h2>1. Core Platform Scope</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+The platform is defined as an Asset Lifecycle Management (ALM) SaaS for IoT-enabled assets across batteries, vehicles, HVAC, and medical equipment.
+Focus areas include warranty risk, operational efficiency, and lifecycle intelligence rather than generic fleet management.
+  </div>
+</div>
+
+<div id="d2" class="section">
+  <h2>2. Asset as Source of Truth</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Assets are treated as immutable entities with a unique identity.
+All telemetry, warranty, claims, transfers, and operational history attach to the asset.
+Assets can appear in multiple workspaces but are never duplicated.
+  </div>
+</div>
+
+<div id="d3" class="section">
+  <h2>3. Multi-Tenancy & Data Isolation</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Organizations are strict tenants with isolation enforced at the data layer.
+Products are global once approved; assets are scoped to organizations with auditable transfer history.
+  </div>
+</div>
+
+<div id="d4" class="section">
+  <h2>4. Workspace Model</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Workspaces are observational lenses, not ownership containers.
+Three types are defined: Actual, Hierarchy, and Operational.
+Workspaces define KPI boundaries and collaboration scope.
+  </div>
+</div>
+
+<div id="d5" class="section">
+  <h2>5. Operational Workspaces</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Operational workspaces are problem-driven and time-bound.
+Any user with access to at least 10 assets can create one.
+Assets enter via rules or manual pinning.
+  </div>
+</div>
+
+<div id="d6" class="section">
+  <h2>6. Product & Global Catalog</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+OEMs onboard products and variants locally.
+ConnectM approves products to a global catalog.
+Once approved, products become reusable and immutable.
+  </div>
+</div>
+
+<div id="d7" class="section">
+  <h2>7. IoT & Rule Engine</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+IoT telemetry is configured at product level.
+Rules are categorized into alerts, events, operational KPIs, and reports.
+Rule evaluation drives asset inclusion, alerts, and warranty logic.
+  </div>
+</div>
+
+<div id="d8" class="section">
+  <h2>8. Dashboards Strategy</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Three dashboard types are defined:
+- Asset Dashboard (single asset truth)
+- Workspace Dashboard (aggregated KPIs)
+- User KPI Dashboard (accountability)
+Landing page is always the workspace boundary dashboard.
+  </div>
+</div>
+
+<div id="d9" class="section">
+  <h2>9. Claims & Warranty Model</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Claims are raised against assets and can be initiated from workspaces.
+Approval, rejection, and reasoning are fully auditable.
+Workspace-level claim correlation is a first-class view.
+  </div>
+</div>
+
+<div id="d10" class="section">
+  <h2>10. Pricing Philosophy</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Pricing is aligned to warranty savings rather than users or devices.
+Model includes base platform fee, per-asset intelligence fee, and success-based savings share.
+  </div>
+</div>
+
+<div id="d11" class="section">
+  <h2>11. Collaboration & External Users</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Workspace owners can invite internal and external users.
+External users receive scoped access limited to workspace assets.
+Access is time-bound and revocable.
+  </div>
+</div>
+
+<div id="d12" class="section">
+  <h2>12. Documentation & Execution</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Conversation history is preserved as a design intent archive.
+Execution artifacts include Jira-ready user stories, glossary, UI baseline, and decision logs.
+  </div>
+</div>
+
+<div class="footer">
+This document reorganizes the full conversation into explicit design decisions without altering intent.
+</div>
+
+
+</div>
+
+<div id="appendix" class="section merged-section">
+<h2>📎 Appendix</h2>
+
+<h3>Document History</h3>
+<ul>
+<li><strong>Created:</strong> February 2026</li>
+<li><strong>Source Files:</strong> 4 research HTML files</li>
+<li><strong>Merge Strategy:</strong> Preserved all unique content, removed duplicates</li>
+<li><strong>Content Loss:</strong> None (research_3 was outline only)</li>
+</ul>
+
+<h3>Usage Guide</h3>
+<p>Use the navigation sidebar to jump to specific sections:</p>
+<ul>
+<li><strong>Research & Documentation:</strong> Comprehensive platform research</li>
+<li><strong>Architecture Thread:</strong> Technical architecture details</li>
+<li><strong>Design Decisions:</strong> Organized decision log</li>
+</ul>
+
+<h3>Next Steps</h3>
+<ol>
+<li>Review complete documentation</li>
+<li>Reference design decisions during implementation</li>
+<li>Use as source of truth for platform development</li>
+<li>Update as new decisions are made</li>
+</ol>
+
+<div class="footer" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+<p>© ConnectM ALM Platform - Complete Research Documentation</p>
+<p><em>Merged from 4 source files | No content loss | All unique content preserved</em></p>
+</div>
+
+</div>
+
+</main>
+</div>
+
+</body>
+</html>

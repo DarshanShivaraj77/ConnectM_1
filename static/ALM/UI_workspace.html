@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create Workspace | ALM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont;
+  min-height: 100vh;
+  background: #020617;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/* ===== AURORA BACKGROUND ===== */
+.aurora {
+  position: fixed;
+  inset: -50%;
+  filter: blur(120px);
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 30%, #22d3ee 0%, transparent 40%),
+    radial-gradient(circle at 70% 40%, #3b82f6 0%, transparent 45%),
+    radial-gradient(circle at 50% 70%, #facc15 0%, transparent 45%);
+  animation: auroraMove 18s ease-in-out infinite alternate;
+}
+
+@keyframes auroraMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(200px, -150px); }
+}
+
+/* ===== CARD ===== */
+.container {
+  width: 100%;
+  max-width: 980px;
+  margin: 20px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.header h2 {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.header p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ===== FORMS ===== */
+h3 {
+  margin-bottom: 14px;
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 14px;
+  font-family: inherit;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ===== BUTTONS ===== */
+button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary {
+  background: linear-gradient(135deg, #22d3ee, #2563eb);
+  color: white;
+}
+
+.secondary {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.note {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="aurora"></div>
+
+<div class="container">
+
+  <!-- ===== HEADER ===== -->
+  <div class="card header">
+    <h2>Create Workspace</h2>
+    <p>Define problem, KPIs and asset inclusion logic</p>
+  </div>
+
+  <!-- ===== STEP 1 ===== -->
+  <div class="card">
+    <h3>1. Define the Problem</h3>
+    <textarea placeholder="Describe the operational or warranty problem you want to observe"></textarea>
+  </div>
+
+  <!-- ===== STEP 2 ===== -->
+  <div class="card">
+    <h3>2. Workspace Type</h3>
+    <select>
+      <option>Operational (Problem / Investigation)</option>
+      <option>Actual (Dealer / Hub / Service Center)</option>
+      <option>Hierarchy (Cluster / Region)</option>
+    </select>
+  </div>
+
+  <!-- ===== STEP 3 ===== -->
+  <div class="card">
+    <h3>3. KPI Boundary</h3>
+    <div class="grid">
+      <input placeholder="Primary KPI (e.g. SOH Drop %)">
+      <input placeholder="Target / Threshold">
+    </div>
+  </div>
+
+  <!-- ===== STEP 4 ===== -->
+  <div class="card">
+    <h3>4. Time Bound</h3>
+    <div class="grid">
+      <input type="date">
+      <input type="date">
+    </div>
+  </div>
+
+  <!-- ===== RULES ===== -->
+  <div class="card">
+    <h3>5. Asset Inclusion Rules</h3>
+
+    <select>
+      <option>SOH below threshold</option>
+      <option>Fault count exceeds</option>
+      <option>Geography equals</option>
+    </select>
+
+    <div class="grid">
+      <input placeholder="Operator (>, <, =)">
+      <input placeholder="Value">
+    </div>
+
+    <select>
+      <option>AND</option>
+      <option>OR</option>
+    </select>
+
+    <button class="secondary">Add Rule</button>
+
+    <div class="note">
+      Assets auto-enter / exit this workspace based on rules
+    </div>
+  </div>
+
+  <!-- ===== ACTION ===== -->
+  <div class="card">
+    <button class="primary">Create Workspace</button>
+  </div>
+
+</div>
+
+</body>
+</html>

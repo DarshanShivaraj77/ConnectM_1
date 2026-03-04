@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBM Group - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+           background: #f2f2f2;
+
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            gap: 100px;
+        }
+
+        .left-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .bus-wrapper {
+            position: relative;
+            width: 600px;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 50px;
+        }
+
+        .bus-image-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bus-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+
+
+        .right-section {
+            background: white;
+            display: flex;
+            width: 420px;
+            flex-direction : column;
+            align-items: center;
+            justify-content: center;
+            padding: 35px 30px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .logo {
+            width: 140px;
+            margin-bottom: 12px;
+        }
+
+        .login-subtitle {
+            color: #AAAAAA;
+            font-size: 13px;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333333;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: all 0.3s;
+            background: #FAFAFA;
+            color: #333;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #0066CC;
+            background: #FFFFFF;
+        }
+
+        input::placeholder {
+            color: #BBBBBB;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #CCCCCC;
+            font-size: 20px;
+            user-select: none;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        .forgot-password a {
+            color: #0066CC;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 13px;
+            background: #0066CC;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 25px;
+        }
+
+        .login-button:hover {
+            background: #0052A8;
+        }
+
+        .help-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888888;
+        }
+
+        .help-text a {
+            color: #0066CC;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 1200px) {
+            .bus-wrapper {
+                width: 600px;
+                height: 600px;
+            }
+            
+            .bus-image-container { width: 450px; }
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .left-section {
+                flex: 0 0 auto;
+                height: 50vh;
+            }
+            
+            .right-section {
+                width: 100%;
+                height: 50vh;
+            }
+            
+            .bus-wrapper {
+                width: 400px;
+                height: 400px;
+            }
+            
+            .bus-image-container { width: 320px; }
+        }
+
+        .console-section {
+                        margin-top: 25px;
+                        margin-bottom: 20px;
+                    }
+
+                    .console-section label {
+                        display: block;
+                        color: #333333;
+                        font-size: 13px;
+                        font-weight: 600;
+                        margin-bottom: 7px;
+                    }
+
+                    .console-dropdown {
+                        width: 100%;
+                        padding: 12px 15px;
+                        border: 1px solid #E0E0E0;
+                        border-radius: 6px;
+                        font-size: 13px;
+                        background: #FAFAFA;
+                        color: #333;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    }
+
+                    .console-dropdown:focus {
+                        outline: none;
+                        border-color: #0066CC;
+                        background: #FFFFFF;
+                    }
+    </style>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</head>
+<body>
+    <div class="container" style="background: linear-gradient(180deg,rgba(255, 255, 255, 1) 0%, rgba(230, 225, 225, 1) 100%, rgba(255, 255, 255, 1) 54%);">
+        <!-- Left Section with Bus -->
+        <div class="left-section">
+            <div class="bus-wrapper">
+                <!-- Bus image -->
+                <div class="bus-image-container">
+                    <img src="/static/jbm_group/images/login_bus_img.png"alt="JBM Electric Bus" class="bus-image">
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section with Login Form -->
+        <div class="right-section">
+            <div class="login-box">
+               <div style="margin: auto; text-align: center;">
+				<img src="/static/jbm_group/images/WEB LOGO copy.png" style="margin-bottom: 15px;" alt="JBM Group Logo" class="logo"><br>
+
+                <p class="login-subtitle">Please login your account</p>
+</div>
+                <form onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="admin@jbmgroup.com" value="admin@jbmgroup.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="password" placeholder="**********">
+                            <span class="password-toggle" onclick="togglePassword()"><i class="far fa-eye-slash" id="togglePassword"></i></span>
+                        </div>
+                        <div class="forgot-password">
+                            <a href="#">Forgot Password</a>
+                        </div>
+                    </div>
+
+                    <div class="console-section">
+                    <label for="console">Select Console</label>
+                    <select id="console" class="console-dropdown">
+                        <option value="" selected hidden>Choose a console</option>
+						<option value="rnd">R&D Console</option>
+                        <option value="fleet">Fleet Operations</option>
+                        <option value="manu">Manufacturing & QA</option>
+                        <option value="retail">Retail and After Sales</option>
+                    </select>
+                </div>
+
+                    <button type="submit" class="login-button">Log in</button>
+                </form>
+
+                
+
+                <p class="help-text">
+                    Problem signing in? <a href="#">Click here for help</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggle = document.querySelector('.password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggle.textContent = '👁️';
+            } else {
+                passwordInput.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
+    
+
+    // Add this in the <script> section
+        document.getElementById('console').addEventListener('change', function() {
+    const selectedValue = this.value;
+
+    const consoleUrls = {
+        'rnd': "/static/jbm_group/consoles/RD_Analysis_Console.html",
+        'fleet': "/static/jbm_group/consoles/Regional_Manager_Console.html",
+        'manu': "/static/jbm_group/consoles/Manufacturing_QA_Dashboard.html",
+        'retail': "/static/jbm_group/consoles/Retail_Dashboard.html"
+    };
+
+    if (selectedValue && consoleUrls[selectedValue]) {
+        window.location.href = consoleUrls[selectedValue];
+    }
+});
+
+</script>
+</body>
+</html>

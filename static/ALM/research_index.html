@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALM Platform - Research & Documentation Hub</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  background: #020617;
+  color: #e2e8f0;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding-bottom: 40px;
+  border-bottom: 2px solid #1e293b;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.doc-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 32px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.doc-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.doc-card:hover {
+  transform: translateY(-4px);
+  border-color: #667eea;
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+}
+
+.doc-card:hover::before {
+  transform: scaleX(1);
+}
+
+.doc-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.doc-card h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 12px;
+}
+
+.doc-card .meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.doc-card p {
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.doc-card .audience {
+  display: inline-block;
+  background: rgba(102, 126, 234, 0.1);
+  color: #a5b4fc;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+}
+
+.doc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.doc-link:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.doc-link::after {
+  content: '→';
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.doc-link:hover::after {
+  transform: translateX(4px);
+}
+
+.info-section {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 40px;
+}
+
+.info-section h3 {
+  font-size: 1.25rem;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.info-section p {
+  color: #94a3b8;
+  line-height: 1.8;
+}
+
+.info-section ul {
+  list-style: none;
+  margin-top: 16px;
+}
+
+.info-section li {
+  color: #94a3b8;
+  padding: 8px 0;
+  padding-left: 24px;
+  position: relative;
+}
+
+.info-section li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+}
+
+footer {
+  text-align: center;
+  padding-top: 40px;
+  border-top: 1px solid #1e293b;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <header>
+    <h1>📚 ALM Platform Documentation Hub</h1>
+    <p class="subtitle">Asset Lifecycle Management - Complete Research & Design Archive</p>
+  </header>
+
+  <div class="info-section">
+    <h3>🎯 About This Documentation Suite</h3>
+    <p>
+      This documentation hub contains the complete research, design decisions, and technical specifications 
+      for the Asset Lifecycle Management (ALM) SaaS platform. Each document serves a specific purpose and 
+      audience. Choose the document that best fits your needs:
+    </p>
+  </div>
+
+  <div class="grid">
+    
+    <!-- Document 1: Complete Documentation -->
+    <div class="doc-card">
+      <span class="doc-icon">📖</span>
+      <h2>Complete Documentation</h2>
+      <div class="meta">
+        <span class="meta-item">📄 1,730 lines</span>
+        <span class="meta-item">⏱️ 30+ min read</span>
+      </div>
+      <span class="audience">For: Developers & Architects</span>
+      <p>
+        Comprehensive master document covering all 18 sections: Product overview, PRD, technical 
+        architecture, database schema, ERD, security model, Jira delivery plan, engineering guide, 
+        and complete design decisions.
+      </p>
+      <a href="/alm-research/complete-documentation" class="doc-link">
+        View Full Documentation
+      </a>
+    </div>
+
+    <!-- Document 2: Conversation Thread -->
+    <div class="doc-card">
+      <span class="doc-icon">💬</span>
+      <h2>Conversation Thread</h2>
+      <div class="meta">
+        <span class="meta-item">📄 367 lines</span>
+        <span class="meta-item">⏱️ 10 min read</span>
+      </div>
+      <span class="audience">For: Product Managers & Stakeholders</span>
+      <p>
+        Raw conversation format showing the evolution of ideas through Q&A. Includes timestamps 
+        and preserves the natural flow of decision-making. Perfect for understanding the "why" 
+        behind design choices.
+      </p>
+      <a href="/alm-research/conversation-thread" class="doc-link">
+        View Conversation
+      </a>
+    </div>
+
+
+    <!-- Document 4: Design Decisions -->
+    <div class="doc-card">
+      <span class="doc-icon">⚡</span>
+      <h2>Design Decisions Log</h2>
+      <div class="meta">
+        <span class="meta-item">📄 174 lines</span>
+        <span class="meta-item">⏱️ 5 min read</span>
+      </div>
+      <span class="audience">For: Technical Leadership</span>
+      <p>
+        Distilled summary of 12 critical architectural and business decisions. Focuses on the 
+        "what" and "why" of key choices: multi-tenancy, workspace model, pricing philosophy, 
+        and operational patterns.
+      </p>
+      <a href="/alm-research/design-decisions" class="doc-link">
+        View Decisions
+      </a>
+    </div>
+
+  </div>
+
+  <div class="info-section">
+    <h3>📋 Document Purposes</h3>
+    <ul>
+      <li><strong>Complete Documentation:</strong> Single source of truth for implementation</li>
+      <li><strong>Conversation Thread:</strong> Historical context and decision evolution</li>
+      <li><strong>Thread Navigation:</strong> Quick topic lookup and navigation aid</li>
+      <li><strong>Design Decisions:</strong> Executive summary for architecture reviews</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p>ConnectM Technology Solutions - Asset Lifecycle Management Platform</p>
+    <p style="margin-top: 8px;">© 2025 - All documents represent research and design intent</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

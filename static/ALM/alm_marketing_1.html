@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>ConnectM ALM – Asset Lifecycle Intelligence Platform</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+:root{
+  --bg:#020617;
+  --panel:#020617;
+  --border:#1f2937;
+  --primary:#2563eb;
+  --accent:#38bdf8;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text);scroll-behavior:smooth}
+header{padding:20px 32px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100}
+header strong{letter-spacing:.3px}
+nav{margin-top:12px}
+nav a{color:var(--muted);text-decoration:none;margin-right:24px;font-size:14px;transition:color .2s}
+nav a:hover{color:var(--accent)}
+section{padding:88px 24px;max-width:1200px;margin:auto}
+.hero{padding:96px 24px}
+h1{font-size:44px;line-height:1.15;margin:0 0 16px}
+h2{font-size:30px;margin:56px 0 16px}
+h3{font-size:18px;margin:0 0 8px}
+p{font-size:16px;color:var(--muted);line-height:1.7;margin:0 0 12px}
+ul{color:var(--muted);line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-top:24px}
+.card{border:1px solid var(--border);border-radius:16px;padding:28px;background:var(--panel)}
+.badge{display:inline-block;border:1px solid var(--border);border-radius:999px;
+  padding:6px 14px;font-size:12px;color:var(--accent);margin-bottom:16px}
+a.button{display:inline-block;background:var(--primary);color:#fff;
+  padding:14px 24px;border-radius:10px;text-decoration:none;font-weight:500;margin-top:16px}
+a.button:hover{background:#1d4ed8}
+.stat{font-size:32px;color:var(--accent);font-weight:600;margin-bottom:8px}
+footer{border-top:1px solid var(--border);padding:32px;text-align:center;color:var(--muted);margin-top:64px}
+.divider{height:1px;background:var(--border);margin:64px auto;max-width:1200px}
+</style>
+</head>
+
+<body>
+
+<header>
+  <strong>ConnectM</strong> · Asset Lifecycle Management Platform
+  <nav>
+    <a href="#overview">Overview</a>
+    <a href="#usecases">Use Cases</a>
+    <a href="#warranty">Warranty Management</a>
+    <a href="#passport">Battery Passport</a>
+  </nav>
+</header>
+
+<!-- OVERVIEW SECTION -->
+<section id="overview" class="hero">
+  <span class="badge">Enterprise Asset Lifecycle Intelligence</span>
+  <h1>From Procurement to Decommission –<br/>One Platform for Asset Truth</h1>
+  <p>
+    ConnectM ALM unifies IoT telemetry, lifecycle governance, warranty intelligence,
+    and compliance-grade auditability for EVs, batteries, and industrial assets.
+    Deploy faster. Govern better. Turn asset data into business certainty.
+  </p>
+  <a class="button" href="#usecases">Explore Industry Use Cases</a>
+</section>
+
+<!-- WHY CONNECTM ALM -->
+<section>
+  <h2>Why ConnectM ALM</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>✓ Governance-First Design</h3>
+      <p>
+        Explicit asset states, controlled transitions, quarantine handling,
+        and irreversible decommissioning eliminate ambiguity and risk.
+        No silent automation – legally defensible.
+      </p>
+    </div>
+    <div class="card">
+      <h3>✓ IoT & AI Native</h3>
+      <p>
+        Built for high-frequency telemetry, battery health analytics,
+        predictive insights, and policy-driven governance.
+      </p>
+    </div>
+    <div class="card">
+      <h3>✓ Enterprise Ready</h3>
+      <p>
+        Multi-tenant isolation, immutable audit trails, SLA enforcement,
+        policy-assisted decisions, and regulator-ready evidence.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRY USE CASES -->
+<section id="usecases">
+  <h2>Who It's For</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>EV & Battery OEMs</h3>
+      <p>
+        Battery SOH analytics, warranty fraud detection, abuse detection,
+        recall intelligence, and battery passport readiness.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Fleet Operators</h3>
+      <p>
+        Central inventory, uptime optimization, asset lifecycle control,
+        geofence-aware operations, SLA enforcement, and lifecycle SLAs.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Financiers & Insurers</h3>
+      <p>
+        Asset risk scoring, recovery workflows, resale valuation,
+        decommission evidence, and data-backed asset valuation.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- KEY USE CASES -->
+<section>
+  <h2>Key Use Cases</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Battery Health & Warranty</h3>
+      <p>
+        Real-time SOH tracking, misuse detection,
+        policy-driven warranty decisions.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Fleet Lifecycle Governance</h3>
+      <p>
+        Inventory → Operations → Quarantine → Decommission,
+        with policy-driven controls and human approvals.
+        Central inventory, quarantine for incidents,
+        controlled decommission with audit trails.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Second-Life & Resale</h3>
+      <p>
+        Immutable asset history to maximize resale
+        and second-life valuation.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CORE CAPABILITIES -->
+<section>
+  <h2>Core Capabilities</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Asset Lifecycle Governance</h3>
+      <p>
+        Inventory → Operations → Quarantine → Decommission,
+        with policy-driven controls and human approvals.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Warranty & Battery Intelligence</h3>
+      <p>
+        Usage behavior analytics, SOH trends,
+        fault diagnostics, and warranty decision support.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Enterprise Integration</h3>
+      <p>
+        ERP, MES, DMS, finance systems,
+        secure APIs, and multi-tenant isolation.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BATTERY WARRANTY MANAGEMENT -->
+<section id="warranty">
+  <span class="badge">Battery Warranty Intelligence</span>
+  <h1>
+    From Reactive Claims<br/>
+    to Data-Driven Warranty Control
+  </h1>
+  <p>
+    Battery warranties are one of the largest and most opaque cost centers
+    for EV OEMs, battery manufacturers, fleet operators, and financiers.
+    ConnectM ALM transforms warranty management from a
+    manual, dispute-driven process into a transparent,
+    data-backed decision system.
+  </p>
+</section>
+
+<section>
+  <h2>The Problem</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>No Visibility Into Usage</h3>
+      <p>
+        OEMs and battery suppliers lack real-world visibility into
+        how batteries are charged, discharged, and operated.
+        Claims are evaluated without context.
+      </p>
+    </div>
+    <div class="card">
+      <h3>High False & Fraudulent Claims</h3>
+      <p>
+        Deep discharge, overheating, fast-charging abuse,
+        and poor maintenance often go undetected,
+        leading to unwarranted claim approvals.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Slow & Manual Claim Processing</h3>
+      <p>
+        Claims rely on dealer observations and paperwork,
+        increasing turnaround time, disputes,
+        and customer dissatisfaction.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Rising Warranty Reserves</h3>
+      <p>
+        Without predictive insight, OEMs over-provision warranty reserves,
+        directly impacting profitability and balance sheets.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>How ConnectM Solves It</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Real-Time Battery Telemetry</h3>
+      <p>
+        Continuous monitoring of SOH, SOC, temperature,
+        charge/discharge cycles, and fault codes
+        directly from BMS and IoT devices.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Warranty-Aware Rule Engine</h3>
+      <p>
+        Warranty terms are digitized into enforceable rules:
+        operating thresholds, abuse conditions,
+        and breach counters are tracked automatically.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Usage & Health-Based Scoring</h3>
+      <p>
+        Each battery is scored on health, safety,
+        usage behavior, and maintenance compliance
+        relative to similar assets.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Automated Claim Intelligence</h3>
+      <p>
+        Claims are supported with objective evidence:
+        usage history, breach events,
+        and comparative analytics,
+        enabling faster approve / reject decisions.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Lifecycle & Policy Integration</h3>
+      <p>
+        Repeated offenders or degraded batteries
+        are automatically flagged for
+        quarantine, extended warranty exclusion,
+        or decommission recommendations.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Battery Passport Linkage</h3>
+      <p>
+        Warranty history becomes part of the Battery Passport,
+        supporting resale, second-life decisions,
+        and regulatory audits.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Business Impact</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="stat">20–40%</div>
+      <p>
+        Reduction in warranty claim costs
+        through fraud detection and early abuse identification.
+      </p>
+    </div>
+    <div class="card">
+      <div class="stat">30–50%</div>
+      <p>
+        Faster claim turnaround time (TAT)
+        with data-backed, automated assessments.
+      </p>
+    </div>
+    <div class="card">
+      <div class="stat">25–30%</div>
+      <p>
+        Improvement in battery lifespan
+        through proactive alerts and best-practice enforcement.
+      </p>
+    </div>
+    <div class="card">
+      <div class="stat">↓ Reserves</div>
+      <p>
+        Optimized warranty provisioning
+        using predictive health and usage analytics.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Who Benefits from Warranty Intelligence</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Battery & EV OEMs</h3>
+      <p>
+        Lower warranty exposure, improved product quality feedback,
+        and defensible claim decisions.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Fleet Operators</h3>
+      <p>
+        Better asset uptime, fewer disputes,
+        and clarity on warranty eligibility.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Financiers & Insurers</h3>
+      <p>
+        Reduced risk, faster recovery decisions,
+        and data-backed asset valuation.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BATTERY PASSPORT & ESG -->
+<section id="passport">
+  <span class="badge">Battery Passport & ESG Intelligence</span>
+  <h1>Lifecycle Transparency for Batteries<br/>Built for Regulation & Sustainability</h1>
+  <p>
+    ConnectM ALM provides a digital Battery Passport that captures
+    the complete lifecycle of batteries—from manufacturing
+    to second life and decommission.
+  </p>
+</section>
+
+<section>
+  <h2>What is a Battery Passport?</h2>
+  <p>
+    A structured, verifiable digital record documenting origin, chemistry,
+    usage, health, and end-of-life status of a battery—designed for
+    regulatory and ESG reporting.
+  </p>
+</section>
+
+<section>
+  <div class="grid">
+    <div class="card">
+      <h3>Manufacturing & Origin</h3>
+      <ul>
+        <li>Model, chemistry, capacity</li>
+        <li>Plant & batch traceability</li>
+        <li>Supplier lineage</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Operational Footprint</h3>
+      <ul>
+        <li>Charge/discharge cycles</li>
+        <li>SOH degradation trends</li>
+        <li>Geography & duty cycles</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Warranty & Safety</h3>
+      <ul>
+        <li>Warranty validity & claims</li>
+        <li>Fault & safety events</li>
+        <li>Abuse indicators</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="grid">
+    <div class="card">
+      <h3>Second-Life & Reuse</h3>
+      <ul>
+        <li>Residual capacity assessment</li>
+        <li>Reuse/repurpose eligibility</li>
+        <li>Valuation intelligence</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Decommission & Recycling</h3>
+      <ul>
+        <li>Controlled decommission workflows</li>
+        <li>Immutable lifecycle snapshot</li>
+        <li>Recycling & disposal records</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>ESG & Compliance</h3>
+      <ul>
+        <li>Scope-3 emissions inputs</li>
+        <li>Circular-economy reporting</li>
+        <li>Audit-ready evidence</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Why It Matters</h2>
+  <p>
+    Battery passports are becoming mandatory across regions.
+    ConnectM enables OEMs, fleets, financiers, and recyclers
+    to meet ESG and regulatory requirements with verifiable data—not declarations.
+    Transparent, verifiable lifecycle data supports sustainability,
+    regulatory compliance, and circular-economy initiatives.
+  </p>
+</section>
+
+<footer>
+  © ConnectM Technology Solutions · Asset Lifecycle Intelligence
+</footer>
+
+</body>
+</html>

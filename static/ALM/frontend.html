@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALM Platform - Frontend UI Hub</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  background: #020617;
+  color: #e2e8f0;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding-bottom: 40px;
+  border-bottom: 2px solid #1e293b;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.back-button {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #22d3ee, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(34, 211, 238, 0.3);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.ui-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 32px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ui-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.ui-card:hover {
+  transform: translateY(-4px);
+  border-color: #667eea;
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+}
+
+.ui-card:hover::before {
+  transform: scaleX(1);
+}
+
+.ui-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.ui-card h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 12px;
+}
+
+.ui-card p {
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.ui-card .category {
+  display: inline-block;
+  background: rgba(102, 126, 234, 0.1);
+  color: #a5b4fc;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+}
+
+.ui-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.ui-link:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.ui-link::after {
+  content: '→';
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.ui-link:hover::after {
+  transform: translateX(4px);
+}
+
+.info-section {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 40px;
+}
+
+.info-section h3 {
+  font-size: 1.25rem;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.info-section p {
+  color: #94a3b8;
+  line-height: 1.8;
+}
+
+footer {
+  text-align: center;
+  padding-top: 40px;
+  border-top: 1px solid #1e293b;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .back-button {
+    position: static;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<a href="/alm" class="back-button">← Back to ALM Dashboard</a>
+
+<div class="container">
+  <header>
+    <h1>🎨 Frontend UI Hub</h1>
+    <p class="subtitle">User Interface Components & Design Systems</p>
+  </header>
+
+  <div class="info-section">
+    <h3>📋 About This Section</h3>
+    <p>
+      This hub contains all frontend UI components, mockups, and design systems for the ALM platform. 
+      Each section provides interactive examples and implementation guides for different parts of the application.
+    </p>
+  </div>
+
+  <div class="grid">
+    
+
+    <!-- 2. Asset and Product Management -->
+    <div class="ui-card">
+      <span class="ui-icon">📦</span>
+      <h2>Asset and Product Management</h2>
+      <span class="category">Core Features</span>
+      <p>
+        Asset listing, detailed views, product catalogs, inventory management interfaces, 
+        and asset lifecycle tracking. Includes filters, search, and bulk operations.
+      </p>
+      <a href="/alm-frontend/asset-product" class="ui-link">
+        View Components
+      </a>
+    </div>
+
+    <!-- 3. Authentication and Roles -->
+    <div class="ui-card">
+      <span class="ui-icon">👤</span>
+      <h2>Authentication and Roles</h2>
+      <span class="category">User Management</span>
+      <p>
+        Role creation and assignment, user management interfaces, permission matrices, 
+        and admin controls. Includes user profiles and team management features.
+      </p>
+      <a href="/alm-frontend/auth-roles" class="ui-link">
+        View Components
+      </a>
+    </div>
+
+    <!-- 4. Dashboards and Workspace -->
+    <div class="ui-card">
+      <span class="ui-icon">📊</span>
+      <h2>Dashboards and Workspace</h2>
+      <span class="category">Analytics</span>
+      <p>
+        Main dashboard layouts, KPI cards, analytics visualizations, and workspace overview screens. 
+        Includes charts, metrics, and real-time data displays.
+      </p>
+      <a href="/alm-frontend/dashboards" class="ui-link">
+        View Components
+      </a>
+    </div>
+
+    <!-- 5. Onboarding -->
+    <div class="ui-card">
+      <span class="ui-icon">🚀</span>
+      <h2>Onboarding</h2>
+      <span class="category">Setup & Configuration</span>
+      <p>
+        Organization onboarding flows, product setup wizards, IoT device configuration, 
+        and initial setup guides. Step-by-step interfaces with progress indicators.
+      </p>
+      <a href="/alm-frontend/onboarding" class="ui-link">
+        View Components
+      </a>
+    </div>
+
+    <!-- 7. UI Concepts -->
+    <div class="ui-card">
+      <span class="ui-icon">💡</span>
+      <h2>UI Concepts</h2>
+      <span class="category">Design System</span>
+      <p>
+        Core UI design patterns, component library, color schemes, typography, icons, 
+        and interaction patterns. Design system documentation and guidelines.
+      </p>
+      <a href="/alm-frontend/ui-concepts" class="ui-link">
+        View Components
+      </a>
+    </div>
+
+    <!-- 8. Workspace Management -->
+    <div class="ui-card">
+      <span class="ui-icon">🗂️</span>
+      <h2>Workspace Management</h2>
+      <span class="category">Organization</span>
+      <p>
+        Workspace creation and editing, hierarchy management, asset grouping interfaces, 
+        and organizational structure views. Includes tree views and drag-drop features.
+      </p>
+      <a href="/alm-frontend/workspace" class="ui-link">
+        View Components
+      </a>
+    </div>
+
+  </div>
+
+  <div class="info-section">
+    <h3>💡 Component Categories</h3>
+    <p style="margin-bottom: 12px;">
+      <strong>Security:</strong> Authentication, authorization, and access control components.
+    </p>
+    <p style="margin-bottom: 12px;">
+      <strong>Core Features:</strong> Essential business functionality and asset management.
+    </p>
+    <p style="margin-bottom: 12px;">
+      <strong>Analytics:</strong> Data visualization, dashboards, and reporting interfaces.
+    </p>
+    <p style="margin-bottom: 12px;">
+      <strong>Setup & Configuration:</strong> Initial setup, onboarding, and configuration screens.
+    </p>
+    <p style="margin-bottom: 12px;">
+      <strong>Operations:</strong> Daily workflow and operational task interfaces.
+    </p>
+    <p>
+      <strong>Design System:</strong> Core UI patterns, components, and design guidelines.
+    </p>
+  </div>
+
+  <footer>
+    <p>ConnectM Technology Solutions - Asset Lifecycle Management Platform</p>
+    <p style="margin-top: 8px;">© 2025 - Frontend UI components and design system</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

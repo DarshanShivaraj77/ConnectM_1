@@ -1,0 +1,700 @@
+# JBM GOCC Platform - Comprehensive Product Architecture Document
+
+**Version:** 1.0  
+**Date:** January 2026  
+**Status:** Production Ready  
+**Prepared for:** JBM Electric Vehicles
+
+---
+
+## Executive Summary
+
+The **Global Operations Command Centre (GOCC)** is a cloud-native, multi-tenant SaaS platform designed to centralize EV fleet management, telematics integration, predictive maintenance, warranty lifecycle, and driver behavior analytics across JBM's operations and external Retail Fleet Operators.
+
+### Key Capabilities
+- **Real-time fleet visibility** across buses, batteries, chargers, and depots
+- **Predictive maintenance** via battery health analytics and fault prediction
+- **Contract KPI tracking** with penalty leakage reduction
+- **Warranty lifecycle management** for OEMs, fleet operators, and retail customers
+- **Multi-tenant architecture** supporting JBM, STUs, dealers, and retail operators
+- **Edge-intelligent alerts** computed on telematics devices and cloud
+- **Driver behavior scoring** with video telematics and ADAS integration
+
+### Business Outcomes
+- **15–35% manpower cost reduction** via telematics automation
+- **10% uplift in fleet uptime** through KPI tracking
+- **50% maintenance cost reduction** via predictive scheduling
+- **Penalty leakage reduction** through real-time contract monitoring
+- **Enhanced customer satisfaction** via proactive after-sales service
+
+---
+
+## 1. Business Architecture Context
+
+### 1.1 Market Opportunity
+
+JBM Electric Vehicles operates a rapidly scaling EV fleet across Indian and international markets, serving:
+- **STU contracts** (state transport units)
+- **Private fleet operators** (corporate, school, ambulance)
+- **Retail fleet operators** purchasing buses for resale/deployment
+- **Financial institutions** (asset valuation, warranty risk)
+
+**Problem Statement:**
+- Fragmented, manual data entry for duty/trip reporting
+- Lack of real-time asset traceability across depots and chargers
+- Delayed alerts on battery SOC, temperature, and scheduled maintenance
+- No unified warranty or penalty tracking across contracts
+- Poor visibility into driver behavior and compliance violations
+- Underutilized IoT telematics data
+
+**GOCC Solution:**
+A centralized, analytics-driven platform enabling:
+- Unified visibility across depots, fleets, and assets
+- Automated KPI computation and penalty tracking
+- Predictive maintenance and warranty breach prevention
+- Driver behavior insights and coaching recommendations
+- Multi-stakeholder role-based access (Fleet Admin, Depot Manager, Driver, RSA, RD, Manufacturing, Retail Operator)
+
+### 1.2 Core Stakeholders & Benefits
+
+| Stakeholder | Use Case | GOCC Benefit |
+|---|---|---|
+| **EV Fleet Admin** | Enterprise-level fleet governance | Centralized visibility, penalty forecasting, contract analytics |
+| **Depot Manager** | Daily operations, route/shift planning, incident management | Real-time asset status, KPI tracking, maintenance coordination |
+| **Driver** | Duty execution, trip tracking | Behavior scoring, compliance monitoring, coaching feedback |
+| **RSA / Support Team** | Roadside assistance, fault resolution | Priority ticketing, asset anomaly observability, SLA tracking |
+| **RD / Product** | Vehicle performance analysis, quality investigation | Digital twin, fault trends, predictive models, battery analytics |
+| **Manufacturing / Service** | Device mapping, EOL testing, subscription management | Device–VIN mapping, firmware OTA, warranty integration |
+| **Retail Fleet Operator** | After-sales service, warranty claims, maintenance booking | Basic vehicle data, warranty status alerts, service scheduling |
+
+---
+
+## 2. System Architecture Overview
+
+### 2.1 High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         FRONTEND LAYER                               │
+├─────────────────────────────────────────────────────────────────────┤
+│ React/Angular Dashboards │ Mobile Apps │ Video Wall │ Retail Portal│
+│ (GOCC, Depot, RD, Retail)│(Driver, RSA) │ (Command Centre)         │
+└──────────────┬──────────────────────────────────────────────────────┘
+               │ HTTPS / WebSocket
+┌──────────────▼──────────────────────────────────────────────────────┐
+│                    API GATEWAY & AUTH LAYER                          │
+├──────────────────────────────────────────────────────────────────────┤
+│ Kong / AWS API Gateway  │  JWT + OAuth2  │  Rate Limiting  │  CORS  │
+└──────────────┬──────────────────────────────────────────────────────┘
+               │
+┌──────────────▼──────────────────────────────────────────────────────┐
+│               MICROSERVICES (JAVA/KOTLIN/NODE.JS)                    │
+├──────────────────────────────────────────────────────────────────────┤
+│ Identity Svc │ Fleet Svc │ Telematics Svc │ Trip Ops Svc │          │
+│ Warranty Svc │ Ticketing │ Analytics Svc  │ Retail Svc   │          │
+└──────────────┬──────────────────────────────────────────────────────┘
+               │
+┌──────────────▼──────────────────────────────────────────────────────┐
+│                 EVENT STREAMING & PROCESSING                         │
+├──────────────────────────────────────────────────────────────────────┤
+│ Apache Kafka (Telemetry Topics)  │  Flink / Kafka Streams          │
+│ Real-time Alert Rules  │  Driver Behavior Scoring  │  KPI Aggregation
+└──────────────┬──────────────────────────────────────────────────────┘
+               │
+┌──────────────▼──────────────────────────────────────────────────────┐
+│                    DATA PERSISTENCE LAYER                            │
+├──────────────────────────────────────────────────────────────────────┤
+│ PostgreSQL + TimescaleDB │ InfluxDB/TDengine │ Elasticsearch │ S3  │
+│ (Core + Transactional)   │ (Telemetry)       │ (Logs/Search) │      │
+└──────────────┬──────────────────────────────────────────────────────┘
+               │
+        ┌──────┴──────┐
+        │             │
+   ┌────▼────┐   ┌───▼─────┐
+   │ Batch   │   │ ML/      │
+   │ Analytics│   │Analytics│
+   │Pipeline  │   │(Python) │
+   └──────────┘   └────────┘
+```
+
+### 2.2 Key Architectural Principles
+
+| Principle | Implementation | Benefit |
+|---|---|---|
+| **Cloud-native** | Kubernetes, containerized microservices | Scalability, auto-healing, multi-region support |
+| **Event-driven** | Kafka backbone, stream processing (Flink) | Real-time alerts, decoupled services, high throughput |
+| **Multi-tenant** | Row-Level Security (RLS), org-scoped data | Data isolation, compliance, revenue efficiency |
+| **Scalability** | TimescaleDB partitioning, auto-scaling ECS | Handles 2500+ vehicles, telematics at 1M+ rows/device/year |
+| **Observability** | Prometheus, Grafana, ELK stack, OpenTelemetry | Debugging, incident response, performance optimization |
+| **Security** | JWT, OAuth2, TLS 1.3, encrypted columns, pgcrypto | OWASP Top 10 compliant, PII encryption, audit trails |
+
+---
+
+## 3. User Personas & Flows
+
+### 3.1 User Personas
+
+#### 1. EV Fleet Admin
+- **Goal:** Enterprise-wide fleet governance and strategy
+- **Key Actions:** Monitor global KPIs, approve contracts, track penalties, review RD investigations
+- **Primary Dashboard:** Global KPI view, contract analytics, penalty forecasting
+
+#### 2. Depot Manager
+- **Goal:** Maximize local fleet uptime and KPI adherence
+- **Key Actions:** Plan duties, assign buses/drivers, manage breakdowns, schedule maintenance, track daily reports
+- **Primary Dashboard:** Depot ops, live fleet monitor, shift planning, daily closeout
+
+#### 3. Driver
+- **Goal:** Execute trips safely and efficiently
+- **Key Actions:** View duty, start/end trips, receive behavior feedback, log incidents
+- **Primary Touchpoint:** Mobile app (RFID attendance, trip tracking, behavior scoring)
+
+#### 4. RSA / Support Team
+- **Goal:** Resolve breakdowns and support operations
+- **Key Actions:** Triage tickets, dispatch roadside assistance, coordinate spare bus allocation
+- **Primary Dashboard:** Ticket queue, priority alerts, SLA tracking
+
+#### 5. RD / Product Development
+- **Goal:** Drive vehicle quality and innovation
+- **Key Actions:** Analyze vehicle performance trends, fault patterns, battery aging, test new features
+- **Primary Dashboard:** Vehicle Performance Console, Digital Twin, fault analysis
+
+#### 6. Manufacturing / Service
+- **Goal:** Quality assurance and field service management
+- **Key Actions:** Device–VIN mapping, EOL/PDI testing, warranty claim investigation, firmware OTA
+- **Primary Interface:** Manufacturing & Service Console
+
+#### 7. Retail Fleet Operator
+- **Goal:** Monitor owned buses, manage warranty, schedule maintenance
+- **Key Actions:** View vehicle status, warranty coverage, upcoming services, raise claims
+- **Primary Portal:** Retail Fleet Operator Portal (read-only, scoped to own VINs)
+
+### 3.2 Core User Flows
+
+#### Flow 1: Depot Manager Daily Operations
+```
+Login → Depot Dashboard
+  ├─ View KPIs (uptime, penalties, fleet status)
+  ├─ Plan Duties (assign routes, buses, drivers)
+  ├─ Monitor Live Fleet (map, SOC, alerts)
+  │  ├─ On breakdown → Create RSA ticket, allocate spare
+  │  ├─ On low SOC → Adjust charging schedule
+  │  └─ On driver violation → Flag for coaching
+  ├─ Schedule Maintenance (mark downtime)
+  └─ Close-of-day Report (export, summary, notes)
+```
+
+#### Flow 2: Retail Fleet Operator After-Sales
+```
+Login → Retail Home (OWN vehicles only)
+  ├─ View Fleet Cards (warranty status, upcoming services)
+  ├─ Click Bus → Bus Detail
+  │  ├─ Warranty & Alerts tab
+  │  │  ├─ View warranty status (in/near expiry/out)
+  │  │  └─ Raise Warranty Claim (pre-filled with GOCC data)
+  │  ├─ Maintenance tab
+  │  │  ├─ View upcoming services
+  │  │  └─ Book/Reschedule service (confirm slot)
+  │  └─ Alerts & Status (basic health)
+  └─ Reports (warranty coverage, service schedule, fault history)
+```
+
+#### Flow 3: Alert Generation & Escalation
+```
+Telematics Device → Kafka Stream
+  → Flink CEP (rule evaluation)
+    ├─ Low SOC (< 15%) → Immediate alert to Depot Manager
+    ├─ High batt temp (> 50°C) → Critical alert to RSA
+    ├─ Fault code (e.g., BMS error) → Log to RD, alert ops
+    ├─ Overspeed / Harsh brake → Driver behavior event + score
+    └─ Non-communication (> 30 min) → Device health alert
+  → Store in TimescaleDB + Elasticsearch
+  → Push to GOCC dashboard + alert channels
+```
+
+---
+
+## 4. Technology Stack
+
+### 4.1 Frontend Layer
+
+| Component | Tech | Rationale |
+|---|---|---|
+| **Web apps** (GOCC, Depot, RD, Retail) | React / Angular + TypeScript | Enterprise state management, reusable components, accessibility |
+| **Mobile apps** (Driver, RSA) | React Native / Flutter | Cross-platform iOS/Android, offline-first capability |
+| **Video Wall** (Command Centre) | React + Canvas/WebGL | Real-time updates, large screen optimization, dense data viz |
+| **UI Components** | Material UI / Ant Design | Consistent design system, accessibility (WCAG 2.1) |
+| **Real-time comms** | WebSockets / GraphQL subscriptions | Live alerts, map updates, KPI refreshes |
+
+### 4.2 Backend Services
+
+| Service | Language | Framework | Purpose |
+|---|---|---|---|
+| Identity & Access | Java/Kotlin | Spring Boot Security | User auth, SSO, RBAC, multi-tenancy |
+| Fleet & Depot | Java | Spring Boot | Vehicles, depots, contracts, routes, asset lifecycle |
+| Telematics Ingestion | Node.js | Express / NestJS | MQTT/HTTPS parsing, Kafka stream | CAN/GPS payload ingestion |
+| Trip & Operations | Java | Spring Boot | Duties, shifts, KPI calculation, penalties |
+| Maintenance & Warranty | Java | Spring Boot | Service schedules, work orders, warranty policies |
+| Ticketing & RSA | Node.js | NestJS | Ticket mgmt, SLA tracking, escalation |
+| Analytics & Reporting | Python | FastAPI | Pre-aggregated KPIs, exports, scheduled jobs |
+| Retail Portal | Node.js | NestJS | Scoped warranty & maintenance views |
+
+### 4.3 Data Layer
+
+| Component | Tech | Use Case |
+|---|---|---|
+| **Relational (core)** | PostgreSQL 15 | Users, vehicles, depots, contracts, trips, tickets, warranties |
+| **Time-series** | TimescaleDB / InfluxDB / TDengine | High-frequency telemetry: SOC, speed, temp, GPS |
+| **Search & logs** | Elasticsearch / OpenSearch | Fault events, driver behavior, incident logs, free-text search |
+| **Columnar analytics** | ClickHouse / BigQuery | Long-term trend analysis, ML training, adhoc queries |
+| **Object storage** | AWS S3 | Video clips, DMS reports, exports, backups |
+| **Cache** | Redis | Session storage, rate-limit counters, real-time aggregates |
+
+### 4.4 Streaming & Processing
+
+| Component | Tech | Purpose |
+|---|---|---|
+| **Message broker** | Apache Kafka | Central bus for telematics, alerts, events (topics: telemetry, alerts, transfers) |
+| **Stream processing** | Apache Flink / Kafka Streams | Real-time rule evaluation, SOC anomalies, driver scoring, KPI aggregation |
+| **Rules engine** | pgcron + custom evaluation | Executable rules for alerts, maintenance, warranty thresholds |
+| **ML pipeline** | Python + Airflow | Battery health prediction, range estimation, maintenance scoring |
+
+### 4.5 DevOps & Observability
+
+| Component | Tech | Purpose |
+|---|---|---|
+| **Orchestration** | Kubernetes (EKS/GKE/AKS) | Container orchestration, auto-scaling, rollout management |
+| **IaC** | Terraform | Infrastructure as code, reproducible deployments |
+| **CI/CD** | GitHub Actions / GitLab CI | Automated testing, security scanning, blue-green deployments |
+| **Metrics** | Prometheus + Grafana | Platform health, service latency, error rates |
+| **Logging** | Fluent Bit + ELK Stack | Centralized logs, incident investigation, audit trails |
+| **Tracing** | OpenTelemetry + Jaeger | Distributed tracing, performance bottleneck identification |
+| **Alerting** | CloudWatch / PagerDuty | Incident notifications, escalation workflows |
+
+---
+
+## 5. Data Model & Schema
+
+### 5.1 Core Entity Relationships
+
+```
+┌──────────────────────────────┐
+│     ORGANISATION             │ (Multi-tenant boundary)
+│ org_id, name, type, region   │
+└────────────┬─────────────────┘
+             │
+     ┌───────┼────────┬────────────┐
+     │       │        │            │
+┌────▼──┐ ┌──▼────┐┌──▼──────┐ ┌──▼──────┐
+│ USER  │ │DEPOT  ││VEHICLE  │ │CHARGER  │
+│ role  │ │city   ││VIN,model││power_kw │
+│ RBAC  │ │time_z ││status   ││location │
+└───────┘ └───────┘└──┬──────┘ └─────────┘
+                       │
+                  ┌────▼────┐
+                  │BATTERY  │
+                  │capacity │
+                  │warranty │
+                  └─────────┘
+
+┌──────────────────┐
+│  ROUTE           │
+│ from_stop, to    │
+│ distance_km      │
+└────────┬─────────┘
+         │
+┌────────▼──────────────┐
+│  TRIP_PLAN            │
+│ scheduled_start, end  │
+│ planned_distance_km   │
+└────────┬──────────────┘
+         │
+┌────────▼──────────────┐
+│  TRIP_INSTANCE        │
+│ vehicle_id, driver_id │
+│ actual_*, billable_km │
+│ penalty_amount        │
+└───────────────────────┘
+
+┌──────────────────────────┐
+│  TELEMETRY_RECORD        │ (High volume, time-series)
+│ vehicle_id, timestamp_utc│
+│ soc, speed, odo, temp    │
+│ lat, lon, raw_payload    │
+└──────────────────────────┘
+
+┌──────────────────────────┐
+│  WARRANTY_COVERAGE       │
+│ vehicle_id, battery_id   │
+│ warranty_policy_id       │
+│ start_date, end_date     │
+│ km_limit, status         │
+└──────────────────────────┘
+
+┌──────────────────────────┐
+│  SERVICE_JOB             │
+│ vehicle_id, planned_date │
+│ due_km, status           │
+│ schedule_template_id     │
+└──────────────────────────┘
+```
+
+### 5.2 Telematics Time-Series Schema
+
+**Table: vehicle_telemetry** (TimescaleDB hypertable)
+
+```sql
+CREATE TABLE vehicle_telemetry (
+  ts_utc        TIMESTAMPTZ NOT NULL,
+  vehicle_id    BIGINT NOT NULL,
+  device_id     BIGINT NOT NULL,
+  lat           NUMERIC(10,7),
+  lon           NUMERIC(10,7),
+  soc_pct       NUMERIC(5,2),
+  odo_km        NUMERIC(12,3),
+  speed_kmph    NUMERIC(6,2),
+  batt_temp_c   NUMERIC(5,2),
+  motor_temp_c  NUMERIC(5,2),
+  dc_bus_v      NUMERIC(8,2),
+  dc_bus_a      NUMERIC(8,2),
+  is_charging   BOOLEAN,
+  raw_extra     JSONB,
+  PRIMARY KEY (vehicle_id, ts_utc)
+);
+SELECT create_hypertable('vehicle_telemetry', 'ts_utc', 'vehicle_id', 4);
+```
+
+**Separate tables for sparse events:**
+- `telematics_fault_event` (fault_code, severity, source)
+- `driver_behaviour_event` (event_type, severity, value)
+- `charge_session` (start_ts, end_ts, energy_kwh, soc_pct)
+
+**Rollup tables for dashboards:**
+- `vehicle_telemetry_hourly` (bucket_ts, avg_speed, min/max SOC, distance_km, energy_kwh)
+
+### 5.3 Multi-Tenancy & RLS
+
+**Row-Level Security policies enforce org isolation:**
+
+```sql
+-- Example: Assets visible only to their owning org
+ALTER TABLE assets ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY rls_assets_select ON assets
+FOR SELECT USING (current_org_id = current_setting('app.current_org_id')::integer);
+```
+
+**Application sets session variable on login:**
+```typescript
+await client.query("SELECT set_config('app.current_org_id', $1, false)", [userId.orgId]);
+```
+
+---
+
+## 6. Workspace Model (Hierarchical Asset Management)
+
+### 6.1 Workspace Hierarchy
+
+**Workspaces provide user-created, hierarchical organization of assets (max 6 levels):**
+
+```
+Level 0: Region (e.g., "South")
+  ├─ Level 1: Zone (e.g., "Hub-North")
+  │  ├─ Level 2: Hub (e.g., "Depot-JBM1")
+  │  │  ├─ Level 3: Dealer (e.g., "Dealer-Bangalore")
+  │  │  │  ├─ Level 4: Fleet (e.g., "Fleet-BMTC")
+  │  │  │  │  ├─ Level 5: Vehicle (e.g., "Bus-001")
+```
+
+**Implementation:** PostgreSQL `ltree` extension
+- Automatic path generation: `south.hubnorth.depotjbm1.dealerbangalore.fleetbmtc.bus001`
+- O(1) ancestor/descendant queries
+- Efficient hierarchical grouping for reports and access control
+
+### 6.2 Workspace Use Cases
+
+| Use Case | Example | Benefit |
+|---|---|---|
+| **Geographic grouping** | Region → Zone → Hub → Dealer | Regional visibility, zone-wise KPIs, dealer management |
+| **Operational grouping** | Fleet → Vehicle → Battery → Component | Asset lifecycle tracking, warranty transfer, maintenance scheduling |
+| **Access control** | Admin at Hub level sees all child assets | Role-based hierarchy, delegation, scalable governance |
+| **Reporting** | Generate KPIs per workspace | Fleet-level dashboards, depot-wise analytics, contract alignment |
+
+---
+
+## 7. API & Integration Points
+
+### 7.1 Core API Endpoints
+
+#### Assets API
+```
+GET    /api/assets                    List org's assets (paginated)
+GET    /api/assets/:id                Asset detail + metadata
+POST   /api/assets                    Create asset from product
+PATCH  /api/assets/:id                Update asset metadata
+DELETE /api/assets/:id                Decommission asset
+GET    /api/assets/:id/status         Current & history
+POST   /api/assets/:id/status         Change status (operational, maintenance, etc.)
+```
+
+#### Workspace API
+```
+GET    /api/workspaces                List org's hierarchies
+POST   /api/workspaces                Create workspace
+PATCH  /api/workspaces/:id            Update workspace
+DELETE /api/workspaces/:id            Delete workspace
+GET    /api/workspaces/:id/ancestors  ltree path traversal (parents)
+GET    /api/workspaces/:id/descendants ltree path traversal (children)
+POST   /api/workspaces/:id/users      Assign user to workspace
+POST   /api/workspaces/:id/assets     Assign asset to workspace
+```
+
+#### Telemetry & Fleet API
+```
+GET    /api/vehicles/:id/telemetry   Last N records (or time range)
+GET    /api/vehicles/:id/trips       Historical trips with KPIs
+GET    /api/vehicles/:id/status      Current vehicle state (SOC, location, faults)
+POST   /api/vehicles/:id/alert       Manually trigger alert (for testing)
+GET    /api/depots/:id/kpis          Depot KPIs (uptime, penalties, fleet util)
+GET    /api/contracts/:id/analytics  Contract-level analytics
+```
+
+#### Warranty & Maintenance API
+```
+GET    /api/vehicles/:id/warranty    Coverage status & policy
+POST   /api/vehicles/:id/warranty/claim  Raise warranty claim
+GET    /api/vehicles/:id/services    Upcoming & overdue services
+POST   /api/vehicles/:id/services    Book service appointment
+GET    /api/tickets                  Support tickets (RSA, warranty, general)
+PATCH  /api/tickets/:id              Update ticket status
+```
+
+#### Transfers & Asset Lifecycle
+```
+POST   /api/transfers                Request asset transfer
+PATCH  /api/transfers/:id/approve    From-org approval
+PATCH  /api/transfers/:id/complete   To-org completion
+GET    /api/transfers                List pending/completed transfers (audit trail)
+```
+
+### 7.2 External Integrations
+
+| Integration | Purpose | Data Flow |
+|---|---|---|
+| **SAP / DMS / ERP** | Master data sync, asset creation, warranty records | Bidirectional (purchase orders → GOCC assets, warranty claims ← GOCC tickets) |
+| **Charger OCPP Gateway** | Charger status, charge sessions, energy telemetry | Charger → GOCC (real-time OCPP 1.6/2.0.1) |
+| **DMS (Video Telematics)** | Driver behavior events, ADAS alerts, video clips | DMS → GOCC (events + SFTP video archives) |
+| **IoT Platform** | Telematics device auth, firmware OTA, edge alerts | MQTT/HTTPS ingest, Kafka stream to processing |
+| **Email / SMS / Notification** | Alert delivery | GOCC → SendGrid / Twilio / Firebase |
+| **Warehouse / BI** | Analytics exports | Daily/hourly snapshots to BigQuery / Snowflake via CDC |
+
+---
+
+## 8. Deployment & Infrastructure (AWS)
+
+### 8.1 AWS Architecture
+
+```
+┌──────────────────────────────────────────────────────┐
+│                    INTERNET GATEWAY                   │
+└──────────────────┬───────────────────────────────────┘
+                   │
+        ┌──────────▼──────────┐
+        │   AWS WAF + Shield   │ (DDoS, SQL injection)
+        └──────────┬───────────┘
+                   │
+        ┌──────────▼──────────────────────┐
+        │  Application Load Balancer (ALB) │ (Port 443 TLS 1.3)
+        │  Health check /health             │
+        └──────────┬───────────────────────┘
+                   │
+        ┌──────────┴──────────────────────┐
+        │   ECS Fargate Cluster             │
+        │   ┌─────────────────────────────┐ │
+        │   │ alm-api:latest (3 tasks)    │ │
+        │   │ CPU: 256, Memory: 512MB     │ │
+        │   │ Auto-scale 2–5 tasks        │ │
+        │   │ Multi-AZ ap-south-1a/1b     │ │
+        │   └─────────────────────────────┘ │
+        └────────────┬─────────────────────┘
+                     │
+        ┌────────────┴────────────┐
+        │                         │
+   ┌────▼────────┐      ┌────────▼───────┐
+   │ RDS Postgres │      │ ElastiCache    │
+   │ Multi-AZ     │      │ Redis (cache)  │
+   │ db.t3.medium │      │ cache.t3.micro │
+   │ 500GB GP3    │      │ Sessions, KPIs │
+   │ Encrypted    │      │                │
+   └──────────────┘      └────────────────┘
+        │
+   ┌────▼────────┐
+   │  S3 Bucket  │
+   │  Logs, backups,
+   │  exports, video clips
+   └─────────────┘
+```
+
+**Cost Estimate (monthly):**
+- RDS PostgreSQL Multi-AZ: $200
+- ECS Fargate (3 tasks): $150
+- ALB: $50
+- ElastiCache: $30
+- CloudWatch Logs: $50
+- Secrets Manager: $20
+- NAT Gateway: $100
+- Data Transfer & S3: $100
+- **Total: ~$700/month (~$8,400/year)**
+
+### 8.2 Deployment Pipeline
+
+```
+Git Commit (main branch)
+    ↓
+GitHub Actions CI
+    ├─ Run tests (unit, integration)
+    ├─ SAST security scan (Snyk, SonarQube)
+    ├─ Build Docker image
+    └─ Push to ECR
+        ↓
+Deploy to Dev → Staging → Production
+    ├─ Blue-green deployment strategy
+    ├─ Health checks, rollback on failure
+    ├─ Database migrations (Flyway)
+    └─ CloudWatch alarms + monitoring
+```
+
+---
+
+## 9. Security & Compliance
+
+### 9.1 Security Measures
+
+| Layer | Control | Implementation |
+|---|---|---|
+| **Transport** | TLS 1.3 | All HTTPS/WSS, ALB enforces 443 only |
+| **Authentication** | JWT + OAuth2 | OpenID Connect, Keycloak, MFA optional |
+| **Authorization** | RBAC + RLS | Role-based UI/API access + DB row filtering |
+| **Data at rest** | Encryption | RDS encrypted (KMS), encrypted columns for IMEI/SIM (pgcrypto) |
+| **Input validation** | Parameterized queries | Prevent SQL injection, input sanitization |
+| **Rate limiting** | Token bucket | 100 req/15min per org, 10 transfers/hour per org |
+| **Audit logging** | CloudWatch + S3 | All sensitive actions logged with user, org, timestamp |
+| **Secrets management** | AWS Secrets Manager | Encrypted storage, rotation, least privilege |
+
+### 9.2 OWASP Top 10 Compliance
+
+| Risk | Mitigation |
+|---|---|
+| A01: Broken Access Control | RLS policies + RBAC checks on every endpoint |
+| A02: Cryptographic Failures | TLS 1.3, AES-256 encryption at rest, pgcrypto for PII |
+| A03: Injection | Parameterized queries, input validation (express-validator) |
+| A04: Insecure Design | Threat modeling, security by design, separation of concerns |
+| A05: Security Misconfiguration | Terraform hardening, security groups, WAF rules |
+| A06: Vulnerable Dependencies | npm audit, Snyk scanning, automated patch management |
+| A07: Identification Failures | JWT tokens, optional MFA, secure session management |
+| A08: Data Integrity | Signed transfers, audit trails, transaction rollback |
+| A09: Logging & Monitoring | CloudWatch, ELK, alerting, incident response procedures |
+| A10: SSRF | Network isolation, VPC, private RDS, no public endpoints |
+
+---
+
+## 10. Performance & Scalability
+
+### 10.1 Performance Targets
+
+| Metric | Target | Approach |
+|---|---|---|
+| **API latency (p95)** | < 200ms | Connection pooling, DB indexing, Redis caching |
+| **Telemetry ingest rate** | 50K msg/sec | Kafka brokers, stream processing, partitioning |
+| **Telematics query latency** | < 100ms for last N records | TimescaleDB partitions, hypertables, compression |
+| **Dashboard load time** | < 2s | Materialized views, pre-aggregated KPIs, CDN for static assets |
+| **Concurrent users** | 5K+ | Auto-scaling ECS, RDS connection pooling, Redis cache |
+
+### 10.2 Optimization Strategies
+
+- **Caching:** Redis for session, KPI aggregates, frequently accessed lookups
+- **Pagination:** All list endpoints return max 100 rows, offset-based or cursor-based
+- **Indexing:** Composite indices on commonly filtered columns (org_id, vehicle_id, ts_utc)
+- **Materialized Views:** Pre-computed dashboards refreshed hourly or on-demand
+- **Query optimization:** EXPLAIN ANALYZE, avoid N+1 queries (JOINs, batch queries)
+- **Compression:** TimescaleDB compression for telemetry older than 7 days
+- **Partitioning:** By org_id, vehicle_id, time (daily for telemetry)
+
+---
+
+## 11. Feature Roadmap
+
+### Phase 1 (Months 1–3): MVP
+- Core fleet management (vehicles, depots, routes, trips)
+- Basic telematics visualization (SOC, speed, location)
+- Depot manager console + daily reporting
+- Retail fleet operator portal (read-only)
+
+### Phase 2 (Months 4–6): V1
+- Predictive maintenance (battery health scoring)
+- Driver behavior analytics + video telematics (optional)
+- Contract KPI tracking & penalty management
+- Warranty lifecycle integration
+- RD Vehicle Performance Console
+
+### Phase 3 (Months 7–9): Enhancements
+- Advanced analytics dashboards (BI integration)
+- ML-powered range & efficiency predictions
+- Geofencing & unauthorized movement alerts
+- Automated OTA firmware updates
+- Multi-language support
+
+### Phase 4 (Months 10–12): Scale
+- International expansion (multi-region, GDPR compliance)
+- API marketplace for third-party integrations
+- Mobile app enhancements (offline mode, advanced filtering)
+- Advanced AI/ML models (fault prediction, optimal routing)
+
+---
+
+## 12. References & Documentation
+
+### Attached Documents
+- `JBM Proposal-masked.pdf` – Executive summary, modules, pricing, milestones
+- `ALM-Platform-Architecture.pdf` – Advanced asset lifecycle management, RLS patterns, code examples
+- `document.pdf` – Security hardening, AWS deployment guide, compliance checklist
+
+### External Standards
+- PostgreSQL Row-Level Security: https://www.postgresql.org/docs/current/ddl-rowsecurity.html
+- OWASP Top 10 2021: https://owasp.org/Top10/
+- AWS best practices: https://docs.aws.amazon.com/security/
+- Kafka documentation: https://kafka.apache.org/documentation/
+- Flink CEP: https://nightlies.apache.org/flink/flink-docs-master/docs/libs/cep/
+
+---
+
+## 13. Appendix: Glossary
+
+| Term | Definition |
+|---|---|
+| **GOCC** | Global Operations Command Centre |
+| **STU** | State Transport Unit (contract authority) |
+| **RLS** | Row-Level Security (database-level data isolation) |
+| **RBAC** | Role-Based Access Control (API/UI authorization) |
+| **CEP** | Complex Event Processing (stream rules) |
+| **KPI** | Key Performance Indicator (uptime, penalty, utilization) |
+| **SOC** | State of Charge (battery %) |
+| **ADAS** | Advanced Driver Assistance System |
+| **DMS** | Driver Monitoring System (video telematics) |
+| **OTA** | Over-The-Air (firmware update) |
+| **RSA** | Roadside Assistance |
+| **ELK** | Elasticsearch, Logstash, Kibana (logging stack) |
+| **CAD** | Cloud Architecture Diagram |
+
+---
+
+**Document Version:** 1.0  
+**Last Updated:** January 2026  
+**Status:** Production Ready  
+**Classification:** Internal – Confidential  
+
+---
+
+**For questions or updates, contact:** ConnectM Technology Solutions  
+**Email:** architecture@connectm.io  
+**Support:** support@jbmgocc.io

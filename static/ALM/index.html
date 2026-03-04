@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALM - ConnectM</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #020617;
+  padding: 20px;
+}
+
+.aurora {
+  position: fixed;
+  inset: -50%;
+  filter: blur(120px);
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 30%, #22d3ee 0%, transparent 40%),
+    radial-gradient(circle at 70% 40%, #3b82f6 0%, transparent 45%),
+    radial-gradient(circle at 50% 70%, #facc15 0%, transparent 45%);
+  animation: auroraMove 18s ease-in-out infinite alternate;
+}
+
+@keyframes auroraMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(200px, -150px); }
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 900px;
+  padding: 40px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #eee;
+}
+
+.header h1 {
+  color: #0f172a;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.header p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.back-button {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #22d3ee, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(34, 211, 238, 0.3);
+}
+
+.buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.section-btn {
+  padding: 20px 24px;
+  background: #facc15;
+  color: #0f172a;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(250, 204, 21, 0.3);
+  background: #fde047;
+}
+
+.section-btn::after {
+  content: '→';
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+
+.section-btn:hover::after {
+  transform: translateX(5px);
+}
+
+.section-description {
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+a {
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 30px 20px;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .back-button {
+    position: static;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .buttons-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="aurora"></div>
+
+<a href="/" class="back-button">← Come Back</a>
+
+<div class="container">
+  <div class="header">
+    <h1>ALM Dashboard</h1>
+    <p>Application Lifecycle Management - Select a section to explore</p>
+  </div>
+
+  <div class="buttons-grid">
+    <a href="/alm-docs">
+      <button class="section-btn">
+        <div>
+          <div>ALM – Docs</div>
+          <div class="section-description">Documentation and guides</div>
+        </div>
+      </button>
+    </a>
+
+    <a href="/alm-architecture">
+      <button class="section-btn">
+        <div>
+          <div>Architecture & System Design</div>
+          <div class="section-description">System architecture overview</div>
+        </div>
+      </button>
+    </a>
+
+    <a href="/alm-database">
+      <button class="section-btn">
+        <div>
+          <div>Database Design & ERD</div>
+          <div class="section-description">Database schemas and relationships</div>
+        </div>
+      </button>
+    </a>
+
+    <a href="/alm-documents">
+      <button class="section-btn">
+        <div>
+          <div>Documents</div>
+          <div class="section-description">Project documentation</div>
+        </div>
+      </button>
+    </a>
+
+    <a href="/alm-frontend">
+      <button class="section-btn">
+        <div>
+          <div>Frontend UI</div>
+          <div class="section-description">User interface designs</div>
+        </div>
+      </button>
+    </a>
+
+    <a href="/alm-process">
+      <button class="section-btn">
+        <div>
+          <div>Process & Lifecycle Flows</div>
+          <div class="section-description">Workflow and process diagrams</div>
+        </div>
+      </button>
+    </a>
+
+    <a href="/alm-product">
+      <button class="section-btn">
+        <div>
+          <div>Product & Marketing</div>
+          <div class="section-description">Product specifications and marketing</div>
+        </div>
+      </button>
+    </a>
+
+    <a href="/alm-research">
+      <button class="section-btn">
+        <div>
+          <div>Research</div>
+          <div class="section-description">Research findings and analysis</div>
+        </div>
+      </button>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

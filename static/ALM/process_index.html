@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALM Platform - Process & Lifecycle Hub</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  background: #020617;
+  color: #e2e8f0;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding-bottom: 40px;
+  border-bottom: 2px solid #1e293b;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.back-button {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #22d3ee, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(34, 211, 238, 0.3);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.doc-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 32px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.doc-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.doc-card:hover {
+  transform: translateY(-4px);
+  border-color: #667eea;
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+}
+
+.doc-card:hover::before {
+  transform: scaleX(1);
+}
+
+.doc-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.doc-card h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 12px;
+}
+
+.doc-card .meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.doc-card p {
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.doc-card .audience {
+  display: inline-block;
+  background: rgba(102, 126, 234, 0.1);
+  color: #a5b4fc;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+}
+
+.doc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.doc-link:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.doc-link::after {
+  content: '→';
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.doc-link:hover::after {
+  transform: translateX(4px);
+}
+
+.info-section {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 40px;
+}
+
+.info-section h3 {
+  font-size: 1.25rem;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.info-section p {
+  color: #94a3b8;
+  line-height: 1.8;
+}
+
+footer {
+  text-align: center;
+  padding-top: 40px;
+  border-top: 1px solid #1e293b;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .back-button {
+    position: static;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<a href="/alm" class="back-button">← Back to ALM Dashboard</a>
+
+<div class="container">
+  <header>
+    <h1>🔄 Process & Lifecycle Hub</h1>
+    <p class="subtitle">User Flows, Architecture Decisions & Lifecycle Management</p>
+  </header>
+
+  <div class="info-section">
+    <h3>📋 About This Section</h3>
+    <p>
+      This hub contains interactive demonstrations and architectural decision records for the ALM platform's 
+      process flows and lifecycle management. Choose the resource that best fits your needs:
+    </p>
+  </div>
+
+  <div class="grid">
+    
+    <!-- Document 1: Interactive Demo -->
+    <div class="doc-card">
+      <span class="doc-icon">🎮</span>
+      <h2>Interactive Demo & User Flows</h2>
+      <div class="meta">
+        <span class="meta-item">📄 590 lines</span>
+        <span class="meta-item">⏱️ Interactive</span>
+      </div>
+      <span class="audience">For: Demos & Presentations</span>
+      <p>
+        Full working prototype with role-based login (Super Admin, OEM Admin, Dealer Admin). 
+        Includes live dashboard, organization onboarding, product management, IoT configuration, 
+        asset assignment, and claims management workflows. Perfect for stakeholder presentations 
+        and UX validation.
+      </p>
+      <a href="/alm-process/interactive-demo" class="doc-link">
+        Launch Interactive Demo
+      </a>
+    </div>
+
+    <!-- Document 2: Architecture Decisions -->
+    <div class="doc-card">
+      <span class="doc-icon">📐</span>
+      <h2>Architecture Decision Records</h2>
+      <div class="meta">
+        <span class="meta-item">📄 194 lines</span>
+        <span class="meta-item">⏱️ 5 min read</span>
+      </div>
+      <span class="audience">For: Technical Leadership</span>
+      <p>
+        Formal ADR documentation covering 10 critical architectural decisions: Platform scope, 
+        Asset immutability, Multi-tenancy, Workspace model, Operational workspaces, Product catalog, 
+        Rule engine, Dashboard strategy, Claims management, and Warranty-aligned pricing. 
+        Each ADR includes Context, Decision, and Consequences.
+      </p>
+      <a href="/alm-process/architecture-decisions" class="doc-link">
+        View Decision Records
+      </a>
+    </div>
+
+  </div>
+
+  <div class="info-section">
+    <h3>💡 When to Use Each Resource</h3>
+    <p style="margin-bottom: 12px;">
+      <strong>Interactive Demo:</strong> Use when demonstrating the platform to stakeholders, training new users, 
+      or validating user experience flows. The demo shows real workflows with interactive forms and navigation.
+    </p>
+    <p>
+      <strong>Architecture Decisions:</strong> Reference when reviewing technical design choices, onboarding 
+      engineering teams, or conducting architecture reviews. ADRs provide the "why" behind key platform decisions.
+    </p>
+  </div>
+
+  <footer>
+    <p>ConnectM Technology Solutions - Asset Lifecycle Management Platform</p>
+    <p style="margin-top: 8px;">© 2025 - Process documentation and interactive resources</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

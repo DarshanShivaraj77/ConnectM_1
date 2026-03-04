@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ALM – Design Decisions Log (From Conversation)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fb;color:#111}
+header{background:#0f172a;color:#fff;padding:16px 24px}
+.wrap{display:grid;grid-template-columns:320px 1fr;height:calc(100vh - 56px)}
+nav{background:#111827;color:#cbd5e1;padding:16px;overflow:auto}
+nav h3{color:#fff;margin-top:0}
+nav a{display:block;color:#cbd5e1;text-decoration:none;padding:8px 10px;border-radius:6px;margin-bottom:4px;font-size:14px}
+nav a:hover{background:#1f2937}
+main{padding:24px;overflow:auto}
+.section{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px;margin-bottom:24px}
+.section h2{margin-top:0}
+.decision{font-size:13px;font-weight:bold;color:#2563eb;margin-bottom:8px}
+.content{white-space:pre-wrap;line-height:1.55}
+.footer{font-size:12px;color:#6b7280;margin-top:24px}
+</style>
+</head>
+<body>
+
+<header>
+Asset Lifecycle Management (ALM) – Design Decisions (Derived from Full Thread)
+</header>
+
+<div class="wrap">
+
+<nav>
+  <h3>Design Decisions</h3>
+  <a href="#d1">1. Core Platform Scope</a>
+  <a href="#d2">2. Asset as Source of Truth</a>
+  <a href="#d3">3. Multi-Tenancy & Isolation</a>
+  <a href="#d4">4. Workspace Model</a>
+  <a href="#d5">5. Operational Workspaces</a>
+  <a href="#d6">6. Product & Global Catalog</a>
+  <a href="#d7">7. IoT & Rule Engine</a>
+  <a href="#d8">8. Dashboards Strategy</a>
+  <a href="#d9">9. Claims & Warranty Model</a>
+  <a href="#d10">10. Pricing Philosophy</a>
+  <a href="#d11">11. Collaboration & External Users</a>
+  <a href="#d12">12. Documentation & Execution</a>
+</nav>
+
+<main>
+
+<div id="d1" class="section">
+  <h2>1. Core Platform Scope</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+The platform is defined as an Asset Lifecycle Management (ALM) SaaS for IoT-enabled assets across batteries, vehicles, HVAC, and medical equipment.
+Focus areas include warranty risk, operational efficiency, and lifecycle intelligence rather than generic fleet management.
+  </div>
+</div>
+
+<div id="d2" class="section">
+  <h2>2. Asset as Source of Truth</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Assets are treated as immutable entities with a unique identity.
+All telemetry, warranty, claims, transfers, and operational history attach to the asset.
+Assets can appear in multiple workspaces but are never duplicated.
+  </div>
+</div>
+
+<div id="d3" class="section">
+  <h2>3. Multi-Tenancy & Data Isolation</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Organizations are strict tenants with isolation enforced at the data layer.
+Products are global once approved; assets are scoped to organizations with auditable transfer history.
+  </div>
+</div>
+
+<div id="d4" class="section">
+  <h2>4. Workspace Model</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Workspaces are observational lenses, not ownership containers.
+Three types are defined: Actual, Hierarchy, and Operational.
+Workspaces define KPI boundaries and collaboration scope.
+  </div>
+</div>
+
+<div id="d5" class="section">
+  <h2>5. Operational Workspaces</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Operational workspaces are problem-driven and time-bound.
+Any user with access to at least 10 assets can create one.
+Assets enter via rules or manual pinning.
+  </div>
+</div>
+
+<div id="d6" class="section">
+  <h2>6. Product & Global Catalog</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+OEMs onboard products and variants locally.
+ConnectM approves products to a global catalog.
+Once approved, products become reusable and immutable.
+  </div>
+</div>
+
+<div id="d7" class="section">
+  <h2>7. IoT & Rule Engine</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+IoT telemetry is configured at product level.
+Rules are categorized into alerts, events, operational KPIs, and reports.
+Rule evaluation drives asset inclusion, alerts, and warranty logic.
+  </div>
+</div>
+
+<div id="d8" class="section">
+  <h2>8. Dashboards Strategy</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Three dashboard types are defined:
+- Asset Dashboard (single asset truth)
+- Workspace Dashboard (aggregated KPIs)
+- User KPI Dashboard (accountability)
+Landing page is always the workspace boundary dashboard.
+  </div>
+</div>
+
+<div id="d9" class="section">
+  <h2>9. Claims & Warranty Model</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Claims are raised against assets and can be initiated from workspaces.
+Approval, rejection, and reasoning are fully auditable.
+Workspace-level claim correlation is a first-class view.
+  </div>
+</div>
+
+<div id="d10" class="section">
+  <h2>10. Pricing Philosophy</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Pricing is aligned to warranty savings rather than users or devices.
+Model includes base platform fee, per-asset intelligence fee, and success-based savings share.
+  </div>
+</div>
+
+<div id="d11" class="section">
+  <h2>11. Collaboration & External Users</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Workspace owners can invite internal and external users.
+External users receive scoped access limited to workspace assets.
+Access is time-bound and revocable.
+  </div>
+</div>
+
+<div id="d12" class="section">
+  <h2>12. Documentation & Execution</h2>
+  <div class="decision">Decision</div>
+  <div class="content">
+Conversation history is preserved as a design intent archive.
+Execution artifacts include Jira-ready user stories, glossary, UI baseline, and decision logs.
+  </div>
+</div>
+
+<div class="footer">
+This document reorganizes the full conversation into explicit design decisions without altering intent.
+</div>
+
+</main>
+</div>
+</body>
+</html>

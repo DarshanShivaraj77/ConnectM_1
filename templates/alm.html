@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALM Portal</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Inter,sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#020617;
+overflow:hidden;
+}
+
+.aurora{
+position:fixed;
+inset:-50%;
+filter:blur(120px);
+z-index:-1;
+background:
+radial-gradient(circle at 20% 30%, #22d3ee 0%, transparent 40%),
+radial-gradient(circle at 70% 40%, #3b82f6 0%, transparent 45%),
+radial-gradient(circle at 50% 70%, #facc15 0%, transparent 45%);
+animation:auroraMove 18s ease-in-out infinite alternate;
+}
+
+@keyframes auroraMove{
+0%{transform:translate(0,0);}
+100%{transform:translate(200px,-150px);}
+}
+
+.section-card{
+background:rgba(255,255,255,.92);
+backdrop-filter:blur(12px);
+border-radius:18px;
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+width:100%;
+max-width:420px;
+margin:20px;
+}
+
+.section-header{
+padding:30px;
+border-bottom:1px solid #eee;
+text-align:center;
+}
+
+.logo-img{
+width:160px;
+margin-bottom:8px;
+}
+
+.section-tag{
+font-size:13px;
+color:#666;
+}
+
+.section-body{
+padding:28px;
+text-align:center;
+}
+
+.hero-btn{
+padding:12px;
+border-radius:12px;
+border:none;
+font-weight:600;
+cursor:pointer;
+width:100%;
+margin-bottom:10px;
+}
+
+.primary{
+background:linear-gradient(135deg,#22d3ee,#2563eb);
+color:white;
+}
+
+.secondary{
+background:#facc15;
+}
+
+a{text-decoration:none;}
+
+.footer{
+margin-top:15px;
+font-size:12px;
+color:#888;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="aurora"></div>
+
+<div class="section-card">
+
+<div class="section-header">
+<img src="https://www.connectm.com/wp-content/uploads/2025/11/logo-ConnectM-1.svg"
+class="logo-img">
+<div class="section-tag">ALM Portal</div>
+</div>
+
+<div class="section-body">
+
+<a href="/alm-docs"><button class="hero-btn secondary">ALM – Docs</button></a>
+
+<a href="/alm-architecture"><button class="hero-btn secondary">Architecture and System Design</button></a>
+
+<a href="/alm-database"><button class="hero-btn secondary">Database Design and ERD</button></a>
+
+<a href="/alm-documents"><button class="hero-btn secondary">Documents</button></a>
+
+<a href="/alm-frontend"><button class="hero-btn secondary">Frontend UI</button></a>
+
+<a href="/alm-process"><button class="hero-btn secondary">Process and Lifecycle Flows</button></a>
+
+<a href="/alm-product"><button class="hero-btn secondary">Product and Marketing</button></a>
+
+<a href="/alm-research"><button class="hero-btn secondary">Research</button></a>
+
+<a href="/">
+<div class="footer">← Back</div>
+</a>
+
+</div>
+
+</div>
+
+</body>
+</html>

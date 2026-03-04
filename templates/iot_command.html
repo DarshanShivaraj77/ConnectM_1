@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IoT Command Section</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  background: #020617;
+}
+
+/* ===== AURORA BACKGROUND ===== */
+.aurora {
+  position: fixed;
+  inset: -50%;
+  filter: blur(120px);
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 30%, #22d3ee 0%, transparent 40%),
+    radial-gradient(circle at 70% 40%, #3b82f6 0%, transparent 45%),
+    radial-gradient(circle at 50% 70%, #facc15 0%, transparent 45%);
+  animation: auroraMove 18s ease-in-out infinite alternate;
+}
+
+@keyframes auroraMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(200px, -150px); }
+}
+
+/* ===== CARD ===== */
+.section-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 420px;
+  margin: 20px;
+}
+
+.section-header {
+  padding: 30px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.logo-img {
+  width: 160px;
+  margin-bottom: 8px;
+}
+
+.section-tag {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.section-body {
+  padding: 28px;
+  text-align: center;
+}
+
+.section-body h3 {
+  margin-bottom: 22px;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* ===== BUTTONS ===== */
+.hero-btn {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.primary {
+  background: linear-gradient(135deg, #22d3ee, #2563eb);
+  color: white;
+}
+
+.footer {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #888;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  display: block;
+}
+</style>
+</head>
+
+<body>
+
+<div class="aurora"></div>
+
+<div class="section-card">
+
+  <div class="section-header">
+    <img
+      src="https://www.connectm.com/wp-content/uploads/2025/11/logo-ConnectM-1.svg"
+      alt="ConnectM Logo"
+      class="logo-img"
+    >
+    <div class="section-tag">IoT Command Section</div>
+  </div>
+
+  <div class="section-body">
+
+    <h3>Select Platform</h3>
+
+    <a href="/jbm-group">
+      <button class="hero-btn primary">JBM Group</button>
+    </a>
+
+    <a href="/jbm-gocc">
+      <button class="hero-btn primary">JBM GOCC</button>
+    </a>
+
+    <a href="/">
+      <div class="footer">← Back to Dashboard</div>
+    </a>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALM Documents - ConnectM</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  background: #020617;
+  color: #e2e8f0;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.back-button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #22d3ee, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 40px;
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(34, 211, 238, 0.3);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding-bottom: 40px;
+  border-bottom: 2px solid #1e293b;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.download-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.download-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.download-icon {
+  font-size: 4rem;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.download-card h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.download-card p {
+  color: #94a3b8;
+  line-height: 1.8;
+  margin-bottom: 32px;
+  font-size: 1.05rem;
+}
+
+.file-info {
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 32px;
+}
+
+.file-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  text-align: center;
+}
+
+.file-info-item {
+  color: #94a3b8;
+}
+
+.file-info-item .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.file-info-item .value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #a5b4fc;
+}
+
+.download-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 18px 36px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.download-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
+}
+
+.download-button::before {
+  content: '⬇';
+  font-size: 1.5rem;
+}
+
+.features-list {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 32px;
+  margin-top: 40px;
+}
+
+.features-list h3 {
+  font-size: 1.25rem;
+  color: #f1f5f9;
+  margin-bottom: 20px;
+}
+
+.features-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features-list li {
+  color: #94a3b8;
+  padding: 12px 0;
+  padding-left: 32px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.features-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+footer {
+  text-align: center;
+  padding-top: 40px;
+  margin-top: 60px;
+  border-top: 1px solid #1e293b;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .download-card {
+    padding: 30px 20px;
+  }
+  
+  .file-info-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <a href="/alm" class="back-button">← Back to ALM Dashboard</a>
+
+  <div class="header">
+    <h1>📦 ALM Documentation Package</h1>
+    <p class="subtitle">Complete documentation archive for Asset Lifecycle Management</p>
+  </div>
+
+  <div class="download-card">
+    <span class="download-icon">📄</span>
+    <h2>ALM Complete Documentation</h2>
+    <p>
+      Download the complete ALM documentation package including architecture documents, 
+      user guides, API references, database schemas, and technical specifications.
+    </p>
+
+    <div class="file-info">
+      <div class="file-info-grid">
+        <div class="file-info-item">
+          <div class="label">File Type</div>
+          <div class="value">ZIP Archive</div>
+        </div>
+        <div class="file-info-item">
+          <div class="label">Format</div>
+          <div class="value">Multiple</div>
+        </div>
+        <div class="file-info-item">
+          <div class="label">Version</div>
+          <div class="value">2025.1</div>
+        </div>
+      </div>
+    </div>
+
+    <a href="/alm-documents/download" class="download-button">
+      Download Documentation Package
+    </a>
+  </div>
+
+  <div class="features-list">
+    <h3>📋 What's Included</h3>
+    <ul>
+      <li>Complete technical architecture documentation</li>
+      <li>Database schema and ERD diagrams</li>
+      <li>API reference and integration guides</li>
+      <li>User manuals and admin guides</li>
+      <li>Process flow diagrams and workflows</li>
+      <li>System design documents and ADRs</li>
+      <li>Installation and deployment guides</li>
+      <li>Security and compliance documentation</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p>ConnectM Technology Solutions - Asset Lifecycle Management Platform</p>
+    <p style="margin-top: 8px;">© 2025 - All documentation is confidential and proprietary</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

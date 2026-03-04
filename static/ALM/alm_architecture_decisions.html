@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ALM – Architecture Decision Records (ADR)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fb;color:#111}
+header{background:#0f172a;color:#fff;padding:16px 24px}
+main{padding:24px;max-width:1200px;margin:auto}
+.adr{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px;margin-bottom:24px}
+.adr h2{margin-top:0}
+.meta{font-size:12px;color:#6b7280;margin-bottom:12px}
+.section{margin-bottom:12px}
+.section h4{margin-bottom:6px;color:#2563eb}
+</style>
+</head>
+<body>
+<header>Asset Lifecycle Management (ALM) – Architecture Decision Records</header>
+<main>
+
+<div class="adr">
+<h2>ADR-001: Platform Scope as Asset Lifecycle Management</h2>
+<div class="meta">Status: Accepted | Date: 2026-01</div>
+<div class="section">
+<h4>Context</h4>
+ALM must support IoT-enabled assets across batteries, vehicles, HVAC, and medical equipment while addressing warranty risk and operational efficiency.
+</div>
+<div class="section">
+<h4>Decision</h4>
+Position the platform as Asset Lifecycle Management, not fleet management, with asset-level truth and lifecycle intelligence.
+</div>
+<div class="section">
+<h4>Consequences</h4>
+Enables multi-industry scale; avoids fleet-SaaS limitations; increases architectural complexity.
+</div>
+</div>
+
+<div class="adr">
+<h2>ADR-002: Asset as Immutable Source of Truth</h2>
+<div class="meta">Status: Accepted | Date: 2026-01</div>
+<div class="section">
+<h4>Context</h4>
+Multiple stakeholders interact with the same physical asset over time.
+</div>
+<div class="section">
+<h4>Decision</h4>
+Treat assets as immutable entities with complete lifecycle history; allow appearance in multiple workspaces.
+</div>
+<div class="section">
+<h4>Consequences</h4>
+Strong auditability; prevents data duplication; requires careful access control.
+</div>
+</div>
+
+<div class="adr">
+<h2>ADR-003: Multi-Tenancy with Data-Layer Isolation</h2>
+<div class="meta">Status: Accepted | Date: 2026-01</div>
+<div class="section">
+<h4>Context</h4>
+OEMs, dealers, and financiers require strict data isolation.
+</div>
+<div class="section">
+<h4>Decision</h4>
+Enforce multi-tenancy at the data layer (e.g., RLS) with organization-scoped assets and auditable transfers.
+</div>
+<div class="section">
+<h4>Consequences</h4>
+Enterprise-grade security; increased schema and query complexity.
+</div>
+</div>
+
+<div class="adr">
+<h2>ADR-004: Workspace as Observational Lens</h2>
+<div class="meta">Status: Accepted | Date: 2026-01</div>
+<div class="section">
+<h4>Context</h4>
+Operations teams need problem-centric views rather than static groups.
+</div>
+<div class="section">
+<h4>Decision</h4>
+Define workspaces as KPI-bound observational lenses, not ownership containers.
+</div>
+<div class="section">
+<h4>Consequences</h4>
+Supports flexible analysis; avoids hierarchy explosion; requires user education.
+</div>
+</div>
+
+<div class="adr">
+<h2>ADR-005: Operational Workspaces (Problem-Driven)</h2>
+<div class="meta">Status: Accepted | Date: 2026-01</div>
+<div class="section">
+<h4>Context</h4>
+Temporary investigations are common in warranty and ops workflows.
+</div>
+<div class="section">
+<h4>Decision</h4>
+Allow any user with access to ≥10 assets to create time-bound operational workspaces with rule-based and manual asset inclusion.
+</div>
+<div class="section">
+<h4>Consequences</h4>
+Improves collaboration; prevents misuse via eligibility rules; adds lifecycle management overhead.
+</div>
+</div>
+
+<div class="adr">
+<h2>ADR-006: Product Global Catalog with Approval Gate</h2>
+<div class="meta">Status: Accepted | Date: 2026-01</div>
+<div class="section">
+<h4>Context</h4>
+Products must be reusable across organizations without fragmentation.
+</div>
+<div class="section">
+<h4>Decision</h4>
+OEMs create products locally; ConnectM approves to global catalog; approved products are immutable.
+</div>
+<div class="section">
+<h4>Consequences</h4>
+Ensures consistency; introduces governance step.
+</div>
+</div>
+
+<div class="adr">
+<h2>ADR-007: Rule Engine at Product Level</h2>
+<div class="meta">Status: Accepted | Date: 2026-01</div>
+<div class="section">
+<h4>Context</h4>
+Alerts, events, and KPIs must be consistent across assets of the same product.
+</div>
+<div class="section">
+<h4>Decision</h4>
+Configure IoT parameters and rules at product level; apply uniformly to all assets.
+</div>
+<div class="section">
+<h4>Consequences</h4>
+Reduces configuration drift; limits per-asset customization.
+</div>
+</div>
+
+<div class="adr">
+<h2>ADR-008: Three-Tier Dashboard Strategy</h2>
+<div class="meta">Status: Accepted | Date: 2026-01</div>
+<div class="section">
+<h4>Context</h4>
+Different roles require different views of the same data.
+</div>
+<div class="section">
+<h4>Decision</h4>
+Define Asset Dashboard (truth), Workspace Dashboard (KPIs), and User KPI Dashboard (accountability).
+</div>
+<div class="section">
+<h4>Consequences</h4>
+Clear separation of concerns; avoids KPI duplication.
+</div>
+</div>
+
+<div class="adr">
+<h2>ADR-009: Claims Tied to Assets and Workspaces</h2>
+<div class="meta">Status: Accepted | Date: 2026-01</div>
+<div class="section">
+<h4>Context</h4>
+Warranty claims require evidence and audit trails.
+</div>
+<div class="section">
+<h4>Decision</h4>
+Bind claims to assets; allow initiation and correlation from workspaces.
+</div>
+<div class="section">
+<h4>Consequences</h4>
+Improves traceability; adds relational complexity.
+</div>
+</div>
+
+<div class="adr">
+<h2>ADR-010: Warranty-Savings-Aligned Pricing</h2>
+<div class="meta">Status: Accepted | Date: 2026-01</div>
+<div class="section">
+<h4>Context</h4>
+Traditional per-user or per-device pricing misaligns incentives.
+</div>
+<div class="section">
+<h4>Decision</h4>
+Adopt pricing based on base platform fee, per-asset intelligence fee, and success-based warranty savings share.
+</div>
+<div class="section">
+<h4>Consequences</h4>
+Strong value alignment; requires robust savings measurement.
+</div>
+</div>
+
+</main>
+</body>
+</html>

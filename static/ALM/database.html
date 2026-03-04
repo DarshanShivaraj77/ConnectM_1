@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>ALM Platform — Database Schema & ERD</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+<style>
+body {
+    font-family: Inter, Arial, sans-serif;
+    background: #f7f9fc;
+    color: #1f2937;
+    margin: 0;
+    padding: 24px;
+}
+h1, h2, h3 {
+    color: #0f172a;
+}
+h1 {
+    border-bottom: 3px solid #2563eb;
+    padding-bottom: 8px;
+    margin-bottom: 32px;
+}
+h2 {
+    margin-top: 32px;
+    margin-bottom: 16px;
+}
+.section {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.table-box {
+    border-left: 4px solid #2563eb;
+    padding-left: 16px;
+    margin: 16px 0;
+    background: #f8fafc;
+    padding: 16px;
+    border-radius: 4px;
+}
+.table-box h3 {
+    margin-top: 0;
+    color: #2563eb;
+    font-family: monospace;
+}
+.table-box ul {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+.table-box li {
+    font-family: monospace;
+    font-size: 13px;
+    margin: 4px 0;
+}
+.table-box p {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #6b7280;
+    font-style: italic;
+}
+.code {
+    background: #0f172a;
+    color: #e5e7eb;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 13px;
+    overflow-x: auto;
+}
+.mindmap {
+    font-family: monospace;
+    background: #f1f5f9;
+    padding: 16px;
+    border-radius: 6px;
+    white-space: pre;
+    overflow-x: auto;
+    line-height: 1.6;
+}
+.diagram-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    overflow-x: auto;
+}
+.guarantees-list {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    padding: 16px 16px 16px 20px;
+    border-radius: 4px;
+}
+.guarantees-list ul {
+    margin: 0;
+    padding-left: 20px;
+}
+.guarantees-list li {
+    margin: 8px 0;
+    color: #1e40af;
+}
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+.toc {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 32px;
+}
+.toc h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+.toc ul {
+    margin: 0;
+    padding-left: 20px;
+}
+.toc li {
+    margin: 8px 0;
+}
+.toc a {
+    color: #2563eb;
+    text-decoration: none;
+}
+.toc a:hover {
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<h1>Asset Lifecycle Management (ALM)<br/>Database Schema & ERD</h1>
+
+<div class="toc">
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#erd">Entity Relationship Diagram</a></li>
+<li><a href="#mindmap-visual">System Mind Map (Visual)</a></li>
+<li><a href="#global-catalog">1. Global Product Catalog</a></li>
+<li><a href="#tenant">2. Tenant & Identity Layer</a></li>
+<li><a href="#asset-model">3. Core Asset Model</a></li>
+<li><a href="#workspace">4. Workspace Hierarchy</a></li>
+<li><a href="#transfer">5. Asset Transfer & Audit</a></li>
+<li><a href="#warranty">6. Warranty Management</a></li>
+<li><a href="#rules">7. Rule Engine & Analytics</a></li>
+<li><a href="#mindmap-text">8. ERD — Textual Mind Map</a></li>
+<li><a href="#guarantees">9. Key Architectural Guarantees</a></li>
+</ul>
+</div>
+
+<div class="section" id="erd">
+<h2>Entity Relationship Diagram</h2>
+<div class="diagram-container">
+<div class="mermaid">
+erDiagram
+    ORGANIZATIONS ||--o{ USERS : has
+    ORGANIZATIONS ||--o{ WORKSPACES : owns
+    WORKSPACES ||--o{ WORKSPACES : parent
+    WORKSPACES ||--o{ WORKSPACE_USERS : grants
+    WORKSPACES ||--o{ WORKSPACE_ASSETS : contains
+    PRODUCTS ||--o{ PRODUCT_VARIANTS : defines
+    PRODUCTS ||--o{ ASSETS : instantiates
+    ASSETS ||--o{ ASSET_STATUS : lifecycle
+    ASSETS ||--o{ ASSET_TRANSFERS : transfers
+    ASSETS ||--|| ASSET_WARRANTY : covered_by
+    ASSETS ||--o{ WARRANTY_CLAIMS : generates
+    ASSETS ||--o{ EXECUTABLE_RULES : governed_by
+    EXECUTABLE_RULES ||--o{ RULE_EXECUTION_LOG : logs
+    
+    ORGANIZATIONS {
+        uuid id PK
+        string name
+        string business_type
+        jsonb metadata
+    }
+    
+    USERS {
+        uuid id PK
+        string email
+        uuid org_id FK
+        string role
+    }
+    
+    PRODUCTS {
+        uuid id PK
+        string name
+        string sku_prefix
+        string category
+        string manufacturer
+        boolean active
+    }
+    
+    PRODUCT_VARIANTS {
+        uuid id PK
+        uuid product_id FK
+        string variant_code
+        jsonb specs
+        jsonb pricing
+    }
+    
+    WORKSPACES {
+        uuid id PK
+        uuid org_id FK
+        uuid parent_id FK
+        int level
+        string type
+        ltree path
+    }
+    
+    ASSETS {
+        uuid id PK
+        uuid product_id FK
+        uuid current_org_id FK
+        string sku
+        string imei_id
+        date warranty_expiry
+        jsonb metadata
+    }
+    
+    ASSET_STATUS {
+        uuid asset_id FK
+        string status
+        timestamp assigned_at
+    }
+    
+    ASSET_TRANSFERS {
+        uuid asset_id FK
+        uuid from_org_id FK
+        uuid to_org_id FK
+        uuid from_workspace FK
+        uuid to_workspace FK
+        string status
+        timestamp created_at
+    }
+    
+    ASSET_WARRANTY {
+        uuid asset_id FK
+        date start_date
+        date end_date
+        jsonb terms
+    }
+    
+    WARRANTY_CLAIMS {
+        uuid id PK
+        uuid asset_id FK
+        string issue_type
+        string status
+        timestamp created_at
+    }
+    
+    EXECUTABLE_RULES {
+        uuid id PK
+        uuid org_id FK
+        uuid asset_id FK
+        string rule_type
+        jsonb threshold
+        string action
+    }
+    
+    RULE_EXECUTION_LOG {
+        uuid id PK
+        uuid rule_id FK
+        uuid asset_id FK
+        string status
+        timestamp executed_at
+    }
+</div>
+</div>
+</div>
+
+<div class="section" id="mindmap-visual">
+<h2>System Mind Map (Visual)</h2>
+<div class="diagram-container">
+<div class="mermaid">
+mindmap
+  root((ALM Platform))
+    Products
+      Global Catalog
+      Variants
+      Specifications
+    Organizations
+      Users & Roles
+      Multi-Tenancy
+      Workspaces
+        Region
+        Hub
+        Depot
+        Fleet
+        Asset Level
+    Assets
+      Lifecycle Status
+      Warranty Coverage
+      Transfer History
+      IoT Telemetry
+    Rules & Analytics
+      Thresholds
+      Alerts
+      Actions
+      Execution Logs
+</div>
+</div>
+</div>
+
+<div class="section" id="global-catalog">
+<h2>1. Global Product Catalog</h2>
+
+<div class="table-box">
+<h3>products</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>name (unique, VARCHAR)</li>
+<li>sku_prefix (VARCHAR)</li>
+<li>category (VARCHAR)</li>
+<li>manufacturer (VARCHAR)</li>
+<li>active (BOOLEAN)</li>
+<li>created_at (TIMESTAMP)</li>
+<li>updated_at (TIMESTAMP)</li>
+</ul>
+<p>OEM-agnostic master catalog shared across all organizations. Approved products are immutable.</p>
+</div>
+
+<div class="table-box">
+<h3>product_variants</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>product_id (FK → products)</li>
+<li>variant_code (VARCHAR, unique within product)</li>
+<li>specs (JSONB) — technical specifications</li>
+<li>pricing (JSONB) — pricing tiers and rules</li>
+<li>warranty_terms (JSONB) — default warranty configuration</li>
+<li>created_at (TIMESTAMP)</li>
+</ul>
+<p>Extends products with variant-specific attributes like battery capacity, motor power, etc.</p>
+</div>
+</div>
+
+<div class="section" id="tenant">
+<h2>2. Tenant & Identity Layer</h2>
+
+<div class="table-box">
+<h3>organizations</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>name (VARCHAR)</li>
+<li>business_type (ENUM: OEM, Fleet, Dealer, Financier, Service)</li>
+<li>registration_number (VARCHAR)</li>
+<li>metadata (JSONB) — branding, config, contact info</li>
+<li>active (BOOLEAN)</li>
+<li>created_at (TIMESTAMP)</li>
+</ul>
+<p>Root tenant entity. All data is isolated by organization using Row-Level Security (RLS).</p>
+</div>
+
+<div class="table-box">
+<h3>users</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>email (VARCHAR, unique)</li>
+<li>org_id (FK → organizations)</li>
+<li>role (ENUM: admin, manager, technician, viewer)</li>
+<li>password_hash (VARCHAR)</li>
+<li>active (BOOLEAN)</li>
+<li>last_login (TIMESTAMP)</li>
+<li>created_at (TIMESTAMP)</li>
+</ul>
+<p>Users are scoped to organizations. Cross-org collaboration requires explicit asset transfers.</p>
+</div>
+</div>
+
+<div class="section" id="asset-model">
+<h2>3. Core Asset Model</h2>
+
+<div class="table-box">
+<h3>assets</h3>
+<ul>
+<li>id (PK, UUID) — immutable, follows asset across transfers</li>
+<li>product_id (FK → products)</li>
+<li>variant_id (FK → product_variants)</li>
+<li>current_org_id (FK → organizations)</li>
+<li>sku (VARCHAR, unique per org) — organization-specific identifier</li>
+<li>serial_number (VARCHAR, unique globally)</li>
+<li>imei_id / sim_id (VARCHAR, encrypted)</li>
+<li>manufacturing_date (DATE)</li>
+<li>warranty_expiry (DATE)</li>
+<li>metadata (JSONB) — custom fields, purchase info, etc.</li>
+<li>created_at (TIMESTAMP)</li>
+<li>updated_at (TIMESTAMP)</li>
+</ul>
+<p>Central asset registry. Assets are immutable identities that can transfer between organizations.</p>
+</div>
+
+<div class="table-box">
+<h3>asset_status</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>asset_id (FK → assets)</li>
+<li>status (ENUM: operational, maintenance, breakdown, in-transit, decommissioned)</li>
+<li>location (VARCHAR)</li>
+<li>assigned_to_workspace (FK → workspaces)</li>
+<li>assigned_at (TIMESTAMP)</li>
+<li>notes (TEXT)</li>
+</ul>
+<p>Historical record of asset status changes. Current status is latest record by assigned_at.</p>
+</div>
+</div>
+
+<div class="section" id="workspace">
+<h2>4. Workspace Hierarchy (6-Level Constraint)</h2>
+
+<div class="table-box">
+<h3>workspaces</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>org_id (FK → organizations)</li>
+<li>parent_id (FK → workspaces, self-referencing)</li>
+<li>level (INT, CHECK: 0–6) — enforces max depth</li>
+<li>type (ENUM: region, hub, depot, fleet, asset)</li>
+<li>name (VARCHAR)</li>
+<li>path (LTREE) — hierarchical path for efficient queries</li>
+<li>metadata (JSONB) — location, config, KPIs</li>
+<li>created_at (TIMESTAMP)</li>
+</ul>
+<p>Flexible hierarchy for organizing assets. Uses PostgreSQL LTREE for efficient tree operations.</p>
+</div>
+
+<div class="table-box">
+<h3>workspace_assets</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>workspace_id (FK → workspaces)</li>
+<li>asset_id (FK → assets)</li>
+<li>assigned_at (TIMESTAMP)</li>
+<li>assigned_by (FK → users)</li>
+</ul>
+<p>Many-to-many relationship. Assets exist only at lowest hierarchy level (leaf nodes).</p>
+</div>
+
+<div class="table-box">
+<h3>workspace_users</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>workspace_id (FK → workspaces)</li>
+<li>user_id (FK → users)</li>
+<li>role (ENUM: admin, editor, viewer)</li>
+<li>assigned_at (TIMESTAMP)</li>
+</ul>
+<p>Workspace-level permissions. Workspace cannot exist without at least one admin user.</p>
+</div>
+</div>
+
+<div class="section" id="transfer">
+<h2>5. Asset Transfer & Audit</h2>
+
+<div class="table-box">
+<h3>asset_transfers</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>asset_id (FK → assets)</li>
+<li>from_org_id (FK → organizations)</li>
+<li>to_org_id (FK → organizations)</li>
+<li>from_workspace (FK → workspaces)</li>
+<li>to_workspace (FK → workspaces)</li>
+<li>status (ENUM: pending, approved, completed, rejected)</li>
+<li>transfer_reason (TEXT)</li>
+<li>initiated_by (FK → users)</li>
+<li>approved_by (FK → users)</li>
+<li>created_at (TIMESTAMP)</li>
+<li>completed_at (TIMESTAMP)</li>
+</ul>
+<p>Immutable audit trail of asset ownership changes. Warranty and telemetry history follow the asset.</p>
+</div>
+</div>
+
+<div class="section" id="warranty">
+<h2>6. Warranty Management</h2>
+
+<div class="table-box">
+<h3>asset_warranty</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>asset_id (FK → assets, unique)</li>
+<li>start_date (DATE)</li>
+<li>end_date (DATE)</li>
+<li>coverage_type (VARCHAR)</li>
+<li>terms (JSONB) — coverage rules, exclusions</li>
+<li>created_at (TIMESTAMP)</li>
+</ul>
+<p>One-to-one relationship with assets. Warranty follows asset across transfers.</p>
+</div>
+
+<div class="table-box">
+<h3>warranty_claims</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>asset_id (FK → assets)</li>
+<li>claim_number (VARCHAR, unique)</li>
+<li>issue_type (VARCHAR)</li>
+<li>description (TEXT)</li>
+<li>status (ENUM: open, under_investigation, approved, rejected, resolved)</li>
+<li>evidence (JSONB) — IoT data snapshots, photos, reports</li>
+<li>submitted_by (FK → users)</li>
+<li>reviewed_by (FK → users)</li>
+<li>resolution (TEXT)</li>
+<li>created_at (TIMESTAMP)</li>
+<li>resolved_at (TIMESTAMP)</li>
+</ul>
+<p>Claims are tied to assets and can be initiated from workspace dashboards.</p>
+</div>
+</div>
+
+<div class="section" id="rules">
+<h2>7. Rule Engine & Analytics (Extensible)</h2>
+
+<div class="table-box">
+<h3>executable_rules</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>org_id (FK → organizations)</li>
+<li>product_id (FK → products) — apply to all assets of this product</li>
+<li>asset_id (FK → assets) — optional, for asset-specific rules</li>
+<li>rule_type (VARCHAR: SOH, speed, geofence, warranty, maintenance)</li>
+<li>condition (JSONB) — threshold + operator (e.g., {"soc": {"<": 20}})</li>
+<li>action (ENUM: alert, ticket, webhook, email)</li>
+<li>action_config (JSONB) — webhook URL, email recipients, etc.</li>
+<li>active (BOOLEAN)</li>
+<li>created_at (TIMESTAMP)</li>
+</ul>
+<p>Product-level rules apply to all assets. Can be overridden at asset level.</p>
+</div>
+
+<div class="table-box">
+<h3>rule_execution_log</h3>
+<ul>
+<li>id (PK, UUID)</li>
+<li>rule_id (FK → executable_rules)</li>
+<li>asset_id (FK → assets)</li>
+<li>status (ENUM: success, failure)</li>
+<li>trigger_data (JSONB) — snapshot of telemetry that triggered rule</li>
+<li>action_result (JSONB) — response from webhook, alert ID, etc.</li>
+<li>executed_at (TIMESTAMP)</li>
+</ul>
+<p>Audit log for rule executions. Enables debugging and analytics on rule effectiveness.</p>
+</div>
+
+<div class="table-box">
+<h3>telemetry (Time-Series)</h3>
+<ul>
+<li>asset_id (FK → assets)</li>
+<li>timestamp (TIMESTAMPTZ)</li>
+<li>params (JSONB) — 70-250 parameters from CAN/MQTT</li>
+<li>location (POINT) — GPS coordinates</li>
+</ul>
+<p>Optimized for time-series queries. Consider TimescaleDB or partitioning for scale.</p>
+</div>
+</div>
+
+<div class="section" id="mindmap-text">
+<h2>8. ERD — Textual Mind Map</h2>
+
+<div class="mindmap">
+GLOBAL CATALOG
+ └─ Products
+    ├─ Product Variants
+    └─ Warranty Terms (default)
+
+TENANT LAYER
+ └─ Organizations
+    ├─ Users (roles: admin, manager, technician, viewer)
+    ├─ Assets
+    │   ├─ Asset Status (history)
+    │   ├─ Asset Warranty (follows asset)
+    │   └─ Asset Transfers (audit trail)
+    └─ Workspaces (ltree, max 6 levels)
+        ├─ Workspace Users (permissions)
+        └─ Workspace Assets (assignments)
+
+ANALYTICS & RULES
+ ├─ Telemetry (Time-Series, 70-250 params)
+ ├─ Executable Rules
+ │   ├─ Product-level (default)
+ │   └─ Asset-level (override)
+ ├─ Rule Execution Log
+ └─ Warranty Claims
+     ├─ Evidence (IoT snapshots)
+     └─ Resolution tracking
+</div>
+</div>
+
+<div class="section" id="guarantees">
+<h2>9. Key Architectural Guarantees</h2>
+<div class="guarantees-list">
+<ul>
+<li><strong>Asset Immutability:</strong> Asset ID never changes; follows asset across transfers</li>
+<li><strong>Single Source of Truth:</strong> Asset exists at lowest hierarchy level only (leaf nodes)</li>
+<li><strong>Workspace Constraint:</strong> Cannot exist without at least one admin user</li>
+<li><strong>User Protection:</strong> User deletion blocked if they are the last admin of any workspace</li>
+<li><strong>Multi-Tenancy:</strong> Row-Level Security (RLS) enforced via current_org_id</li>
+<li><strong>Transfer Preservation:</strong> Warranty and telemetry history follow the asset</li>
+<li><strong>Hierarchy Depth:</strong> Maximum 6 levels enforced via CHECK constraint</li>
+<li><strong>Product Consistency:</strong> Rules configured at product level apply uniformly to all assets</li>
+<li><strong>Audit Trail:</strong> All transfers, status changes, and rule executions are logged</li>
+<li><strong>Scalability:</strong> Telemetry optimized for millions of rows/day using time-series partitioning</li>
+</ul>
+</div>
+</div>
+
+<div class="section">
+<h2>10. Design Principles Summary</h2>
+<ul>
+<li><strong>Asset-Centric:</strong> Assets are the immutable source of truth, not organizations or workspaces</li>
+<li><strong>Observable Workspaces:</strong> Workspaces are KPI-bound lenses, not ownership containers</li>
+<li><strong>Global Catalog:</strong> Products approved once, reused across all organizations</li>
+<li><strong>Rule Engine:</strong> Executable, not passive — triggers actions based on real-time telemetry</li>
+<li><strong>Warranty Intelligence:</strong> Claims tied to assets with IoT evidence correlation</li>
+<li><strong>Transfer Transparency:</strong> Full audit trail with stakeholder approval workflow</li>
+</ul>
+</div>
+
+<div class="footer">
+© ConnectM — ALM Platform Architecture | Production-Ready Database Schema<br>
+Version 1.0 | Last Updated: February 2026
+</div>
+
+</body>
+</html>

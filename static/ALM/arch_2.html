@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>ALM Architecture – Workspace & Lifecycle Governance</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+body{margin:0;font-family:Inter,system-ui;background:#ffffff;color:#111827}
+.container{display:grid;grid-template-columns:260px 1fr;height:100vh}
+nav{border-right:1px solid #e5e7eb;padding:16px}
+nav a{display:block;padding:6px 0;color:#2563eb;text-decoration:none;font-size:13px}
+main{padding:32px;overflow:auto}
+h1{font-size:22px}
+h2{margin-top:32px;font-size:18px}
+p,li{font-size:14px;line-height:1.6}
+code{background:#f3f4f6;padding:2px 6px;border-radius:4px}
+</style>
+</head>
+
+<body>
+<div class="container">
+<nav>
+<strong>ALM Architecture</strong>
+<a href="#workspaces">Workspace Model</a>
+<a href="#lifecycle">Asset Lifecycle</a>
+<a href="#sla">SLA Governance</a>
+<a href="#policy">Policy Engine</a>
+<a href="#snapshot">Immutable Snapshot</a>
+</nav>
+
+<main>
+<h1>Workspace & Asset Lifecycle Governance</h1>
+
+<h2 id="workspaces">1. Workspace Model</h2>
+<p>
+Every organization has mandatory system-controlled primary workspaces:
+</p>
+<ul>
+<li>Central Inventory (procured, not deployed)</li>
+<li>Quarantine (risk isolation)</li>
+<li>Decommissioned Assets (terminal)</li>
+</ul>
+<p>
+Primary workspaces represent physical ownership.  
+Secondary workspaces provide logical overlays (warranty, region, cluster).
+</p>
+
+<h2 id="lifecycle">2. Asset Lifecycle</h2>
+<pre>
+Central Inventory → Operational → Quarantine → Decommission (Terminal)
+</pre>
+<p>
+Illegal transitions are blocked at both UI and API layers.
+</p>
+
+<h2 id="sla">3. SLA Governance</h2>
+<ul>
+<li>Inventory aging SLA</li>
+<li>Operational uptime SLA</li>
+<li>Quarantine resolution SLA</li>
+<li>Decommission approval SLA</li>
+</ul>
+<p>
+Breaches escalate automatically to compliance administrators.
+</p>
+
+<h2 id="policy">4. Policy-Driven Decisions</h2>
+<p>
+Rule and AI engines generate recommendations, not actions.
+Human approval is mandatory for decommissioning.
+</p>
+
+<h2 id="snapshot">5. Immutable Snapshot</h2>
+<p>
+At decommission, the platform captures a cryptographically hashed snapshot:
+</p>
+<ul>
+<li>Telemetry & health</li>
+<li>Warranty & claims</li>
+<li>Financial exposure</li>
+<li>SLA & violation history</li>
+</ul>
+
+<p>
+Snapshots are append-only and audit-safe.
+</p>
+</main>
+</div>
+</body>
+</html>
