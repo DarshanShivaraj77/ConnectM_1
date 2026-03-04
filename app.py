@@ -12,10 +12,11 @@ app = Flask(__name__)
 # ===== DATABASE CONNECTION =====
 db = mysql.connector.connect(
     host=os.getenv("DB_HOST"),
-    port=int(os.getenv("DB_PORT")),
     user=os.getenv("DB_USER"),
     password=os.getenv("DB_PASSWORD"),
-    database=os.getenv("DB_NAME")
+    database=os.getenv("DB_NAME"),
+    port=int(os.getenv("DB_PORT")),
+    use_pure=True
 )
 # ===== SECURITY SETTINGS =====
 app.secret_key = os.getenv("SECRET_KEY")
