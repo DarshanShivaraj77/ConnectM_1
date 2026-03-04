@@ -12,13 +12,11 @@ app = Flask(__name__)
 # ===== DATABASE CONNECTION =====
 db = mysql.connector.connect(
     host=os.getenv("DB_HOST"),
+    port=int(os.getenv("DB_PORT")),
     user=os.getenv("DB_USER"),
     password=os.getenv("DB_PASSWORD"),
-    database=os.getenv("DB_NAME"),
-    port=3306,
-    use_pure=True
+    database=os.getenv("DB_NAME")
 )
-
 # ===== SECURITY SETTINGS =====
 app.secret_key = os.getenv("SECRET_KEY")
 app.config['SESSION_COOKIE_HTTPONLY'] = True
