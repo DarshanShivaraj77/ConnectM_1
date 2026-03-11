@@ -346,58 +346,60 @@
 
 <div class="layout-shell">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-title">Contents</div>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-title">Contents</div>
 
-    <details class="toc-section" open>
-      <summary class="toc-section-label">Getting Started</summary>
-      <ul class="toc-list">
-        <li><a class="toc-link" href="#know-device">Know Your Device</a></li>
-        <li><a class="toc-link" href="#revision">Revision History</a></li>
-      </ul>
-    </details>
+  <details class="toc-section" open>
+    <summary class="toc-section-label">Getting Started</summary>
+    <ul class="toc-list">
+      <li><a class="toc-link" href="#know-device">Know Your Device</a></li>
+      <li><a class="toc-link" href="#revision">Revision History</a></li>
+    </ul>
+  </details>
 
-    <details class="toc-section" open>
-      <summary class="toc-section-label">Mounting &amp; Wiring</summary>
-      <ul class="toc-list">
-        <li><a class="toc-link" href="#wiring">Wiring Scheme</a></li>
-        <li><a class="toc-link" href="#mounting">Mounting Recommendations</a></li>
-        <li><a class="toc-link" href="#connecting-wires">Connecting Wires</a></li>
-        <li><a class="toc-link" href="#connecting-power">Connecting Power Source</a></li>
-        <li><a class="toc-link" href="#connecting-ignition">Connecting Ignition Wire</a></li>
-        <li><a class="toc-link" href="#connecting-ground">Connecting Ground Wire</a></li>
-      </ul>
-    </details>
+  <details class="toc-section" open>
+    <summary class="toc-section-label">Pinout & Wiring</summary>
+    <ul class="toc-list">
+      <li><a class="toc-link" href="#wiring">Pinout</a></li>
+      <li><a class="toc-link" href="#wiring-scheme">Wiring Scheme</a></li>
+      <li><a class="toc-link" href="#mounting">Mounting Recommendations</a></li>
+      <li><a class="toc-link" href="#connecting-wires">Connecting Wires</a></li>
+      <li><a class="toc-link" href="#connecting-power">Connecting Power Source</a></li>
+      <li><a class="toc-link" href="#connecting-ignition">Connecting Ignition Wire</a></li>
+      <li><a class="toc-link" href="#connecting-ground">Connecting Ground Wire</a></li>
+    </ul>
+  </details>
 
-    <details class="toc-section" open>
-      <summary class="toc-section-label">Specifications</summary>
-      <ul class="toc-list">
-        <li><a class="toc-link" href="#basic-chars">Basic Characteristics</a></li>
-        <li><a class="toc-link" href="#led">LED Indications</a></li>
-        <li><a class="toc-link" href="#physical">Physical Specification</a></li>
-        <li><a class="toc-link" href="#environment">Operating Environment</a></li>
-        <li><a class="toc-link" href="#features">Features</a></li>
-        <li><a class="toc-link" href="#electrical">Electrical Characteristics</a></li>
-      </ul>
-    </details>
+  <details class="toc-section" open>
+    <summary class="toc-section-label">Specifications</summary>
+    <ul class="toc-list">
+      <li><a class="toc-link" href="#basic-chars">Basic Characteristics</a></li>
+      <li><a class="toc-link" href="#interfaces-section">Interfaces</a></li>
+      <li><a class="toc-link" href="#led">LED Indications</a></li>
+      <li><a class="toc-link" href="#physical">Physical Specification</a></li>
+      <li><a class="toc-link" href="#environment">Operating Environment</a></li>
+      <li><a class="toc-link" href="#features">Features</a></li>
+      <li><a class="toc-link" href="#electrical">Electrical Characteristics</a></li>
+    </ul>
+  </details>
 
-    <details class="toc-section" open>
-      <summary class="toc-section-label">Safety &amp; Compliance</summary>
-      <ul class="toc-list">
-        <li><a class="toc-link" href="#safety">Safety Information</a></li>
-        <li><a class="toc-link" href="#certifications">Certification &amp; Approvals</a></li>
-      </ul>
-    </details>
+  <details class="toc-section" open>
+    <summary class="toc-section-label">Safety & Compliance</summary>
+    <ul class="toc-list">
+      <li><a class="toc-link" href="#safety">Safety Information</a></li>
+      <li><a class="toc-link" href="#certifications">Certification & Approvals</a></li>
+    </ul>
+  </details>
 
-    <details class="toc-section" open>
-      <summary class="toc-section-label">Warranty</summary>
-      <ul class="toc-list">
-        <li><a class="toc-link" href="#warranty">Warranty</a></li>
-        <li><a class="toc-link" href="#warranty-disclaimer">Warranty Disclaimer</a></li>
-      </ul>
-    </details>
-  </aside>
+  <details class="toc-section" open>
+    <summary class="toc-section-label">Warranty</summary>
+    <ul class="toc-list">
+      <li><a class="toc-link" href="#warranty">Warranty</a></li>
+      <li><a class="toc-link" href="#warranty-disclaimer">Warranty Disclaimer</a></li>
+    </ul>
+  </details>
+</aside>
 
   <!-- MAIN CONTENT -->
   <main>
@@ -453,24 +455,93 @@
         </table>
       </div>
     </section>
+<section id="wiring" class="section-card">
+  <div class="section-header">
+    <div class="section-title">Pinout &amp; Wiring Scheme</div>
+    <span class="section-tag">Hardware</span>
+  </div>
+  <div class="section-body">
 
-    <!-- PINOUT -->
-    <section id="wiring" class="section-card">
-      <div class="section-header">
-        <div class="section-title">Pinout &amp; Wiring Scheme</div>
-        <span class="section-tag">Hardware</span>
+    <!-- BASIC PINOUT -->
+    <div class="subsection">
+      <div class="subsection-title">📌 Basic Pinout</div>
+      <img src="../images/bms_iot/bms1.jpeg" alt="Basic Pinout Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
+      <div class="table-wrap" style="margin-top:10px;">
+        <table>
+          <thead>
+            <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>VIN</td><td>Power Supply Input (24V)</td><td>Red</td></tr>
+            <tr><td>2</td><td>IGNITION</td><td>IGNITION</td><td>Gray</td></tr>
+            <tr><td>3</td><td>CAN H1</td><td>CAN HIGH (with CAN wakeup)</td><td>Yellow</td></tr>
+            <tr><td>4</td><td>GROUND</td><td>POWER GROUND</td><td>Black</td></tr>
+            <tr><td>5</td><td>DIGITAL OUTPUT</td><td>5 VOLTS/SUPPLY INPUT</td><td>Blue</td></tr>
+            <tr><td>6</td><td>CAN L1</td><td>CAN LOW (with CAN wakeup)</td><td>Green</td></tr>
+          </tbody>
+        </table>
       </div>
-      <div class="section-body">
-        <div class="note-box info">
-          <span>ℹ️</span>
-          <span><strong>Pinout</strong> – To be filled by Anish.</span>
-        </div>
-        <div class="note-box info" style="margin-top:8px;">
-          <span>ℹ️</span>
-          <span><strong>Wiring Scheme</strong> – To be filled by Anish.</span>
-        </div>
+    </div>
+
+    <!-- ADVANCED PINOUT -->
+    <div class="subsection" style="margin-top:20px;">
+      <div class="subsection-title">⚙️ Advanced Pinout</div>
+      <img src="../images/bms_iot/bms2.jpeg" alt="Advanced Pinout Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
+      <div class="table-wrap" style="margin-top:10px;">
+        <table>
+          <thead>
+            <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>VIN</td><td>Power Supply Input (24V)</td><td>Red</td></tr>
+            <tr><td>2</td><td>IGNITION</td><td>IGNITION</td><td>Gray</td></tr>
+            <tr><td>3</td><td>CAN H1</td><td>CAN HIGH (with CAN wakeup)</td><td>Yellow</td></tr>
+            <tr><td>4</td><td>GROUND</td><td>POWER GROUND</td><td>Black</td></tr>
+            <tr><td>5</td><td>DIGITAL OUTPUT</td><td>5 VOLTS/SUPPLY INPUT</td><td>Blue</td></tr>
+            <tr><td>6</td><td>CAN L1</td><td>CAN LOW (with CAN wakeup)</td><td>Green</td></tr>
+          </tbody>
+        </table>
       </div>
-    </section>
+      <p style="margin:12px 0 4px;"><strong>4‑Pin Table (Advanced)</strong></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>ISO CAN H2</td><td>ISOLATED CAN HIGH</td><td>Yellow</td></tr>
+            <tr><td>2</td><td>ISO CAN L2</td><td>ISOLATED CAN LOW</td><td>Green</td></tr>
+            <tr><td>3</td><td>ANALOG INPUT</td><td>0‑10 VOLTS</td><td>Red</td></tr>
+            <tr><td>4</td><td>DIGITAL INPUT</td><td>12 VOLTS</td><td>Brown</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="wiring-scheme" class="section-card">
+  <div class="section-header">
+    <div class="section-title">Wiring Scheme</div>
+    <span class="section-tag">Installation</span>
+  </div>
+  <div class="section-body">
+
+    <div class="subsection">
+      <div class="subsection-title">🔌 Basic Wiring</div>
+      <img src="../images/bms_iot/bms3.jpeg" alt="Basic Wiring Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
+      <img src="../images/bms_iot/bms4.svg" alt="Basic Wiring Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
+    </div>
+
+    <div class="subsection" style="margin-top:20px;">
+      <div class="subsection-title">🔌 Advanced Wiring</div>
+      <img src="../images/bms_iot/bms5.svg" alt="Advanced Wiring Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
+      <img src="../images/bms_iot/bms6.svg" alt="Advanced Wiring Additional Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
+    </div>
+
+  </div>
+</section>
 
     <!-- MOUNTING -->
     <section id="mounting" class="section-card">
