@@ -176,7 +176,24 @@
     .subsection-title { font-size:12px; font-weight:700; color:var(--text); margin:0 0 6px; text-transform:uppercase; letter-spacing:.06em; }
 
     /* SPEC GRID */
-    .spec-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin-top:10px; }
+    .spec-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* max 3 per row */
+  gap: 16px;
+}
+/* Tablet */
+@media (max-width: 992px) {
+  .spec-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .spec-grid {
+    grid-template-columns: 1fr;
+  }
+}
     .spec-card {
       border-radius:10px; padding:10px 12px;
       background:#ffffff; border:1px solid rgba(148,163,184,0.6);
