@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, abort, send_from_directory, g
+from flask import Flask, render_template, request, redirect, session, abort, send_from_directory
 import mysql.connector
 from werkzeug.security import check_password_hash, generate_password_hash
 import os
@@ -10,31 +10,20 @@ load_dotenv()
 app = Flask(__name__)
 
 # ===== DATABASE CONNECTION =====
-def get_db():
-    if 'db' not in g:
-        g.db = mysql.connector.connect(
-            host=os.getenv("DB_HOST"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            database=os.getenv("DB_NAME"),
-            port=int(os.getenv("DB_PORT")),
-            use_pure=True
-        )
-    return g.db
-
-@app.teardown_appcontext
-def close_db(e=None):
-    db = g.pop('db', None)
-    if db is not None:
-        db.close()
-
+db = mysql.connector.connect(
+    host=os.getenv("DB_HOST"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    database=os.getenv("DB_NAME"),
+    port=int(os.getenv("DB_PORT")),
+    use_pure=True
+)
 # ===== SECURITY SETTINGS =====
 app.secret_key = os.getenv("SECRET_KEY")
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
 # ===== ACTIVITY LOG =====
 def log_activity(user, action, ip):
-    db = get_db()
     cur = db.cursor()
     cur.execute("""
         INSERT INTO activity_logs(username,action,ip_address)
@@ -46,21 +35,26 @@ def log_activity(user, action, ip):
 # ===== GLOBAL ROUTE PROTECTION =====
 @app.before_request
 def protect_routes():
+
     admin_routes = ["/add_user"]
+
     if request.path in admin_routes:
+
         if "user" not in session:
             return redirect("/")
+
         if session.get("role") != "admin":
             abort(403)
 
 # ===== LOGIN =====
 @app.route("/", methods=["GET","POST"])
 def login():
+
     if request.method == "POST":
+
         username = request.form["username"]
         password = request.form["password"]
 
-        db = get_db()
         cur = db.cursor(dictionary=True)
         cur.execute("SELECT password,role FROM users WHERE username=%s",(username,))
         row = cur.fetchone()
@@ -69,10 +63,14 @@ def login():
         ip = request.remote_addr
 
         if row and check_password_hash(row["password"], password):
+
             session["user"] = username
             session["role"] = row["role"]
+
             log_activity(username,"LOGIN_SUCCESS",ip)
+
             return redirect("/")
+
         else:
             log_activity(username,"LOGIN_FAILED",ip)
             return render_template("login.html", error="Invalid Login")
@@ -82,14 +80,15 @@ def login():
 # ===== ADD USER (ADMIN ONLY) =====
 @app.route("/add_user", methods=["GET","POST"])
 def add_user():
+
     if request.method == "POST":
+
         username = request.form["username"]
         password = generate_password_hash(
             request.form["password"],
             method="pbkdf2:sha256"
         )
 
-        db = get_db()
         cur = db.cursor()
         cur.execute(
             "INSERT INTO users(username,password,role) VALUES(%s,%s,'user')",
@@ -99,6 +98,7 @@ def add_user():
         cur.close()
 
         log_activity(session["user"], f"CREATED_USER:{username}", request.remote_addr)
+
         return redirect("/")
 
     return render_template("add_user.html")
@@ -106,8 +106,10 @@ def add_user():
 # ===== HANDBOOK =====
 @app.route("/handbook")
 def handbook():
+
     if "user" not in session:
         abort(403)
+
     log_activity(session["user"], "OPENED_HANDBOOK", request.remote_addr)
     return render_template("handbook.html")
 
@@ -115,21 +117,25 @@ def handbook():
 def bms_iot():
     if "user" not in session:
         abort(403)
+    
     log_activity(session["user"], "OPENED_BMS_IOT_MANUAL", request.remote_addr)
+    
     try:
         return send_from_directory('static/BMS_IOT', 'bms_iot.html')
     except Exception as e:
         print(f"Error serving BMS IoT manual: {e}")
         return f"Error: Could not find 'bms_iot.html' in 'static/BMS_IOT/' folder. Error details: {str(e)}", 404
-
 # ===== JBM ROUTES =====
 @app.route("/jbm-gocc")
 def jbm_gocc():
     if "user" not in session:
         abort(403)
+    
     try:
+        # Try to serve the file from static/jbm_gocc/
         return send_from_directory('static/jbm_gocc', 'gocc_arch_2.html')
     except Exception as e:
+        # Log the error and return a helpful message
         print(f"Error serving JBM GOCC file: {e}")
         return f"Error: Could not find the file. Make sure 'gocc_arch_2.html' exists in 'static/jbm_gocc/' folder. Error details: {str(e)}", 404
 
@@ -137,9 +143,12 @@ def jbm_gocc():
 def jbm_group():
     if "user" not in session:
         abort(403)
+    
     try:
+        # Try to serve the file from static/jbm_group_login/
         return send_from_directory('static/jbm_group', 'Login.html')
     except Exception as e:
+        # Log the error and return a helpful message
         print(f"Error serving JBM Group file: {e}")
         return f"Error: Could not find the file. Make sure 'Login.html' exists in 'static/jbm_group/' folder. Error details: {str(e)}", 404
 
@@ -148,7 +157,9 @@ def jbm_group():
 def alm_home():
     if "user" not in session:
         abort(403)
+    
     try:
+        # Serve the main ALM index file from static/ALM/
         return send_from_directory('static/ALM', 'index.html')
     except Exception as e:
         print(f"Error serving ALM home: {e}")
@@ -158,6 +169,7 @@ def alm_home():
 def alm_docs():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'docs.html')
     except Exception as e:
@@ -168,11 +180,13 @@ def alm_docs():
 def alm_architecture():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'architecture_index.html')
     except Exception as e:
         print(f"Error serving ALM architecture: {e}")
         return f"Error: Could not find 'architecture.html' in 'static/ALM/' folder. Error details: {str(e)}", 404
+
 
 # ===== ALM ARCHITECTURE SUB-ROUTES =====
 @app.route("/alm-architecture/technical")
@@ -214,11 +228,11 @@ def alm_architecture_master():
     except Exception as e:
         print(f"Error serving master document: {e}")
         return f"Error: Could not find 'arch_4.html' in 'static/ALM/' folder. Error details: {str(e)}", 404
-
 @app.route("/alm-database")
 def alm_database():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'database.html')
     except Exception as e:
@@ -245,6 +259,7 @@ def alm_frontend_asset_product():
     except Exception as e:
         print(f"Error serving asset product: {e}")
         return f"Error: Could not find file. Error details: {str(e)}", 404
+
 
 @app.route("/alm-frontend/asset-product/fleet-dashboard")
 def alm_frontend_fleet_dashboard():
@@ -330,6 +345,7 @@ def alm_frontend_workspace():
 def alm_documents():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'documents.html')
     except Exception as e:
@@ -340,10 +356,14 @@ def alm_documents():
 def alm_documents_download():
     if "user" not in session:
         abort(403)
+    
     try:
+        # Log the download activity
         log_activity(session["user"], "DOWNLOADED_ALM_DOCUMENTS", request.remote_addr)
+        
+        # Send the zip file for download directly from static/ALM folder
         return send_from_directory(
-            'static/ALM',
+            'static/ALM', 
             'Documents.zip',
             as_attachment=True,
             download_name='ALM_Documentation_Package.zip'
@@ -356,6 +376,7 @@ def alm_documents_download():
 def alm_frontend():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'frontend.html')
     except Exception as e:
@@ -366,6 +387,7 @@ def alm_frontend():
 def alm_process():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'process_index.html')
     except Exception as e:
@@ -377,6 +399,7 @@ def alm_process():
 def alm_process_demo():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'alm_interactive_demo.html')
     except Exception as e:
@@ -387,6 +410,7 @@ def alm_process_demo():
 def alm_process_decisions():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'alm_architecture_decisions.html')
     except Exception as e:
@@ -397,16 +421,22 @@ def alm_process_decisions():
 def alm_product():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'alm_marketing_1.html')
     except Exception as e:
         print(f"Error serving ALM product: {e}")
         return f"Error: Could not find 'product_index.html' in 'static/ALM/' folder. Error details: {str(e)}", 404
 
+
+
+
+
 @app.route("/alm-research")
 def alm_research():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'research_index.html')
     except Exception as e:
@@ -418,6 +448,7 @@ def alm_research():
 def alm_research_complete():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'alm_complete_documentation.html')
     except Exception as e:
@@ -428,6 +459,7 @@ def alm_research_complete():
 def alm_research_conversation():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'alm_conversation_thread.html')
     except Exception as e:
@@ -438,6 +470,7 @@ def alm_research_conversation():
 def alm_research_navigation():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'alm_thread_navigation.html')
     except Exception as e:
@@ -448,12 +481,12 @@ def alm_research_navigation():
 def alm_research_decisions():
     if "user" not in session:
         abort(403)
+    
     try:
         return send_from_directory('static/ALM', 'alm_design_decisions.html')
     except Exception as e:
         print(f"Error serving design decisions: {e}")
         return f"Error: Could not find file. Error details: {str(e)}", 404
-
 @app.route("/iot-command")
 def iot_command():
     if "user" not in session:
@@ -463,8 +496,10 @@ def iot_command():
 # ===== LOGOUT =====
 @app.route("/logout")
 def logout():
+
     if "user" in session:
         log_activity(session["user"], "LOGOUT", request.remote_addr)
+
     session.clear()
     return redirect("/")
 
@@ -478,6 +513,8 @@ def forbidden(e):
     return "Access forbidden. Please log in.", 403
 
 # ===== RUN =====
+import os
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0"
