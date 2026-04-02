@@ -3,7 +3,6 @@ import psycopg2
 from werkzeug.security import check_password_hash, generate_password_hash
 import os
 from dotenv import load_dotenv
-from pathlib import Path
 
 # ===== LOAD ENV FILE =====
 load_dotenv()
@@ -16,7 +15,14 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 # ===== DATABASE CONNECTION =====
 def get_db():
     if 'db' not in g:
-        g.db = psycopg2.connect(os.getenv("DATABASE_URL"))
+        db_url = os.getenv("DATABASE_URL")
+
+        # Fix Render postgres:// → postgresql://
+        if db_url and db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+        g.db = psycopg2.connect(db_url)
+        g.db.autocommit = True
     return g.db
 
 @app.teardown_appcontext
@@ -30,10 +36,9 @@ def log_activity(user, action, ip):
     db = get_db()
     cur = db.cursor()
     cur.execute("""
-        INSERT INTO activity_logs(username,action,ip_address)
-        VALUES(%s,%s,%s)
-    """,(user,action,ip))
-    db.commit()
+        INSERT INTO activity_logs(username, action, ip_address)
+        VALUES(%s, %s, %s)
+    """, (user, action, ip))
     cur.close()
 
 # ===== GLOBAL ROUTE PROTECTION =====
@@ -47,7 +52,7 @@ def protect_routes():
             abort(403)
 
 # ===== LOGIN =====
-@app.route("/", methods=["GET","POST"])
+@app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         username = request.form["username"]
@@ -78,7 +83,7 @@ def login():
     return render_template("login.html")
 
 # ===== ADD USER (ADMIN ONLY) =====
-@app.route("/add_user", methods=["GET","POST"])
+@app.route("/add_user", methods=["GET", "POST"])
 def add_user():
     if request.method == "POST":
         username = request.form["username"]
@@ -90,10 +95,9 @@ def add_user():
         db = get_db()
         cur = db.cursor()
         cur.execute(
-            "INSERT INTO users(username,password,role) VALUES(%s,%s,'user')",
-            (username,password)
+            "INSERT INTO users(username, password, role) VALUES(%s, %s, 'user')",
+            (username, password)
         )
-        db.commit()
         cur.close()
 
         log_activity(session["user"], f"CREATED_USER:{username}", request.remote_addr)
@@ -170,7 +174,7 @@ def alm_architecture():
         return send_from_directory('static/ALM', 'architecture_index.html')
     except Exception as e:
         print(f"Error serving ALM architecture: {e}")
-        return f"Error: Could not find 'architecture.html' in 'static/ALM/' folder. Error details: {str(e)}", 404
+        return f"Error: Could not find 'architecture_index.html' in 'static/ALM/' folder. Error details: {str(e)}", 404
 
 # ===== ALM ARCHITECTURE SUB-ROUTES =====
 @app.route("/alm-architecture/technical")
@@ -399,7 +403,7 @@ def alm_product():
         return send_from_directory('static/ALM', 'alm_marketing_1.html')
     except Exception as e:
         print(f"Error serving ALM product: {e}")
-        return f"Error: Could not find 'product_index.html' in 'static/ALM/' folder. Error details: {str(e)}", 404
+        return f"Error: Could not find 'alm_marketing_1.html' in 'static/ALM/' folder. Error details: {str(e)}", 404
 
 @app.route("/alm-research")
 def alm_research():
@@ -479,3 +483,4 @@ def forbidden(e):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
