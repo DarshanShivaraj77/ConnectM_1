@@ -4,7 +4,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+import socket
 
+print("DNS TEST:", socket.gethostbyname("mysql-2944261b-darshan-72a1.c.aivencloud.com"))
 # ===== LOAD ENV FILE =====
 load_dotenv()
 app = Flask(__name__)
