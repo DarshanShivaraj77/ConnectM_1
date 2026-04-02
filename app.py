@@ -17,13 +17,13 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 def get_db():
     if 'db' not in g:
         g.db = mysql.connector.connect(
-            host=os.getenv("DB_HOST"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            database=os.getenv("DB_NAME"),
-            port=int(os.getenv("DB_PORT")),
-            use_pure=True
-        )
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME"),
+        port=int(os.getenv("DB_PORT")),
+        ssl_ca="ca.pem"
+    )
     return g.db
 
 @app.teardown_appcontext
