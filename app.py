@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, abort, send_from_directory, g
-import mysql.connector
+import psycopg2
 from werkzeug.security import check_password_hash, generate_password_hash
 import os
 from dotenv import load_dotenv
@@ -16,14 +16,7 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 # ===== DATABASE CONNECTION =====
 def get_db():
     if 'db' not in g:
-        g.db = mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME"),
-        port=int(os.getenv("DB_PORT")),
-        ssl_ca="ca.pem"
-    )
+        g.db = psycopg2.connect(os.getenv("DATABASE_URL"))
     return g.db
 
 @app.teardown_appcontext
@@ -61,20 +54,25 @@ def login():
         password = request.form["password"]
 
         db = get_db()
-        cur = db.cursor(dictionary=True)
-        cur.execute("SELECT password,role FROM users WHERE username=%s",(username,))
+        cur = db.cursor()
+        cur.execute("SELECT password, role FROM users WHERE username=%s", (username,))
         row = cur.fetchone()
         cur.close()
 
         ip = request.remote_addr
 
-        if row and check_password_hash(row["password"], password):
-            session["user"] = username
-            session["role"] = row["role"]
-            log_activity(username,"LOGIN_SUCCESS",ip)
-            return redirect("/")
+        if row:
+            db_password, role = row
+            if check_password_hash(db_password, password):
+                session["user"] = username
+                session["role"] = role
+                log_activity(username, "LOGIN_SUCCESS", ip)
+                return redirect("/")
+            else:
+                log_activity(username, "LOGIN_FAILED", ip)
+                return render_template("login.html", error="Invalid Login")
         else:
-            log_activity(username,"LOGIN_FAILED",ip)
+            log_activity(username, "LOGIN_FAILED", ip)
             return render_template("login.html", error="Invalid Login")
 
     return render_template("login.html")
