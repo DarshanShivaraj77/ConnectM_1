@@ -14,14 +14,19 @@ app.secret_key = os.getenv("SECRET_KEY")
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
 # ===== DATABASE CONNECTION =====
+import urllib.parse
+
 def get_db():
     if 'db' not in g:
+        url = os.getenv("MYSQL_PUBLIC_URL")
+        # parse: mysql://user:password@host:port/database
+        parsed = urllib.parse.urlparse(url)
         g.db = mysql.connector.connect(
-            host=os.getenv("DB_HOST"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            database=os.getenv("DB_NAME"),
-            port=int(os.getenv("DB_PORT")),
+            host=parsed.hostname,
+            user=parsed.username,
+            password=parsed.password,
+            database=parsed.path.lstrip('/'),
+            port=parsed.port,
             use_pure=True
         )
     return g.db
