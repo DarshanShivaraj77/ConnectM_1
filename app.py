@@ -18,21 +18,18 @@ import urllib.parse
 
 def get_db():
     if 'db' not in g:
-        url = os.getenv("MYSQL_PUBLIC_URL")
-
-        parsed = urllib.parse.urlparse(url)
-
-        username = urllib.parse.unquote(parsed.username)
-        password = urllib.parse.unquote(parsed.password)
-
-        g.db = mysql.connector.connect(
-            host=parsed.hostname,
-            user=username,
-            password=password,
-            database=parsed.path.lstrip('/'),
-            port=parsed.port,
-            use_pure=True
-        )
+        try:
+            g.db = mysql.connector.connect(
+                host="metro.proxy.rlwy.net",
+                user="root",
+                password=admin07,
+                database="railway",
+                port=26386,
+                connection_timeout=5
+            )
+        except Exception as e:
+            print("DB ERROR:", e)
+            g.db = None
     return g.db
 @app.teardown_appcontext
 def close_db(e=None):
@@ -60,7 +57,21 @@ def protect_routes():
             return redirect("/")
         if session.get("role") != "admin":
             abort(403)
+            
+@app.route("/test")
+def test():
+    try:
+        db = get_db()
+        if not db:
+            return "DB NOT CONNECTED"
 
+        cur = db.cursor()
+        cur.execute("SELECT 1")
+        return "DB WORKING ✅"
+
+    except Exception as e:
+        return f"ERROR: {str(e)}"
+        
 # ===== LOGIN =====
 @app.route("/", methods=["GET","POST"])
 def login():
