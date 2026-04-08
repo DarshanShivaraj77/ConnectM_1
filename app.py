@@ -22,7 +22,7 @@ def get_db():
             g.db = mysql.connector.connect(
                 host="metro.proxy.rlwy.net",
                 user="root",
-                password=admin07,
+                password=admin007,
                 database="railway",
                 port=26386,
                 connection_timeout=5
