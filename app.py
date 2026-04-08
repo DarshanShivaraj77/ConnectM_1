@@ -20,11 +20,11 @@ def get_db():
     if 'db' not in g:
         try:
             g.db = mysql.connector.connect(
-                host="metro.proxy.rlwy.net",
-                user="root",
-                password=admin007,
-                database="railway",
-                port=26386,
+                host=os.getenv("MYSQLHOST"),
+                user=os.getenv("MYSQLUSER"),
+                password=os.getenv("MYSQLPASSWORD"),
+                database=os.getenv("MYSQLDATABASE"),
+                port=int(os.getenv("MYSQLPORT")),
                 connection_timeout=5
             )
         except Exception as e:
