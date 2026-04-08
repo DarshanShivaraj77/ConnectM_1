@@ -18,20 +18,22 @@ import urllib.parse
 
 def get_db():
     if 'db' not in g:
-        try:
-            g.db = mysql.connector.connect(
-                host=os.getenv("DB_HOST"),
-                user=os.getenv("DB_USER"),
-                password=os.getenv("DB_PASSWORD"),
-                database=os.getenv("DB_NAME"),
-                port=int(os.getenv("DB_PORT")),
-                connection_timeout=5
-            )
-        except Exception as e:
-            print("DB ERROR:", e)
-            g.db = None
-    return g.db
+        url = os.getenv("MYSQL_PUBLIC_URL")
 
+        parsed = urllib.parse.urlparse(url)
+
+        username = urllib.parse.unquote(parsed.username)
+        password = urllib.parse.unquote(parsed.password)
+
+        g.db = mysql.connector.connect(
+            host=parsed.hostname,
+            user=username,
+            password=password,
+            database=parsed.path.lstrip('/'),
+            port=parsed.port,
+            use_pure=True
+        )
+    return g.db
 @app.teardown_appcontext
 def close_db(e=None):
     db = g.pop('db', None)
