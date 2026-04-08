@@ -61,13 +61,14 @@ def protect_routes():
 @app.route("/test")
 def test():
     try:
-        db = get_db()
-        if not db:
-            return "DB NOT CONNECTED"
-
-        cur = db.cursor()
-        cur.execute("SELECT 1")
-        return "DB WORKING ✅"
+        db = mysql.connector.connect(
+            host="metro.proxy.rlwy.net",
+            user="root",
+            password="YOUR_PASSWORD",
+            database="railway",
+            port=26386
+        )
+        return "CONNECTED ✅"
 
     except Exception as e:
         return f"ERROR: {str(e)}"
