@@ -100,6 +100,10 @@ def login():
         row = cur.fetchone()
         cur.close()
 
+        print(row["username"])
+        print(row["password"])
+        print(check_password_hash(row["password"], password))
+        
         ip = request.remote_addr
 
         if row and check_password_hash(row["password"], password):
