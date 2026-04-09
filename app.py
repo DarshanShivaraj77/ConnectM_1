@@ -16,15 +16,20 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 # ===== DATABASE CONNECTION =====
 import urllib.parse
 
+import urllib.parse
+
 def get_db():
     if 'db' not in g:
         try:
+            url = os.getenv("MYSQL_PUBLIC_URL")
+            parsed = urllib.parse.urlparse(url)
+
             g.db = mysql.connector.connect(
-                host=os.getenv("MYSQLHOST"),
-                user=os.getenv("MYSQLUSER"),
-                password=os.getenv("MYSQLPASSWORD"),
-                database=os.getenv("MYSQLDATABASE"),
-                port=int(os.getenv("MYSQLPORT")),
+                host=parsed.hostname,
+                user=parsed.username,
+                password=parsed.password,
+                database=parsed.path.lstrip('/'),
+                port=parsed.port,
                 connection_timeout=5
             )
         except Exception as e:
