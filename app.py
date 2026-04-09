@@ -66,15 +66,8 @@ def protect_routes():
 @app.route("/test")
 def test():
     try:
-        db = mysql.connector.connect(
-            host="metro.proxy.rlwy.net",
-            user="root",
-            password="YOUR_PASSWORD",
-            database="railway",
-            port=26386
-        )
-        return "CONNECTED ✅"
-
+        url = os.getenv("MYSQL_PUBLIC_URL")
+        return f"URL: {url[:40]}..."   # just to confirm it's loaded
     except Exception as e:
         return f"ERROR: {str(e)}"
         
