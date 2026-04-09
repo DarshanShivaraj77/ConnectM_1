@@ -20,8 +20,12 @@ import urllib.parse
 
 def get_db():
     if 'db' not in g:
+        url = os.getenv("MYSQL_PUBLIC_URL")
+
+        if not url:
+            raise Exception("MYSQL_PUBLIC_URL not set")
+
         try:
-            url = os.getenv("MYSQL_PUBLIC_URL")
             parsed = urllib.parse.urlparse(url)
 
             g.db = mysql.connector.connect(
@@ -30,11 +34,13 @@ def get_db():
                 password=parsed.password,
                 database=parsed.path.lstrip('/'),
                 port=parsed.port,
-                connection_timeout=5
+                connection_timeout=10
             )
+
         except Exception as e:
-            print("DB ERROR:", e)
-            g.db = None
+            print("❌ DB CONNECTION ERROR:", e)
+            raise Exception("Database connection failed")
+
     return g.db
 @app.teardown_appcontext
 def close_db(e=None):
