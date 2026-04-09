@@ -20,37 +20,19 @@ import urllib.parse
 
 def get_db():
     if 'db' not in g:
-        # Try to get full URL first
-        url = os.getenv("MYSQL_PUBLIC_URL")
-        
-        if not url:
-            # Build URL from Railway-style variables
-            host = os.getenv("MYSQLHOST")
-            port = os.getenv("MYSQLPORT", "3306")
-            user = os.getenv("MYSQLUSER") or os.getenv("MYSQL_USER")  # Railway may use MYSQLUSER
-            password = os.getenv("MYSQLPASSWORD")
-            database = os.getenv("MYSQLDATABASE") or os.getenv("MYSQL_DATABASE")
-            
-            if not all([host, user, password, database]):
-                raise Exception("Missing database environment variables. Need either MYSQL_PUBLIC_URL or MYSQLHOST, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE")
-            
-            # Build the connection string
-            url = f"mysql://{user}:{password}@{host}:{port}/{database}"
-        
         try:
-            parsed = urllib.parse.urlparse(url)
             g.db = mysql.connector.connect(
-                host=parsed.hostname,
-                user=parsed.username,
-                password=parsed.password,
-                database=parsed.path.lstrip('/'),
-                port=parsed.port or 3306,
-                connection_timeout=10
+                host=os.getenv("DB_HOST"),
+                port=int(os.getenv("DB_PORT", 3306)), 
+                user=os.getenv("DB_USER"),
+                password=os.getenv("DB_PASSWORD"),
+                database=os.getenv("DB_NAME"),
+                connect_timeout=10  # Seconds to wait before giving up
             )
-        except Exception as e:
-            print("❌ DB CONNECTION ERROR:", e)
-            raise Exception("Database connection failed")
-    
+        except mysql.connector.Error as e:
+            # If it times out, this will catch the error immediately
+            print(f"❌ DB CONNECTION ERROR: {e}")
+            raise 
     return g.db
 @app.teardown_appcontext
 def close_db(e=None):
