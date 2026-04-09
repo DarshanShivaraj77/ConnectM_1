@@ -81,10 +81,6 @@ def login():
         cur.execute("SELECT password,role FROM users WHERE username=%s",(username,))
         row = cur.fetchone()
         cur.close()
-
-        print(row["username"])
-        print(row["password"])
-        print(check_password_hash(row["password"], password))
         
         ip = request.remote_addr
 
