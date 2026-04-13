@@ -575,86 +575,121 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   </div>
   <div class="section-body">
 
-    <!-- BASIC PINOUT -->
-    <div class="subsection">
-      <div class="subsection-title">ALCM - LITE</div>
-      <img src="/static/BMS_IOT/bms_iot/bms_iot.png" alt="Basic Wiring Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
-      <div class="table-wrap" style="margin-top:10px;">
-        <table>
-          <thead>
-            <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>1</td><td>VIN</td><td>Power Supply Input (24V)</td><td>Red</td></tr>
-            <tr><td>2</td><td>IGNITION</td><td>IGNITION</td><td>Gray</td></tr>
-            <tr><td>3</td><td>CAN H1</td><td>CAN HIGH (with CAN wakeup)</td><td>Yellow</td></tr>
-            <tr><td>4</td><td>GROUND</td><td>POWER GROUND</td><td>Black</td></tr>
-            <tr><td>5</td><td>DIGITAL OUTPUT</td><td>5 VOLTS/SUPPLY INPUT</td><td>Blue</td></tr>
-            <tr><td>6</td><td>CAN L1</td><td>CAN LOW (with CAN wakeup)</td><td>Green</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ADVANCED PINOUT -->
-    <div class="subsection" style="margin-top:20px;">
-      <div class="subsection-title">ALCM - PLUS</div>
-      <img src="/static/BMS_IOT/bms_iot/bms_iot.png" alt="Basic Wiring Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
-      <div class="table-wrap" style="margin-top:10px;">
-        <table>
-          <thead>
-            <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>1</td><td>VIN</td><td>Power Supply Input (24V)</td><td>Red</td></tr>
-            <tr><td>2</td><td>IGNITION</td><td>IGNITION</td><td>Gray</td></tr>
-            <tr><td>3</td><td>CAN H1</td><td>CAN HIGH (with CAN wakeup)</td><td>Yellow</td></tr>
-            <tr><td>4</td><td>GROUND</td><td>POWER GROUND</td><td>Black</td></tr>
-            <tr><td>5</td><td>DIGITAL OUTPUT</td><td>5 VOLTS/SUPPLY INPUT</td><td>Blue</td></tr>
-            <tr><td>6</td><td>CAN L1</td><td>CAN LOW (with CAN wakeup)</td><td>Green</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="margin:12px 0 4px;"><strong>4‑Pin Table (Advanced)</strong></p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>1</td><td>ISO CAN H2</td><td>ISOLATED CAN HIGH</td><td>Yellow</td></tr>
-            <tr><td>2</td><td>ISO CAN L2</td><td>ISOLATED CAN LOW</td><td>Green</td></tr>
-            <tr><td>3</td><td>ANALOG INPUT</td><td>0‑10 VOLTS</td><td>Red</td></tr>
-            <tr><td>4</td><td>DIGITAL INPUT</td><td>12 VOLTS</td><td>Brown</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
+<!-- BASIC PINOUT -->
+<div class="subsection">
+  <div class="subsection-title">ALCM - LITE</div>
+  <img src="/static/BMS_IOT/bms_iot/bms_iot.png" alt="ALCM Lite Pinout" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
+  <img src="/static/BMS_IOT/bms_iot/bms_iot3.png" alt="ALCM Lite Wiring" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px; margin-top:10px;" />
+  <div class="table-wrap" style="margin-top:10px;">
+    <table>
+      <thead>
+        <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>VIN</td><td>Power Supply Input (24V)</td><td>Red</td></tr>
+        <tr><td>2</td><td>IGNITION</td><td>IGNITION</td><td>Gray</td></tr>
+        <tr><td>3</td><td>CAN H1</td><td>CAN HIGH (with CAN wakeup)</td><td>Yellow</td></tr>
+        <tr><td>4</td><td>GROUND</td><td>POWER GROUND</td><td>Black</td></tr>
+        <tr><td>5</td><td>DIGITAL OUTPUT</td><td>5 VOLTS/SUPPLY INPUT</td><td>Blue</td></tr>
+        <tr><td>6</td><td>CAN L1</td><td>CAN LOW (with CAN wakeup)</td><td>Green</td></tr>
+      </tbody>
+    </table>
   </div>
-</section>
+</div>
 
-<section id="wiring-scheme" class="section-card">
-  <div class="section-header">
-    <div class="section-title">Wiring Scheme</div>
-    <span class="section-tag">Installation</span>
+<!-- PLUS PINOUT -->
+<div class="subsection" style="margin-top:20px;">
+  <div class="subsection-title">ALCM - PLUS</div>
+  <img src="/static/BMS_IOT/bms_iot/bms_iot.png" alt="ALCM Plus Pinout" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
+  <img src="/static/BMS_IOT/bms_iot/bms_iot3.png" alt="ALCM Plus Wiring 1" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px; margin-top:10px;" />
+  <img src="/static/BMS_IOT/bms_iot/bms_iott.png" alt="ALCM Plus Wiring 2" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px; margin-top:10px;" />
+  <img src="/static/BMS_IOT/bms_iot/bms_iot4.png" alt="ALCM Plus Wiring 3" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px; margin-top:10px;" />
+  <div class="table-wrap" style="margin-top:10px;">
+    <table>
+      <thead>
+        <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>VIN</td><td>Power Supply Input (24V)</td><td>Red</td></tr>
+        <tr><td>2</td><td>IGNITION</td><td>IGNITION</td><td>Gray</td></tr>
+        <tr><td>3</td><td>CAN H1</td><td>CAN HIGH (with CAN wakeup)</td><td>Yellow</td></tr>
+        <tr><td>4</td><td>GROUND</td><td>POWER GROUND</td><td>Black</td></tr>
+        <tr><td>5</td><td>DIGITAL OUTPUT</td><td>5 VOLTS/SUPPLY INPUT</td><td>Blue</td></tr>
+        <tr><td>6</td><td>CAN L1</td><td>CAN LOW (with CAN wakeup)</td><td>Green</td></tr>
+      </tbody>
+    </table>
   </div>
-  <div class="section-body">
-
-    <div class="subsection">
-      <div class="subsection-title">🔌 Basic Wiring</div>
-      <img src="/static/BMS_IOT/bms_iot/bms_iott.png" alt="Basic Wiring Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
-      <img src="/static/BMS_IOT/bms_iot/bms_iot3.png" alt="Basic Wiring Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
-    </div>
-
-    <div class="subsection" style="margin-top:20px;">
-      <div class="subsection-title">🔌 Advanced Wiring</div>
-      <img src="/static/BMS_IOT/bms_iot/bms_iot3.png" alt="Basic Wiring Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
-      <img src="/static/BMS_IOT/bms_iot/bms_iot4.png" alt="Basic Wiring Diagram" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
-    </div>
-
+  <p style="margin:12px 0 4px;"><strong>4‑Pin Table (Advanced)</strong></p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>ISO CAN H2</td><td>ISOLATED CAN HIGH</td><td>Yellow</td></tr>
+        <tr><td>2</td><td>ISO CAN L2</td><td>ISOLATED CAN LOW</td><td>Green</td></tr>
+        <tr><td>3</td><td>ANALOG INPUT</td><td>0‑10 VOLTS</td><td>Red</td></tr>
+        <tr><td>4</td><td>DIGITAL INPUT</td><td>12 VOLTS</td><td>Brown</td></tr>
+      </tbody>
+    </table>
   </div>
-</section>
+</div>
+
+<!-- PRO PINOUT -->
+<div class="subsection" style="margin-top:20px;">
+  <div class="subsection-title">ALCM - PRO</div>
+  <img src="/static/BMS_IOT/bms_iot/bms_iot.png" alt="ALCM Pro Pinout" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px;" />
+  <img src="/static/BMS_IOT/bms_iot/pro_wiring_1.png" alt="ALCM Pro Wiring 1" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px; margin-top:10px;" />
+  <img src="/static/BMS_IOT/bms_iot/pro_wiring_2.png" alt="ALCM Pro Wiring 2" style="width:100%; height:auto; border:1px solid #ccc; border-radius:8px; margin-top:10px;" />
+
+  <!-- Connector Details -->
+  <div class="spec-grid" style="margin-top:12px;">
+    <div class="spec-card">
+      <div class="spec-label">Connector Type</div>
+      <div class="spec-value">2 Nos × BESMAK – 6-Pole (6MW 090 FHCL ASSY. MALE CONNECTOR)</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-label">Mating &amp; Opposite Connector</div>
+      <div class="spec-value">2 Nos × BESMAK – 6FW 090 FHCL FEMALE CONNECTOR</div>
+    </div>
+  </div>
+
+  <!-- Connector-1 Table -->
+  <p style="margin:14px 0 4px;"><strong>Connector-1 (Natural)</strong></p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>VIN</td><td>Power Supply Input (24V)</td><td>Red</td></tr>
+        <tr><td>2</td><td>IGNITION</td><td>IGNITION</td><td>Gray</td></tr>
+        <tr><td>3</td><td>CAN H1</td><td>CAN HIGH (with CAN wakeup)</td><td>Yellow</td></tr>
+        <tr><td>4</td><td>Ground</td><td>Power Ground</td><td>Black</td></tr>
+        <tr><td>5</td><td>Digital Output</td><td>5 Volts / Supply Input</td><td>Blue</td></tr>
+        <tr><td>6</td><td>CAN L1</td><td>5 Volts / Supply Input</td><td>Green</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Connector-2 Table -->
+  <p style="margin:14px 0 4px;"><strong>Connector-2 (Silver Gray)</strong></p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Digital Input</td><td>12 Volt</td><td>Pink</td></tr>
+        <tr><td>2</td><td>Digital Input</td><td>12 Volt</td><td>Purple</td></tr>
+        <tr><td>3</td><td>Digital Input</td><td>12 Volt</td><td>Gray</td></tr>
+        <tr><td>4</td><td>Digital Output</td><td>5 Volts / Supply Input</td><td>Blue</td></tr>
+        <tr><td>5</td><td>Digital Output</td><td>5 Volts / Supply Input</td><td>Yellow</td></tr>
+        <tr><td>6</td><td>Analog Input</td><td>Voltage Based</td><td>White</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
     <!-- MOUNTING -->
     <section id="mounting" class="section-card">
