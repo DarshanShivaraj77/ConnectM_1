@@ -1251,77 +1251,77 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   });
 </script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const btn = document.getElementById('downloadPdfBtn');
-    if (!btn) {
-      console.error('PDF button not found');
-      return;
-    }
-
-    btn.addEventListener('click', async function() {
-      const element = document.querySelector('.page');
-      if (!element) {
-        alert('Could not find page content.');
+  (function() {
+    // Wait for the page to be fully loaded
+    window.addEventListener('load', function() {
+      const btn = document.getElementById('downloadPdfBtn');
+      if (!btn) {
+        console.error('PDF button not found');
         return;
       }
 
-      // Show loading state
-      const originalText = this.innerHTML;
-      this.innerHTML = '<span>⏳</span> Generating PDF...';
-      this.style.opacity = '0.7';
-      this.style.pointerEvents = 'none';
-
-      try {
-        // Clone the element to avoid modifying the live page
-        const clone = element.cloneNode(true);
-        
-        // Remove all images that might be broken (optional)
-        const images = clone.querySelectorAll('img');
-        for (let img of images) {
-          // Test if image loads, if not, remove it
-          await new Promise((resolve) => {
-            const testImg = new Image();
-            testImg.onload = () => resolve(true);
-            testImg.onerror = () => {
-              img.remove();
-              resolve(false);
-            };
-            testImg.src = img.src;
-          });
+      btn.addEventListener('click', function() {
+        const element = document.querySelector('.page');
+        if (!element) {
+          alert('Page content not found.');
+          return;
         }
 
-        // Create a temporary container for PDF generation
-        const container = document.createElement('div');
-        container.appendChild(clone);
-        container.style.position = 'absolute';
-        container.style.top = '-9999px';
-        container.style.left = '-9999px';
-        document.body.appendChild(container);
+        // UI feedback
+        const originalText = this.innerHTML;
+        this.innerHTML = '<span>⏳</span> Generating PDF...';
+        this.style.opacity = '0.7';
+        this.style.pointerEvents = 'none';
 
         const opt = {
           margin: [0.5, 0.5, 0.5, 0.5],
           filename: 'BMS_IoT_User_Manual.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: false },
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: {
+            scale: 2,
+            useCORS: false,        // Disable CORS to avoid failures
+            allowTaint: true,      // Allow tainted canvas
+            logging: false,
+            onclone: function(clonedDoc, element) {
+              // Replace all images that might fail with a placeholder
+              const images = clonedDoc.querySelectorAll('img');
+              images.forEach(img => {
+                // If image source is external or likely broken, replace
+                const src = img.getAttribute('src');
+                if (src && (src.startsWith('http') || src.startsWith('/static/'))) {
+                  // Create a small placeholder canvas to avoid missing image
+                  const canvas = clonedDoc.createElement('canvas');
+                  canvas.width = img.width || 100;
+                  canvas.height = img.height || 100;
+                  const ctx = canvas.getContext('2d');
+                  ctx.fillStyle = '#f0f0f0';
+                  ctx.fillRect(0, 0, canvas.width, canvas.height);
+                  ctx.fillStyle = '#999';
+                  ctx.font = '12px sans-serif';
+                  ctx.fillText('Image not available', 10, 50);
+                  img.parentNode.replaceChild(canvas, img);
+                }
+              });
+            }
+          },
           jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
         };
 
-        await html2pdf().set(opt).from(container).save();
-
-        // Clean up
-        document.body.removeChild(container);
-        
-        // Restore button
-        this.innerHTML = originalText;
-        this.style.opacity = '1';
-        this.style.pointerEvents = 'auto';
-      } catch (err) {
-        console.error('PDF error:', err);
-        alert('PDF generation failed: ' + (err.message || 'Unknown error'));
-        this.innerHTML = originalText;
-        this.style.opacity = '1';
-        this.style.pointerEvents = 'auto';
-      }
+        html2pdf().set(opt).from(element).save()
+          .then(() => {
+            // Success
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+          })
+          .catch(err => {
+            console.error('PDF generation error:', err);
+            alert('PDF generation failed: ' + (err.message || 'Unknown error'));
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+          });
+      });
     });
   });
 </script>
