@@ -1250,19 +1250,8 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
     });
   });
 </script>
-  <script>
-  // Active TOC on scroll (existing)
-  const sections = document.querySelectorAll('[id]');
-  const tocLinks = document.querySelectorAll('.toc-link');
-  const observer = new IntersectionObserver(...);
-  sections.forEach(s => observer.observe(s));
-
-  // Accordion (existing)
-  document.querySelectorAll('.accordion-header').forEach(header => {
-    header.addEventListener('click', () => { ... });
-  });
-
-  // *** NEW: PDF download button ***
+<script>
+  // PDF download button (corrected)
   document.getElementById('downloadPdfBtn').addEventListener('click', function() {
     const element = document.querySelector('.page');
     const opt = {
