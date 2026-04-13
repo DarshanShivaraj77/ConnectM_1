@@ -1259,30 +1259,17 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
 </script>
 <script>
   (function() {
-    // Try to find the button immediately
-    var btn = document.getElementById('downloadPdfBtn');
-    if (!btn) {
-      console.error('Button not found on first try – will retry');
-      // Retry after a short delay
-      setTimeout(function() {
-        var btn2 = document.getElementById('downloadPdfBtn');
-        if (btn2) {
-          attachHandler(btn2);
-        } else {
-          console.error('Button still not found – check ID');
-        }
-      }, 100);
-    } else {
-      attachHandler(btn);
-    }
-
-    function attachHandler(btn) {
-      console.log('Attaching click handler to', btn);
+    function attachPDFHandler() {
+      const btn = document.getElementById('downloadPdfBtn');
+      if (!btn) {
+        console.error('PDF button not found – retrying in 500ms');
+        setTimeout(attachPDFHandler, 500);
+        return;
+      }
+      console.log('PDF button found, attaching click handler');
+      
       btn.addEventListener('click', function(e) {
-        console.log('CLICK detected on button');
-        e.preventDefault();
-        e.stopPropagation();
-
+        console.log('Button clicked!');
         const element = document.querySelector('.page');
         if (!element) {
           alert('Page content not found.');
@@ -1306,18 +1293,15 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
             onclone: function(clonedDoc, element) {
               const images = clonedDoc.querySelectorAll('img');
               images.forEach(img => {
-                const canvas = clonedDoc.createElement('canvas');
-                canvas.width = img.width || img.clientWidth || 100;
-                canvas.height = img.height || img.clientHeight || 100;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = '#f0f0f0';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.strokeStyle = '#cccccc';
-                ctx.strokeRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#999';
-                ctx.font = '12px sans-serif';
-                ctx.fillText('Image not available', 10, canvas.height / 2);
-                img.parentNode.replaceChild(canvas, img);
+                const src = img.getAttribute('src');
+                // Remove ONLY problematic images (external HTTP/HTTPS or broken /static/ paths)
+                // Keep base64 images (data:image) and other working images
+                if (src && (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/static/'))) {
+                  console.log('Removing problematic image:', src);
+                  img.remove();
+                } else {
+                  console.log('Keeping image:', src);
+                }
               });
             }
           },
@@ -1338,6 +1322,12 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
             btn.style.pointerEvents = 'auto';
           });
       });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attachPDFHandler);
+    } else {
+      attachPDFHandler();
     }
   })();
 </script>
