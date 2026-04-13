@@ -1268,7 +1268,7 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
       }
       console.log('PDF button found, attaching click handler');
       
-      btn.addEventListener('click', function(e) {
+      btn.addEventListener('click', async function(e) {
         console.log('Button clicked!');
         const element = document.querySelector('.page');
         if (!element) {
@@ -1277,50 +1277,80 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
         }
 
         const originalText = this.innerHTML;
-        this.innerHTML = '<span>⏳</span> Generating PDF...';
+        this.innerHTML = '<span>⏳</span> Checking images...';
         this.style.opacity = '0.7';
         this.style.pointerEvents = 'none';
 
-        const opt = {
-          margin: [0.5, 0.5, 0.5, 0.5],
-          filename: 'BMS_IoT_User_Manual.pdf',
-          image: { type: 'jpeg', quality: 0.95 },
-          html2canvas: {
-            scale: 2,
-            useCORS: false,
-            allowTaint: true,
-            logging: false,
-            onclone: function(clonedDoc, element) {
-              const images = clonedDoc.querySelectorAll('img');
-              images.forEach(img => {
-                const src = img.getAttribute('src');
-                // Remove ONLY problematic images (external HTTP/HTTPS or broken /static/ paths)
-                // Keep base64 images (data:image) and other working images
-                if (src && (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/static/'))) {
-                  console.log('Removing problematic image:', src);
-                  img.remove();
-                } else {
-                  console.log('Keeping image:', src);
-                }
+        try {
+          // Clone the element to avoid modifying the live page
+          const clone = element.cloneNode(true);
+          
+          // Find all images in the clone
+          const images = clone.querySelectorAll('img');
+          
+          // Test each image and remove those that fail to load
+          this.innerHTML = '<span>⏳</span> Validating images...';
+          
+          for (const img of images) {
+            const src = img.getAttribute('src');
+            if (src && (src.startsWith('http') || src.startsWith('https') || src.startsWith('/static/'))) {
+              // Test if image loads
+              const isValid = await new Promise((resolve) => {
+                const testImg = new Image();
+                testImg.onload = () => resolve(true);
+                testImg.onerror = () => resolve(false);
+                testImg.src = src;
               });
+              
+              if (!isValid) {
+                console.log('Removing invalid image:', src);
+                img.remove();
+              } else {
+                console.log('Keeping valid image:', src);
+              }
             }
-          },
-          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-        };
-
-        html2pdf().set(opt).from(element).save()
-          .then(() => {
-            btn.innerHTML = originalText;
-            btn.style.opacity = '1';
-            btn.style.pointerEvents = 'auto';
-          })
-          .catch(err => {
-            console.error('PDF generation error:', err);
-            alert('PDF generation failed: ' + (err.message || 'Unknown error'));
-            btn.innerHTML = originalText;
-            btn.style.opacity = '1';
-            btn.style.pointerEvents = 'auto';
-          });
+            // Keep base64 images (data:image) without testing
+          }
+          
+          // Create a temporary container for PDF generation
+          const container = document.createElement('div');
+          container.appendChild(clone);
+          container.style.position = 'absolute';
+          container.style.top = '-9999px';
+          container.style.left = '-9999px';
+          document.body.appendChild(container);
+          
+          this.innerHTML = '<span>⏳</span> Generating PDF...';
+          
+          const opt = {
+            margin: [0.5, 0.5, 0.5, 0.5],
+            filename: 'BMS_IoT_User_Manual.pdf',
+            image: { type: 'jpeg', quality: 0.95 },
+            html2canvas: {
+              scale: 2,
+              useCORS: false,
+              allowTaint: true,
+              logging: false
+            },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+          };
+          
+          await html2pdf().set(opt).from(container).save();
+          
+          // Clean up
+          document.body.removeChild(container);
+          
+          btn.innerHTML = originalText;
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+          
+        } catch (err) {
+          console.error('PDF generation error:', err);
+          alert('PDF generation failed: ' + (err.message || 'Unknown error'));
+          btn.innerHTML = originalText;
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+        }
       });
     }
 
