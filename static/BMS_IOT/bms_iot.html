@@ -1279,28 +1279,30 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
           image: { type: 'jpeg', quality: 0.95 },
           html2canvas: {
             scale: 2,
-            useCORS: false,        // Disable CORS to avoid failures
-            allowTaint: true,      // Allow tainted canvas
+            useCORS: false,
+            allowTaint: true,
             logging: false,
             onclone: function(clonedDoc, element) {
-              // Replace all images that might fail with a placeholder
+              // Replace every <img> with a safe canvas placeholder
               const images = clonedDoc.querySelectorAll('img');
               images.forEach(img => {
-                // If image source is external or likely broken, replace
-                const src = img.getAttribute('src');
-                if (src && (src.startsWith('http') || src.startsWith('/static/'))) {
-                  // Create a small placeholder canvas to avoid missing image
-                  const canvas = clonedDoc.createElement('canvas');
-                  canvas.width = img.width || 100;
-                  canvas.height = img.height || 100;
-                  const ctx = canvas.getContext('2d');
-                  ctx.fillStyle = '#f0f0f0';
-                  ctx.fillRect(0, 0, canvas.width, canvas.height);
-                  ctx.fillStyle = '#999';
-                  ctx.font = '12px sans-serif';
-                  ctx.fillText('Image not available', 10, 50);
-                  img.parentNode.replaceChild(canvas, img);
-                }
+                // Create a canvas of the same size
+                const canvas = clonedDoc.createElement('canvas');
+                // Preserve original dimensions if available
+                canvas.width = img.width || img.clientWidth || 100;
+                canvas.height = img.height || img.clientHeight || 100;
+                const ctx = canvas.getContext('2d');
+                // Draw a light gray background
+                ctx.fillStyle = '#f0f0f0';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                // Draw a border and text
+                ctx.strokeStyle = '#cccccc';
+                ctx.strokeRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#999';
+                ctx.font = '12px sans-serif';
+                ctx.fillText('Image not available', 10, canvas.height / 2);
+                // Replace the img with the canvas
+                img.parentNode.replaceChild(canvas, img);
               });
             }
           },
@@ -1309,7 +1311,6 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
 
         html2pdf().set(opt).from(element).save()
           .then(() => {
-            // Success
             btn.innerHTML = originalText;
             btn.style.opacity = '1';
             btn.style.pointerEvents = 'auto';
@@ -1323,6 +1324,81 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
           });
       });
     });
-  });
+  })();
+</script><script>
+  (function() {
+    // Wait for the page to be fully loaded
+    window.addEventListener('load', function() {
+      const btn = document.getElementById('downloadPdfBtn');
+      if (!btn) {
+        console.error('PDF button not found');
+        return;
+      }
+
+      btn.addEventListener('click', function() {
+        const element = document.querySelector('.page');
+        if (!element) {
+          alert('Page content not found.');
+          return;
+        }
+
+        // UI feedback
+        const originalText = this.innerHTML;
+        this.innerHTML = '<span>⏳</span> Generating PDF...';
+        this.style.opacity = '0.7';
+        this.style.pointerEvents = 'none';
+
+        const opt = {
+          margin: [0.5, 0.5, 0.5, 0.5],
+          filename: 'BMS_IoT_User_Manual.pdf',
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: {
+            scale: 2,
+            useCORS: false,
+            allowTaint: true,
+            logging: false,
+            onclone: function(clonedDoc, element) {
+              // Replace every <img> with a safe canvas placeholder
+              const images = clonedDoc.querySelectorAll('img');
+              images.forEach(img => {
+                // Create a canvas of the same size
+                const canvas = clonedDoc.createElement('canvas');
+                // Preserve original dimensions if available
+                canvas.width = img.width || img.clientWidth || 100;
+                canvas.height = img.height || img.clientHeight || 100;
+                const ctx = canvas.getContext('2d');
+                // Draw a light gray background
+                ctx.fillStyle = '#f0f0f0';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                // Draw a border and text
+                ctx.strokeStyle = '#cccccc';
+                ctx.strokeRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#999';
+                ctx.font = '12px sans-serif';
+                ctx.fillText('Image not available', 10, canvas.height / 2);
+                // Replace the img with the canvas
+                img.parentNode.replaceChild(canvas, img);
+              });
+            }
+          },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save()
+          .then(() => {
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+          })
+          .catch(err => {
+            console.error('PDF generation error:', err);
+            alert('PDF generation failed: ' + (err.message || 'Unknown error'));
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+          });
+      });
+    });
+  })();
 </script>
 </body>
