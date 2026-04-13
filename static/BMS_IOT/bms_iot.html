@@ -418,7 +418,36 @@ footer {
 
 details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 4px 0; }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
 </head>
+  <script>
+  document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+    const element = document.querySelector('.page'); // capture the whole manual
+    const opt = {
+      margin:        [0.5, 0.5, 0.5, 0.5], // top, right, bottom, left in inches
+      filename:     'BMS_IoT_User_Manual.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true, logging: false },
+      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+    // Show a small loading message (optional)
+    const originalBtnText = this.innerHTML;
+    this.innerHTML = '<span>⏳</span> Generating PDF...';
+    this.style.opacity = '0.7';
+    html2pdf().set(opt).from(element).save().then(() => {
+      // Restore button after generation
+      this.innerHTML = originalBtnText;
+      this.style.opacity = '1';
+    }).catch(err => {
+      console.error('PDF error:', err);
+      this.innerHTML = originalBtnText;
+      this.style.opacity = '1';
+      alert('PDF generation failed. Please try again.');
+    });
+  });
+</script>
+  
 <body>
 <div class="aurora"></div>
 <div class="page">
@@ -435,6 +464,9 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
       </div>
     </div>
     <div class="nav-pill">
+      <div class="nav-pill" id="downloadPdfBtn" style="cursor:pointer; background:#15803d; color:white; border:none;">
+  <span>📄</span> Download BMS IoT PDF
+</div>
       <span>●</span>· IoT · BMS · Telematics · LTE
     </div>
   </div>
