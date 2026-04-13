@@ -709,6 +709,7 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   </div>
   <div class="section-body">
 
+    <!-- SHARED: All three same -->
     <div class="spec-grid">
       <div class="spec-card">
         <div class="spec-label">MCU / SOC</div>
@@ -723,26 +724,12 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
         <div class="spec-value">LTE Cat(L1)</div>
       </div>
       <div class="spec-card">
-        <div class="spec-label">Internal Memory</div>
-        <div class="spec-value">8 MB</div>
+        <div class="spec-label">Bluetooth</div>
+        <div class="spec-value">BLE 5.0 (Optional)</div>
       </div>
       <div class="spec-card">
         <div class="spec-label">Region Supported</div>
         <div class="spec-value">India; EMEA / Australia / NZ; Latin America</div>
-      </div>
-      <!-- DIFFERENT: Bluetooth -->
-      <div class="spec-card" style="border:1.5px solid rgba(37,99,235,0.25);">
-        <div class="spec-label">Bluetooth</div>
-        <div style="display:flex; flex-direction:column; gap:6px; margin-top:6px;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="model-badge lite" style="font-size:9px; padding:2px 7px;">Lite</span>
-            <span class="spec-value">BLE 5.0 (Optional)</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="model-badge plus" style="font-size:9px; padding:2px 7px;">Plus</span>
-            <span class="spec-value">BLE 5.0 (Optional)</span>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -766,6 +753,31 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
       <p><strong>LTE TDD Data:</strong> Max 8.96 Mbps (DL) / Max 3.1 Mbps (UL)</p>
     </div>
 
+    <!-- DIFFERENT: Internal Memory -->
+    <div class="subsection">
+      <div class="subsection-title">Internal Memory</div>
+      <div class="iface-compare-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div>
+          <div class="iface-col-header lite">ALCM – Lite · TEL-4G-W-STD-001</div>
+          <div class="iface-col-body lite">
+            <div class="iface-row"><span class="iface-row-label">Internal Memory</span><span class="iface-row-val">8 MB</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="iface-col-header plus">ALCM – Plus · TELIB-4G-W-STD-002</div>
+          <div class="iface-col-body plus">
+            <div class="iface-row"><span class="iface-row-label">Internal Memory</span><span class="iface-row-val">8 MB</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="iface-col-header pro">ALCM – Pro · TELIB-4G-W-STD-001</div>
+          <div class="iface-col-body pro">
+            <div class="iface-row"><span class="iface-row-label">Internal Memory</span><span class="iface-row-val highlight">16 MB</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="model-banner lite" style="margin-top:14px;">
       <span class="model-badge lite">ALCM – Lite</span>
       <div><div class="model-name">TEL-4G-W-STD-001</div></div>
@@ -773,6 +785,10 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
     <div class="model-banner plus">
       <span class="model-badge plus">ALCM – Plus</span>
       <div><div class="model-name">TELIB-4G-W-STD-002</div></div>
+    </div>
+    <div class="model-banner pro">
+      <span class="model-badge pro">ALCM – Pro</span>
+      <div><div class="model-name">TELIB-4G-W-STD-001</div></div>
     </div>
 
   </div>
@@ -788,41 +804,9 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   </div>
   <div class="section-body">
 
-    <div class="iface-compare-grid">
-      <!-- LITE -->
-      <div>
-        <div class="iface-col-header lite">ALCM – Lite · TEL-4G-W-STD-001</div>
-        <div class="iface-col-body lite">
-          <div class="iface-row"><span class="iface-row-label">Digital Inputs</span><span class="iface-row-val">1</span></div>
-          <div class="iface-row"><span class="iface-row-label">Digital Outputs</span><span class="iface-row-val">1</span></div>
-          <div class="iface-row"><span class="iface-row-label">Analog Input</span><span class="iface-row-val na">—</span></div>
-          <div class="iface-row"><span class="iface-row-label">CAN (Std. Wake up)</span><span class="iface-row-val">1</span></div>
-          <div class="iface-row"><span class="iface-row-label">CAN (Isolated)</span><span class="iface-row-val na">—</span></div>
-          <div class="iface-row"><span class="iface-row-label">RS485</span><span class="iface-row-val na">—</span></div>
-          <div class="iface-row"><span class="iface-row-label">UART</span><span class="iface-row-val">1</span></div>
-          <div class="iface-row"><span class="iface-row-label">RTC – External</span><span class="iface-row-val">1</span></div>
-        </div>
-      </div>
-
-      <!-- PLUS -->
-      <div>
-        <div class="iface-col-header plus">ALCM – Plus · TELIB-4G-W-STD-002</div>
-        <div class="iface-col-body plus">
-          <div class="iface-row"><span class="iface-row-label">Digital Inputs</span><span class="iface-row-val highlight">4</span></div>
-          <div class="iface-row"><span class="iface-row-label">Digital Outputs</span><span class="iface-row-val highlight">3</span></div>
-          <div class="iface-row"><span class="iface-row-label">Analog Input</span><span class="iface-row-val highlight">1</span></div>
-          <div class="iface-row"><span class="iface-row-label">CAN (Std. Wake up)</span><span class="iface-row-val">1</span></div>
-          <div class="iface-row"><span class="iface-row-label">CAN (Isolated)</span><span class="iface-row-val na">—</span></div>
-          <div class="iface-row"><span class="iface-row-label">RS485</span><span class="iface-row-val na">—</span></div>
-          <div class="iface-row"><span class="iface-row-label">UART</span><span class="iface-row-val">1</span></div>
-          <div class="iface-row"><span class="iface-row-label">RTC – External</span><span class="iface-row-val">1</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SHARED interface specs -->
-    <div class="subsection" style="margin-top:14px;">
-      <div class="subsection-title">Common · ALCM – Lite &amp; ALCM – Plus</div>
+    <!-- SHARED: All three same -->
+    <div class="subsection">
+      <div class="subsection-title">ALCM – Lite, ALCM – Plus &amp; ALCM – Pro</div>
       <div class="spec-grid">
         <div class="spec-card">
           <div class="spec-label">GNSS Antenna</div>
@@ -837,8 +821,105 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
           <div class="spec-value">Standard</div>
         </div>
         <div class="spec-card">
-          <div class="spec-label">Internal Memory</div>
-          <div class="spec-value">8 MB</div>
+          <div class="spec-label">CAN (Std. Wake up)</div>
+          <div class="spec-value">1</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">UART</div>
+          <div class="spec-value">1</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">RTC – External</div>
+          <div class="spec-value">1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIFFERENT: Per-model interface specs -->
+    <div class="subsection" style="margin-top:14px;">
+      <div class="subsection-title">Model-Specific Interfaces</div>
+      <div class="iface-compare-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div>
+          <div class="iface-col-header lite">ALCM – Lite · TEL-4G-W-STD-001</div>
+          <div class="iface-col-body lite">
+            <div class="iface-row"><span class="iface-row-label">Digital Inputs</span><span class="iface-row-val">1</span></div>
+            <div class="iface-row"><span class="iface-row-label">Digital Outputs</span><span class="iface-row-val">1</span></div>
+            <div class="iface-row"><span class="iface-row-label">Analog Input</span><span class="iface-row-val na">—</span></div>
+            <div class="iface-row"><span class="iface-row-label">CAN (Isolated)</span><span class="iface-row-val na">—</span></div>
+            <div class="iface-row"><span class="iface-row-label">RS485</span><span class="iface-row-val na">—</span></div>
+            <div class="iface-row"><span class="iface-row-label">e-SIM</span><span class="iface-row-val na">—</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="iface-col-header plus">ALCM – Plus · TELIB-4G-W-STD-002</div>
+          <div class="iface-col-body plus">
+            <div class="iface-row"><span class="iface-row-label">Digital Inputs</span><span class="iface-row-val highlight">4</span></div>
+            <div class="iface-row"><span class="iface-row-label">Digital Outputs</span><span class="iface-row-val highlight">3</span></div>
+            <div class="iface-row"><span class="iface-row-label">Analog Input</span><span class="iface-row-val highlight">1</span></div>
+            <div class="iface-row"><span class="iface-row-label">CAN (Isolated)</span><span class="iface-row-val na">—</span></div>
+            <div class="iface-row"><span class="iface-row-label">RS485</span><span class="iface-row-val na">—</span></div>
+            <div class="iface-row"><span class="iface-row-label">e-SIM</span><span class="iface-row-val na">—</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="iface-col-header pro">ALCM – Pro · TELIB-4G-W-STD-001</div>
+          <div class="iface-col-body pro">
+            <div class="iface-row"><span class="iface-row-label">Digital Inputs</span><span class="iface-row-val highlight">4</span></div>
+            <div class="iface-row"><span class="iface-row-label">Digital Outputs</span><span class="iface-row-val highlight">3</span></div>
+            <div class="iface-row"><span class="iface-row-label">Analog Input</span><span class="iface-row-val highlight">1</span></div>
+            <div class="iface-row"><span class="iface-row-label">CAN (Isolated)</span><span class="iface-row-val highlight">1 (Optional)</span></div>
+            <div class="iface-row"><span class="iface-row-label">RS485</span><span class="iface-row-val highlight">1</span></div>
+            <div class="iface-row"><span class="iface-row-label">e-SIM</span><span class="iface-row-val highlight">Optional</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connector Details – Pro only -->
+    <div class="subsection" style="margin-top:14px;">
+      <div class="subsection-title">🔌 Connector Details · ALCM – Pro</div>
+      <div class="spec-grid">
+        <div class="spec-card">
+          <div class="spec-label">Connector Type</div>
+          <div class="spec-value">2 Nos × BESMAK – 6-Pole (6MW 090 FHCL ASSY. MALE CONNECTOR)</div>
+        </div>
+        <div class="spec-card">
+          <div class="spec-label">Mating &amp; Opposite Connector</div>
+          <div class="spec-value">2 Nos × BESMAK – 6FW 090 FHCL FEMALE CONNECTOR</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px;">
+        <div class="table-wrap">
+          <div style="font-size:12px; font-weight:600; margin-bottom:6px; color:var(--text-secondary);">Connector-1 (Natural)</div>
+          <table>
+            <thead>
+              <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>VIN</td><td>Power Supply Input (24V)</td><td>Red</td></tr>
+              <tr><td>2</td><td>IGNITION</td><td>Ignition</td><td>Gray</td></tr>
+              <tr><td>3</td><td>CAN H1</td><td>CAN HIGH (with CAN wakeup)</td><td>Yellow</td></tr>
+              <tr><td>4</td><td>Ground</td><td>Power Ground</td><td>Black</td></tr>
+              <tr><td>5</td><td>Digital Output</td><td>5 Volts / Supply Input</td><td>Blue</td></tr>
+              <tr><td>6</td><td>CAN L1</td><td>5 Volts / Supply Input</td><td>Green</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <div style="font-size:12px; font-weight:600; margin-bottom:6px; color:var(--text-secondary);">Connector-2 (Silver Gray)</div>
+          <table>
+            <thead>
+              <tr><th>Pin No.</th><th>Pin Definition</th><th>Description</th><th>Wire Color</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Digital Input</td><td>12 Volt</td><td>Pink</td></tr>
+              <tr><td>2</td><td>Digital Input</td><td>12 Volt</td><td>Purple</td></tr>
+              <tr><td>3</td><td>Digital Input</td><td>12 Volt</td><td>Gray</td></tr>
+              <tr><td>4</td><td>Digital Output</td><td>5 Volts / Supply Input</td><td>Blue</td></tr>
+              <tr><td>5</td><td>Digital Output</td><td>5 Volts / Supply Input</td><td>Yellow</td></tr>
+              <tr><td>6</td><td>Analog Input</td><td>Voltage Based</td><td>White</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -856,17 +937,15 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   </div>
   <div class="section-body">
 
-    <div class="subsection">
-      <div class="subsection-title">ALCM – Lite &amp; ALCM – Plus</div>
-      <div class="spec-grid">
-        <div class="spec-card">
-          <div class="spec-label">IMU</div>
-          <div class="spec-value">3-Axis Accelerometer / 3-Axis Gyroscope (Optional)</div>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Buzzer</div>
-          <div class="spec-value">1 (Optional)</div>
-        </div>
+    <!-- SHARED: All three same -->
+    <div class="spec-grid">
+      <div class="spec-card">
+        <div class="spec-label">IMU</div>
+        <div class="spec-value">3-Axis Accelerometer / 3-Axis Gyroscope (Optional)</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Buzzer</div>
+        <div class="spec-value">1 (Optional)</div>
       </div>
     </div>
 
@@ -883,38 +962,38 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   </div>
   <div class="section-body">
 
-    <!-- SHARED specs -->
-    <div class="subsection">
-      <div class="subsection-title">ALCM – Lite &amp; ALCM – Plus</div>
-      <div class="spec-grid">
-        <div class="spec-card">
-          <div class="spec-label">Input Voltage Range</div>
-          <div class="spec-value">9V – 100V DC</div>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Nominal Voltage</div>
-          <div class="spec-value">12V / 24V / 36V / 48V / 72V DC</div>
-        </div>
+    <!-- SHARED: All three same -->
+    <div class="spec-grid">
+      <div class="spec-card">
+        <div class="spec-label">Input Voltage Range</div>
+        <div class="spec-value">9V – 100V DC</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Nominal Voltage</div>
+        <div class="spec-value">12V / 24V / 36V / 48V / 72V DC</div>
       </div>
     </div>
 
     <!-- DIFFERENT: Internal Battery -->
-    <div class="iface-compare-grid" style="margin-top:12px;">
-      <div>
-        <div class="iface-col-header lite">ALCM – Lite · TEL-4G-W-STD-001</div>
-        <div class="iface-col-body lite">
-          <div class="iface-row">
-            <span class="iface-row-label">Internal Battery</span>
-            <span class="iface-row-val na">—</span>
+    <div class="subsection" style="margin-top:14px;">
+      <div class="subsection-title">Internal Battery</div>
+      <div class="iface-compare-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div>
+          <div class="iface-col-header lite">ALCM – Lite · TEL-4G-W-STD-001</div>
+          <div class="iface-col-body lite">
+            <div class="iface-row"><span class="iface-row-label">Internal Battery</span><span class="iface-row-val na">—</span></div>
           </div>
         </div>
-      </div>
-      <div>
-        <div class="iface-col-header plus">ALCM – Plus · TELIB-4G-W-STD-002</div>
-        <div class="iface-col-body plus">
-          <div class="iface-row">
-            <span class="iface-row-label">Internal Battery</span>
-            <span class="iface-row-val highlight">1750 mAh</span>
+        <div>
+          <div class="iface-col-header plus">ALCM – Plus · TELIB-4G-W-STD-002</div>
+          <div class="iface-col-body plus">
+            <div class="iface-row"><span class="iface-row-label">Internal Battery</span><span class="iface-row-val highlight">1750 mAh</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="iface-col-header pro">ALCM – Pro · TELIB-4G-W-STD-001</div>
+          <div class="iface-col-body pro">
+            <div class="iface-row"><span class="iface-row-label">Internal Battery</span><span class="iface-row-val highlight">2500 mAh</span></div>
           </div>
         </div>
       </div>
@@ -933,41 +1012,51 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   </div>
   <div class="section-body">
 
-    <!-- SHARED specs -->
-    <div class="subsection">
-      <div class="subsection-title">ALCM – Lite &amp; ALCM – Plus</div>
-      <div class="spec-grid">
-        <div class="spec-card">
-          <div class="spec-label">PCBA Dimensions</div>
-          <div class="spec-value">84 × 62 × 18 mm</div>
-        </div>
-        <div class="spec-card">
-          <div class="spec-label">Mounting</div>
-          <div class="spec-value">GPS antenna pointing upwards without disturbance</div>
-        </div>
+    <!-- SHARED: All three same -->
+    <div class="spec-grid">
+      <div class="spec-card">
+        <div class="spec-label">Enclosure Material</div>
+        <div class="spec-value">ABS</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Mounting</div>
+        <div class="spec-value">GPS antenna pointing upwards without disturbance</div>
       </div>
     </div>
 
-    <!-- DIFFERENT specs -->
-    <div class="iface-compare-grid" style="margin-top:12px;">
-      <div>
-        <div class="iface-col-header lite">ALCM – Lite · TEL-4G-W-STD-001</div>
-        <div class="iface-col-body lite">
-          <div class="iface-row"><span class="iface-row-label">Enclosure</span><span class="iface-row-val na">—</span></div>
-          <div class="iface-row"><span class="iface-row-label">Enclosure Material</span><span class="iface-row-val na">—</span></div>
-          <div class="iface-row"><span class="iface-row-label">Enclosure Dimensions</span><span class="iface-row-val">On request</span></div>
-          <div class="iface-row"><span class="iface-row-label">IP Rating</span><span class="iface-row-val na">Not Applicable</span></div>
-          <div class="iface-row"><span class="iface-row-label">Weight</span><span class="iface-row-val na">—</span></div>
+    <!-- DIFFERENT: Per-model mechanical specs -->
+    <div class="subsection" style="margin-top:14px;">
+      <div class="subsection-title">Model-Specific Dimensions &amp; Ratings</div>
+      <div class="iface-compare-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div>
+          <div class="iface-col-header lite">ALCM – Lite · TEL-4G-W-STD-001</div>
+          <div class="iface-col-body lite">
+            <div class="iface-row"><span class="iface-row-label">PCBA Dimensions</span><span class="iface-row-val">84 × 62 × 18 mm</span></div>
+            <div class="iface-row"><span class="iface-row-label">Enclosure</span><span class="iface-row-val na">Optional</span></div>
+            <div class="iface-row"><span class="iface-row-label">Enclosure Dimensions</span><span class="iface-row-val">On request</span></div>
+            <div class="iface-row"><span class="iface-row-label">IP Rating</span><span class="iface-row-val na">—</span></div>
+            <div class="iface-row"><span class="iface-row-label">Weight</span><span class="iface-row-val na">—</span></div>
+          </div>
         </div>
-      </div>
-      <div>
-        <div class="iface-col-header plus">ALCM – Plus · TELIB-4G-W-STD-002</div>
-        <div class="iface-col-body plus">
-          <div class="iface-row"><span class="iface-row-label">Enclosure</span><span class="iface-row-val">Standard</span></div>
-          <div class="iface-row"><span class="iface-row-label">Enclosure Material</span><span class="iface-row-val">ABS</span></div>
-          <div class="iface-row"><span class="iface-row-label">Enclosure Dimensions</span><span class="iface-row-val">111 × 97 × 27 mm</span></div>
-          <div class="iface-row"><span class="iface-row-label">IP Rating</span><span class="iface-row-val highlight">IP 65</span></div>
-          <div class="iface-row"><span class="iface-row-label">Weight</span><span class="iface-row-val">150 g</span></div>
+        <div>
+          <div class="iface-col-header plus">ALCM – Plus · TELIB-4G-W-STD-002</div>
+          <div class="iface-col-body plus">
+            <div class="iface-row"><span class="iface-row-label">PCBA Dimensions</span><span class="iface-row-val">84 × 62 × 18 mm</span></div>
+            <div class="iface-row"><span class="iface-row-label">Enclosure</span><span class="iface-row-val">Standard</span></div>
+            <div class="iface-row"><span class="iface-row-label">Enclosure Dimensions</span><span class="iface-row-val">111 × 97 × 27 mm</span></div>
+            <div class="iface-row"><span class="iface-row-label">IP Rating</span><span class="iface-row-val highlight">IP 65</span></div>
+            <div class="iface-row"><span class="iface-row-label">Weight</span><span class="iface-row-val">150 g</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="iface-col-header pro">ALCM – Pro · TELIB-4G-W-STD-001</div>
+          <div class="iface-col-body pro">
+            <div class="iface-row"><span class="iface-row-label">PCBA Dimensions</span><span class="iface-row-val highlight">84 × 62 × 20 mm</span></div>
+            <div class="iface-row"><span class="iface-row-label">Enclosure</span><span class="iface-row-val">Standard</span></div>
+            <div class="iface-row"><span class="iface-row-label">Enclosure Dimensions</span><span class="iface-row-val highlight">100 × 100 × 40 mm</span></div>
+            <div class="iface-row"><span class="iface-row-label">IP Rating</span><span class="iface-row-val highlight">IP 65/66</span></div>
+            <div class="iface-row"><span class="iface-row-label">Weight</span><span class="iface-row-val">To be included</span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -985,22 +1074,20 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   </div>
   <div class="section-body">
 
-    <div class="subsection">
-      <div class="subsection-title">ALCM – Lite &amp; ALCM – Plus</div>
-      <div class="table-wrap" style="margin-top:10px;">
-        <table>
-          <thead><tr><th>Parameter</th><th>Range</th></tr></thead>
-          <tbody>
-            <tr><td>Operating Temperature (without battery)</td><td>−40 °C to +85 °C</td></tr>
-            <tr><td>Storage Temperature (without battery)</td><td>−40 °C to +85 °C</td></tr>
-            <tr><td>Operating Humidity</td><td>5% to 95% non-condensing</td></tr>
-            <tr><td>Battery Charge Temperature</td><td>0 °C to +45 °C</td></tr>
-            <tr><td>Battery Discharge Temperature</td><td>−20 °C to +60 °C</td></tr>
-            <tr><td>Battery Storage (1 month)</td><td>−20 °C to +45 °C</td></tr>
-            <tr><td>Battery Storage (6 months)</td><td>−20 °C to +35 °C</td></tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- SHARED: All three same -->
+    <div class="table-wrap" style="margin-top:10px;">
+      <table>
+        <thead><tr><th>Parameter</th><th>Range</th></tr></thead>
+        <tbody>
+          <tr><td>Operating Temperature (without battery)</td><td>−40 °C to +85 °C</td></tr>
+          <tr><td>Storage Temperature (without battery)</td><td>−40 °C to +85 °C</td></tr>
+          <tr><td>Operating Humidity</td><td>5% to 95% non-condensing</td></tr>
+          <tr><td>Battery Charge Temperature</td><td>0 °C to +45 °C</td></tr>
+          <tr><td>Battery Discharge Temperature</td><td>−20 °C to +60 °C</td></tr>
+          <tr><td>Battery Storage (1 month)</td><td>−20 °C to +45 °C</td></tr>
+          <tr><td>Battery Storage (6 months)</td><td>−20 °C to +35 °C</td></tr>
+        </tbody>
+      </table>
     </div>
 
   </div>
@@ -1016,43 +1103,28 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   </div>
   <div class="section-body">
 
-    <!-- SHARED features -->
-    <div class="subsection">
-      <div class="subsection-title">ALCM – Lite &amp; ALCM – Plus</div>
-      <ul>
-        <li><strong>Scenario:</strong> Overspeed Detection, Crash/Fall Detection, Excessive Idling Detection, Unplug Detection, Towing Detection, Geo fence</li>
-        <li><strong>Sensors:</strong> IMU – 3-Axis Accelerometer + 3-Axis Gyroscope (Optional)</li>
-        <li><strong>Configuration &amp; Firmware Update:</strong> Device Management – OTA/FOTA</li>
-        <li><strong>SMS:</strong> Events</li>
-        <li><strong>GPRS Commands:</strong> Device Management, Configuration, Events</li>
-        <li><strong>Time Synchronization:</strong> GPS, External RTC, Network</li>
-        <li><strong>Wake up Detection:</strong> Digital Input, IMU, External Power Voltage, CAN</li>
-        <li><strong>Cloud Communication:</strong> ≥ 250 ms (Configurable)</li>
-        <li><strong>CAN UDS:</strong> Based firmware updates</li>
-        <li><strong>Security:</strong> 128-bit encryption for edge-to-cloud</li>
-      </ul>
-    </div>
+    <!-- SHARED: All three same -->
+    <ul>
+      <li><strong>Scenario:</strong> Overspeed Detection, Crash/Fall Detection, Excessive Idling Detection, Unplug Detection, Towing Detection, Geo fence</li>
+      <li><strong>Modes:</strong> Sleep Mode, Active Mode</li>
+      <li><strong>Sensors:</strong> IMU – 3-Axis Accelerometer + 3-Axis Gyroscope (Optional)</li>
+      <li><strong>Configuration &amp; Firmware Update:</strong> Device Management – OTA/FOTA</li>
+      <li><strong>SMS:</strong> Events</li>
+      <li><strong>GPRS Commands:</strong> Device Management, Configuration, Events</li>
+      <li><strong>Time Synchronization:</strong> GPS, External RTC, Network</li>
+      <li><strong>Wake up Detection:</strong> Digital Input, IMU, External Power Voltage, CAN</li>
+      <li><strong>Cloud Communication:</strong> ≥ 250 ms (Configurable)</li>
+      <li><strong>CAN UDS:</strong> Based firmware updates</li>
+      <li><strong>Security:</strong> 128-bit encryption for edge-to-cloud</li>
+    </ul>
 
-    <!-- DIFFERENT: Sleep Modes -->
-    <div class="iface-compare-grid" style="margin-top:12px;">
-      <div>
-        <div class="iface-col-header lite">ALCM – Lite · TEL-4G-W-STD-001</div>
-        <div class="iface-col-body lite">
-          <div class="iface-row">
-            <span class="iface-row-label">Modes</span>
-            <span class="iface-row-val">Sleep Mode, Active Mode</span>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="iface-col-header plus">ALCM – Plus · TELIB-4G-W-STD-002</div>
-        <div class="iface-col-body plus">
-          <div class="iface-row">
-            <span class="iface-row-label">Modes</span>
-            <span class="iface-row-val highlight">Sleep Mode, Active Mode, Deep Sleep Mode</span>
-          </div>
-        </div>
-      </div>
+    <!-- Pro-exclusive features -->
+    <div class="subsection" style="margin-top:16px;">
+      <div class="subsection-title">ALCM – Pro Exclusive</div>
+      <ul>
+        <li><strong>Edge Analytics Engine:</strong> Extensible edge analytics engine</li>
+        <li><strong>Secure Cloud Communication:</strong> MQTT, TCP, HTTP</li>
+      </ul>
     </div>
 
   </div>
@@ -1068,18 +1140,16 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   </div>
   <div class="section-body">
 
-    <div class="subsection">
-      <div class="subsection-title">ALCM – Lite &amp; ALCM – Plus</div>
-      <p><strong>Navigation LED Indication (All Green Color):</strong></p>
-      <div class="led-row">
-        <div class="led-item"><div class="led-dot"></div> 1 Net-Status LED</div>
-        <div class="led-item"><div class="led-dot"></div> 1 Modem Status (3.9V available)</div>
-        <div class="led-item"><div class="led-dot"></div> 1 Power LED (5V available)</div>
-      </div>
-      <div class="note-box" style="margin-top:12px;">
-        <span>⚠️</span>
-        <span><strong>OFF</strong> – Device is in Boot mode / not working.</span>
-      </div>
+    <!-- SHARED: All three same -->
+    <p><strong>Navigation LED Indication (All Green Color):</strong></p>
+    <div class="led-row">
+      <div class="led-item"><div class="led-dot"></div> 1 Net-Status LED</div>
+      <div class="led-item"><div class="led-dot"></div> 1 Modem Status (3.9V available)</div>
+      <div class="led-item"><div class="led-dot"></div> 1 Power LED (5V available)</div>
+    </div>
+    <div class="note-box" style="margin-top:12px;">
+      <span>⚠️</span>
+      <span><strong>OFF</strong> – Device is in Boot mode / not working.</span>
     </div>
 
   </div>
@@ -1092,7 +1162,7 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
       </div>
       <div class="section-body">
         <p>
-          This section contains information on how to operate <strong>ALM IOT Devices</strong> safely.
+          This section contains information on how to operate <strong>ALCM IOT Devices</strong> safely.
           By following these requirements and recommendations, you will avoid dangerous situations.
           Read these instructions carefully and follow them strictly before operating the device.
         </p>
