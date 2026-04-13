@@ -1251,27 +1251,77 @@ details > summary { color: #16a34a; font-weight: 600; cursor: pointer; padding: 
   });
 </script>
 <script>
-  // PDF download button (corrected)
-  document.getElementById('downloadPdfBtn').addEventListener('click', function() {
-    const element = document.querySelector('.page');
-    const opt = {
-      margin:        [0.5, 0.5, 0.5, 0.5],
-      filename:     'BMS_IoT_User_Manual.pdf',
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true, logging: false },
-      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-    };
-    const originalBtnText = this.innerHTML;
-    this.innerHTML = '<span>⏳</span> Generating PDF...';
-    this.style.opacity = '0.7';
-    html2pdf().set(opt).from(element).save().then(() => {
-      this.innerHTML = originalBtnText;
-      this.style.opacity = '1';
-    }).catch(err => {
-      console.error('PDF error:', err);
-      this.innerHTML = originalBtnText;
-      this.style.opacity = '1';
-      alert('PDF generation failed. Please try again.');
+  document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('downloadPdfBtn');
+    if (!btn) {
+      console.error('PDF button not found');
+      return;
+    }
+
+    btn.addEventListener('click', async function() {
+      const element = document.querySelector('.page');
+      if (!element) {
+        alert('Could not find page content.');
+        return;
+      }
+
+      // Show loading state
+      const originalText = this.innerHTML;
+      this.innerHTML = '<span>⏳</span> Generating PDF...';
+      this.style.opacity = '0.7';
+      this.style.pointerEvents = 'none';
+
+      try {
+        // Clone the element to avoid modifying the live page
+        const clone = element.cloneNode(true);
+        
+        // Remove all images that might be broken (optional)
+        const images = clone.querySelectorAll('img');
+        for (let img of images) {
+          // Test if image loads, if not, remove it
+          await new Promise((resolve) => {
+            const testImg = new Image();
+            testImg.onload = () => resolve(true);
+            testImg.onerror = () => {
+              img.remove();
+              resolve(false);
+            };
+            testImg.src = img.src;
+          });
+        }
+
+        // Create a temporary container for PDF generation
+        const container = document.createElement('div');
+        container.appendChild(clone);
+        container.style.position = 'absolute';
+        container.style.top = '-9999px';
+        container.style.left = '-9999px';
+        document.body.appendChild(container);
+
+        const opt = {
+          margin: [0.5, 0.5, 0.5, 0.5],
+          filename: 'BMS_IoT_User_Manual.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: false },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        await html2pdf().set(opt).from(container).save();
+
+        // Clean up
+        document.body.removeChild(container);
+        
+        // Restore button
+        this.innerHTML = originalText;
+        this.style.opacity = '1';
+        this.style.pointerEvents = 'auto';
+      } catch (err) {
+        console.error('PDF error:', err);
+        alert('PDF generation failed: ' + (err.message || 'Unknown error'));
+        this.innerHTML = originalText;
+        this.style.opacity = '1';
+        this.style.pointerEvents = 'auto';
+      }
     });
   });
 </script>
